@@ -1,26 +1,147 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ============================================================
+   Tokens de design
+   Fonte unica da verdade das cores. Definidos como variaveis
+   CSS para que o modo escuro apenas as redefina, sem duplicar
+   classe nenhuma nos componentes.
+   ============================================================ */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root {
+  /* Superficies */
+  --fundo: #f6f7fb;
+  --superficie: #ffffff;
+  --superficie-2: #f1f3f9;
+  --borda: #e2e6ef;
+
+  /* Texto */
+  --tinta: #10152b;
+  --tinta-media: #4a5270;
+  --tinta-fraca: #79819c;
+
+  /* Marca */
+  --marca: #4338ca;
+  --marca-forte: #312e9e;
+  --marca-fraca: #eef0ff;
+  --marca-contraste: #ffffff;
+
+  /* Veredito: milhas (dourado) x dinheiro (verde) */
+  --milhas: #b45309;
+  --milhas-fundo: #fef5e6;
+  --milhas-borda: #f3d9a8;
+
+  --dinheiro: #047857;
+  --dinheiro-fundo: #e7f6ef;
+  --dinheiro-borda: #a9dcc6;
+
+  /* Sinais */
+  --alerta: #b91c1c;
+  --alerta-fundo: #fdecec;
+  --atencao: #a16207;
+
+  /* Elevacao */
+  --sombra-card: 0 1px 2px rgb(16 21 43 / 0.05), 0 4px 12px rgb(16 21 43 / 0.05);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --fundo: #0a0e1c;
+    --superficie: #131a30;
+    --superficie-2: #1b2340;
+    --borda: #2a3355;
+
+    --tinta: #eef1fa;
+    --tinta-media: #a8b0cc;
+    --tinta-fraca: #7b85a6;
+
+    --marca: #8b8bf5;
+    --marca-forte: #a5a5f8;
+    --marca-fraca: #1e2448;
+    --marca-contraste: #0a0e1c;
+
+    --milhas: #fbbf4c;
+    --milhas-fundo: #2e2410;
+    --milhas-borda: #57430f;
+
+    --dinheiro: #4ade9f;
+    --dinheiro-fundo: #0f2c22;
+    --dinheiro-borda: #1f5c44;
+
+    --alerta: #f87171;
+    --alerta-fundo: #2d1414;
+    --atencao: #fbbf24;
+
+    --sombra-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 12px rgb(0 0 0 / 0.25);
   }
 }
 
+/* Expoe os tokens como utilitarios do Tailwind:
+   bg-fundo, text-tinta, border-borda, text-milhas, etc. */
+@theme inline {
+  --color-fundo: var(--fundo);
+  --color-superficie: var(--superficie);
+  --color-superficie-2: var(--superficie-2);
+  --color-borda: var(--borda);
+
+  --color-tinta: var(--tinta);
+  --color-tinta-media: var(--tinta-media);
+  --color-tinta-fraca: var(--tinta-fraca);
+
+  --color-marca: var(--marca);
+  --color-marca-forte: var(--marca-forte);
+  --color-marca-fraca: var(--marca-fraca);
+  --color-marca-contraste: var(--marca-contraste);
+
+  --color-milhas: var(--milhas);
+  --color-milhas-fundo: var(--milhas-fundo);
+  --color-milhas-borda: var(--milhas-borda);
+
+  --color-dinheiro: var(--dinheiro);
+  --color-dinheiro-fundo: var(--dinheiro-fundo);
+  --color-dinheiro-borda: var(--dinheiro-borda);
+
+  --color-alerta: var(--alerta);
+  --color-alerta-fundo: var(--alerta-fundo);
+  --color-atencao: var(--atencao);
+
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+
+  --shadow-card: var(--sombra-card);
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+
+html {
+  /* Impede o iOS de aumentar a fonte ao girar o aparelho */
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--fundo);
+  color: var(--tinta);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  /* Evita rolagem horizontal acidental no mobile */
+  overflow-x: hidden;
+}
+
+/* Numeros alinhados em tabelas e comparativos de preco:
+   sem isso o "1" ocupa menos espaco que o "8" e as colunas dancam. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Area segura do iPhone (barra de gestos) para a nav inferior */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
