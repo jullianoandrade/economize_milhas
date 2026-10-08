@@ -1,0 +1,50 @@
+{
+  "atualizadoEm": "2026-10-08",
+  "explicacao": "Ponto de partida para responder 'compro agora ou espero?' e 'qual o melhor mes para ir?'. Sao medias de mercado. Conforme a tabela precos_snapshot no Supabase acumula observacoes reais da rota, o motor troca estas heuristicas pela curva propria daquela rota e avisa na tela qual das duas esta usando.",
+  "janelaDeCompra": [
+    {
+      "tipo": "domestico",
+      "diasMin": 28,
+      "diasOtimo": 39,
+      "diasMax": 90,
+      "economiaTipicaPct": 20,
+      "fonte": "nomadglobal.com, kayak.com.br"
+    },
+    {
+      "tipo": "internacional",
+      "diasMin": 60,
+      "diasOtimo": 90,
+      "diasMax": 120,
+      "economiaTipicaPct": 26,
+      "fonte": "seguroviagem.srv.br, meutudo.com.br"
+    }
+  ],
+  "diaDaSemanaParaComprar": {
+    "melhores": ["terca", "quarta"],
+    "economiaTipicaPct": 15,
+    "observacao": "Diferenca menor que a da antecedencia. Nao vale esperar dias so por isso."
+  },
+  "sazonalidadeBrasil": {
+    "explicacao": "Indice relativo de preco por mes de EMBARQUE partindo do Brasil. 1,0 e a media do ano. Acima de 1,15 e alta temporada.",
+    "indicePorMes": {
+      "1": 1.35,
+      "2": 1.05,
+      "3": 0.85,
+      "4": 0.88,
+      "5": 0.82,
+      "6": 0.95,
+      "7": 1.4,
+      "8": 0.9,
+      "9": 0.88,
+      "10": 0.92,
+      "11": 0.95,
+      "12": 1.3
+    },
+    "altaTemporada": [1, 7, 12],
+    "baixaTemporada": [3, 4, 5, 9],
+    "fonte": "Padrao de ferias escolares e feriados no Brasil; confirmado por atarde.com.br e seguroviagem.srv.br"
+  },
+  "inversaoMilhas": {
+    "explicacao": "A tabela de resgate em milhas e praticamente fixa o ano inteiro, mas o preco em dinheiro dispara na alta temporada. Logo o valor que voce EXTRAI por milheiro sobe junto. Essa e a regra mais lucrativa do app: use milhas em janeiro, julho e dezembro; na baixa temporada pague em dinheiro e guarde as milhas."
+  }
+}

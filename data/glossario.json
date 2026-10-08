@@ -1,0 +1,85 @@
+{
+  "atualizadoEm": "2026-10-08",
+  "termos": [
+    {
+      "id": "cpm",
+      "termo": "CPM (custo por milheiro)",
+      "resumo": "Quanto voce PAGA por 1.000 milhas.",
+      "explicacao": "E o preco de aquisicao. Se voce assina um clube de R$ 184 por mes que deposita 5.000 milhas, seu CPM e 184 dividido por 5, ou seja R$ 36,80. Esse numero e a base de qualquer decisao: sem ele, nao da para saber se um resgate foi bom.",
+      "exemplo": "Clube de R$ 184/mes com 5.000 milhas = CPM de R$ 36,80."
+    },
+    {
+      "id": "valor-extraido",
+      "termo": "Valor extraido por milheiro",
+      "resumo": "Quanto cada 1.000 milhas VALEU naquele resgate.",
+      "explicacao": "E o outro lado da moeda do CPM. Pegue o preco da passagem em dinheiro, divida pelas milhas do resgate e multiplique por mil. Se o valor extraido for maior que o seu CPM, o resgate valeu a pena. Se for menor, voce queimou milhas que custaram mais caro do que a passagem.",
+      "exemplo": "Passagem de R$ 3.280 por 80.000 milhas = R$ 41 extraidos por milheiro. Se voce pagou R$ 16 no milheiro, foi um otimo resgate."
+    },
+    {
+      "id": "transferencia-bonificada",
+      "termo": "Transferencia bonificada",
+      "resumo": "Promocao que multiplica seus pontos ao transferir.",
+      "explicacao": "Programas como Livelo e Esfera periodicamente oferecem bonus para mover pontos para as companhias aereas. Com 100% de bonus, 10.000 pontos viram 20.000 milhas, o que corta o seu CPM pela metade. E o caminho mais barato de acumulo para quem ja junta pontos pelo cartao.",
+      "exemplo": "10.000 pontos Livelo com 80% de bonus viram 18.000 milhas Smiles."
+    },
+    {
+      "id": "clube",
+      "termo": "Clube de pontos",
+      "resumo": "Assinatura mensal que deposita milhas na sua conta.",
+      "explicacao": "Voce paga uma mensalidade fixa e recebe um pacote de milhas todo mes. O custo por milheiro de um clube costuma ficar entre R$ 34 e R$ 46, bem acima do CPM alvo dos programas. Isso significa que o clube so compensa quando voce consegue extrair mais do que isso no resgate, o que normalmente acontece em viagens internacionais e na alta temporada. Para trechos domesticos baratos, o clube quase nunca se paga.",
+      "exemplo": "Clube de R$ 46 por 1.000 milhas e um CPM de R$ 46. Se o seu resgate extrai R$ 30 por milheiro, voce perdeu dinheiro."
+    },
+    {
+      "id": "taxa-embarque",
+      "termo": "Taxa de embarque",
+      "resumo": "O dinheiro que voce paga mesmo resgatando com milhas.",
+      "explicacao": "Nenhum resgate e totalmente gratuito. Alem das milhas, voce paga taxas em reais que variam por aeroporto e companhia. Num trecho domestico costumam ficar perto de R$ 50; na Europa passam dos R$ 300. Ignorar a taxa e o erro mais comum de quem esta comecando, porque ela pode transformar um resgate bom em um resgate medio."
+    },
+    {
+      "id": "coalizao",
+      "termo": "Programa de coalizao",
+      "resumo": "Livelo e Esfera: hubs onde os pontos esperam.",
+      "explicacao": "Nao sao programas de companhia aerea. Voce acumula pontos ali pelo cartao e so decide o destino depois, transferindo para Smiles, LATAM Pass ou Azul quando aparecer a melhor promocao. Guardar pontos no hub em vez de transferir na hora e uma das estrategias mais eficientes que existem."
+    },
+    {
+      "id": "paridade",
+      "termo": "Paridade",
+      "resumo": "A taxa de cambio entre dois programas.",
+      "explicacao": "Quantos pontos de origem viram quantas milhas no destino. Livelo para Smiles e 1:1, ou seja, um ponto vira uma milha. Esfera para TAP e 2,7:1, bem pior: voce precisa de 2.700 pontos para conseguir 1.000 milhas."
+    },
+    {
+      "id": "alta-temporada",
+      "termo": "Alta e baixa temporada",
+      "resumo": "Janeiro, julho e dezembro sao os meses caros.",
+      "explicacao": "No Brasil o preco acompanha as ferias escolares e os feriados. Marco a maio e setembro a novembro sao os meses mais baratos para viajar. E aqui esta o detalhe que quase ninguem explica: como a tabela de milhas e quase fixa o ano inteiro, e justamente na alta temporada que as milhas rendem mais."
+    },
+    {
+      "id": "antecedencia",
+      "termo": "Antecedencia de compra",
+      "resumo": "Nem cedo demais, nem em cima da hora.",
+      "explicacao": "Existe uma janela em que a passagem fica mais barata. Para voos domesticos no Brasil ela costuma ficar entre 28 e 90 dias antes do embarque, com o ponto otimo perto de 39 dias. Para internacionais, entre 60 e 120 dias. Comprar com um ano de antecedencia raramente ajuda: as companhias ainda nao abriram as tarifas promocionais."
+    }
+  ],
+  "quandoNaoUsarMilhas": [
+    {
+      "titulo": "Quando a passagem esta barata em dinheiro",
+      "explicacao": "Num trecho domestico de R$ 400, gastar 8.000 milhas significa extrair R$ 50 por milheiro... menos a taxa de embarque. Se suas milhas custaram R$ 40 cada mil, voce praticamente empatou e perdeu a flexibilidade. Milha e um ativo: use quando ela rende mais que o dinheiro."
+    },
+    {
+      "titulo": "Quando as taxas comem o desconto",
+      "explicacao": "Alguns resgates internacionais cobram mais de R$ 400 de taxa por trecho. Some as taxas ao custo das milhas antes de comparar com a tarifa em dinheiro. O app ja faz essa conta para voce."
+    },
+    {
+      "titulo": "Quando voce esta comprando milhas so para aquela viagem",
+      "explicacao": "Comprar milhas de tabela sai entre R$ 70 e R$ 80 o milheiro, mais caro que quase qualquer passagem avaliada por milheiro. Comprar milhas no desespero e a forma mais rapida de perder dinheiro no mundo das milhas."
+    },
+    {
+      "titulo": "Quando a data e inflexivel",
+      "explicacao": "Resgates dependem de disponibilidade de assentos. Se voce precisa viajar numa data exata e so ha tarifa cara em milhas, o dinheiro costuma sair melhor. Guarde as milhas para quando voce puder escolher a data."
+    },
+    {
+      "titulo": "Quando voce ainda nao sabe o seu CPM",
+      "explicacao": "Sem saber quanto suas milhas custaram, nao da para dizer se um resgate foi bom. Esse e o primeiro numero a descobrir, e e por ele que este app comeca."
+    }
+  ]
+}

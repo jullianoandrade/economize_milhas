@@ -1,0 +1,49 @@
+{
+  "atualizadoEm": "2026-10-08",
+  "explicacao": "CPM = custo por milheiro, ou quanto custa adquirir 1.000 milhas. O alvo e o preco ate o qual vale a pena comprar. O mercado e a faixa praticada na compra e venda entre pessoas.",
+  "fonte": "melhoresdestinos.com.br/milhas/valor-milheiro-azul-latam-smiles-2026",
+  "programas": {
+    "smiles": {
+      "alvoBRL": 16,
+      "mercadoMinBRL": 12,
+      "mercadoMaxBRL": 21
+    },
+    "latampass": {
+      "alvoBRL": 26,
+      "mercadoMinBRL": 18,
+      "mercadoMaxBRL": 29
+    },
+    "tudoazul": {
+      "alvoBRL": 13,
+      "mercadoMinBRL": 12,
+      "mercadoMaxBRL": 25
+    },
+    "tapmilesgo": {
+      "alvoBRL": 30,
+      "mercadoMinBRL": 22,
+      "mercadoMaxBRL": 38
+    },
+    "iberiaplus": {
+      "alvoBRL": 32,
+      "mercadoMinBRL": 24,
+      "mercadoMaxBRL": 42
+    }
+  },
+  "compraDiretaBRL": {
+    "explicacao": "Preco de tabela ao comprar milhas direto da companhia, sem promocao. Serve de teto: acima disso nunca vale.",
+    "faixaMin": 70,
+    "faixaMax": 80
+  },
+  "coalizao": {
+    "explicacao": "Preco para COMPRAR pontos de coalizao, que e a origem das transferencias bonificadas. O valor base de tabela da Livelo e R$ 70 o milheiro; em promocao de compra cai para perto de R$ 30, e e esse o alvo realista.",
+    "fonte": "melhoresdestinos.com.br/milhas/valor-milheiro-livelo",
+    "livelo": {
+      "alvoBRL": 30,
+      "baseBRL": 70
+    },
+    "esfera": {
+      "alvoBRL": 32,
+      "baseBRL": 70
+    }
+  }
+}

@@ -1,0 +1,294 @@
+{
+  "atualizadoEm": "2026-10-08",
+  "explicacao": "Estimativa de milhas por TRECHO (so ida), classe economica. Programas nao publicam tabela fixa: os valores variam por data, demanda e disponibilidade. Por isso cada faixa traz min (resgate promocional), tipico (o que se encontra na maior parte das datas) e max (alta temporada ou ultima hora). O campo confianca diz se o numero veio de fonte publicada ou de interpolacao entre pontos conhecidos.",
+  "regioes": [
+    {
+      "id": "domestico-curto",
+      "rotulo": "Doméstico curto",
+      "ateKm": 800
+    },
+    {
+      "id": "domestico-medio",
+      "rotulo": "Doméstico médio",
+      "ateKm": 2000
+    },
+    {
+      "id": "domestico-longo",
+      "rotulo": "Doméstico longo",
+      "ateKm": 4500
+    },
+    {
+      "id": "america-sul",
+      "rotulo": "América do Sul",
+      "ateKm": 5000
+    },
+    {
+      "id": "america-norte-central",
+      "rotulo": "América do Norte e Central",
+      "ateKm": 9000
+    },
+    {
+      "id": "europa",
+      "rotulo": "Europa e África do Norte",
+      "ateKm": 11000
+    },
+    {
+      "id": "resto-mundo",
+      "rotulo": "Ásia, Oceania e África",
+      "ateKm": 99999
+    }
+  ],
+  "taxasEmbarqueBRL": {
+    "explicacao": "Taxa aproximada por trecho, paga em dinheiro mesmo no resgate por milhas. Varia por aeroporto e companhia.",
+    "domestico-curto": 45,
+    "domestico-medio": 50,
+    "domestico-longo": 55,
+    "america-sul": 130,
+    "america-norte-central": 250,
+    "europa": 350,
+    "resto-mundo": 420
+  },
+  "tabelas": {
+    "smiles": {
+      "multiplicadorExecutiva": 2,
+      "economica": {
+        "domestico-curto": {
+          "min": 4000,
+          "tipico": 6200,
+          "max": 12000,
+          "confianca": "pesquisado"
+        },
+        "domestico-medio": {
+          "min": 5000,
+          "tipico": 9000,
+          "max": 18000,
+          "confianca": "interpolado"
+        },
+        "domestico-longo": {
+          "min": 7000,
+          "tipico": 13000,
+          "max": 25000,
+          "confianca": "interpolado"
+        },
+        "america-sul": {
+          "min": 12000,
+          "tipico": 20000,
+          "max": 35000,
+          "confianca": "interpolado"
+        },
+        "america-norte-central": {
+          "min": 25000,
+          "tipico": 40000,
+          "max": 70000,
+          "confianca": "interpolado"
+        },
+        "europa": {
+          "min": 42000,
+          "tipico": 60000,
+          "max": 95000,
+          "confianca": "pesquisado"
+        },
+        "resto-mundo": {
+          "min": 50000,
+          "tipico": 75000,
+          "max": 120000,
+          "confianca": "interpolado"
+        }
+      },
+      "milhasPorReal": 13.5
+    },
+    "latampass": {
+      "multiplicadorExecutiva": 2.1,
+      "economica": {
+        "domestico-curto": {
+          "min": 5000,
+          "tipico": 8500,
+          "max": 16000,
+          "confianca": "pesquisado"
+        },
+        "domestico-medio": {
+          "min": 6500,
+          "tipico": 12000,
+          "max": 22000,
+          "confianca": "interpolado"
+        },
+        "domestico-longo": {
+          "min": 9000,
+          "tipico": 17000,
+          "max": 30000,
+          "confianca": "interpolado"
+        },
+        "america-sul": {
+          "min": 15000,
+          "tipico": 25000,
+          "max": 45000,
+          "confianca": "interpolado"
+        },
+        "america-norte-central": {
+          "min": 35000,
+          "tipico": 55000,
+          "max": 85000,
+          "confianca": "pesquisado"
+        },
+        "europa": {
+          "min": 60000,
+          "tipico": 95000,
+          "max": 140000,
+          "confianca": "pesquisado"
+        },
+        "resto-mundo": {
+          "min": 70000,
+          "tipico": 110000,
+          "max": 160000,
+          "confianca": "interpolado"
+        }
+      },
+      "milhasPorReal": 20
+    },
+    "tudoazul": {
+      "multiplicadorExecutiva": 2,
+      "economica": {
+        "domestico-curto": {
+          "min": 3500,
+          "tipico": 7100,
+          "max": 14000,
+          "confianca": "pesquisado"
+        },
+        "domestico-medio": {
+          "min": 4500,
+          "tipico": 10000,
+          "max": 19000,
+          "confianca": "interpolado"
+        },
+        "domestico-longo": {
+          "min": 6000,
+          "tipico": 14000,
+          "max": 26000,
+          "confianca": "interpolado"
+        },
+        "america-sul": {
+          "min": 12000,
+          "tipico": 20000,
+          "max": 36000,
+          "confianca": "interpolado"
+        },
+        "america-norte-central": {
+          "min": 24000,
+          "tipico": 38000,
+          "max": 68000,
+          "confianca": "interpolado"
+        },
+        "europa": {
+          "min": 55000,
+          "tipico": 78000,
+          "max": 95000,
+          "confianca": "pesquisado"
+        },
+        "resto-mundo": {
+          "min": 60000,
+          "tipico": 90000,
+          "max": 130000,
+          "confianca": "interpolado"
+        }
+      },
+      "milhasPorReal": 16.5
+    },
+    "tapmilesgo": {
+      "multiplicadorExecutiva": 2.2,
+      "economica": {
+        "domestico-curto": {
+          "min": 0,
+          "tipico": 0,
+          "max": 0,
+          "confianca": "indisponivel"
+        },
+        "domestico-medio": {
+          "min": 0,
+          "tipico": 0,
+          "max": 0,
+          "confianca": "indisponivel"
+        },
+        "domestico-longo": {
+          "min": 0,
+          "tipico": 0,
+          "max": 0,
+          "confianca": "indisponivel"
+        },
+        "america-sul": {
+          "min": 0,
+          "tipico": 0,
+          "max": 0,
+          "confianca": "indisponivel"
+        },
+        "america-norte-central": {
+          "min": 0,
+          "tipico": 0,
+          "max": 0,
+          "confianca": "indisponivel"
+        },
+        "europa": {
+          "min": 35000,
+          "tipico": 55000,
+          "max": 90000,
+          "confianca": "interpolado"
+        },
+        "resto-mundo": {
+          "min": 50000,
+          "tipico": 80000,
+          "max": 120000,
+          "confianca": "interpolado"
+        }
+      },
+      "milhasPorReal": 15
+    },
+    "iberiaplus": {
+      "multiplicadorExecutiva": 2.3,
+      "economica": {
+        "domestico-curto": {
+          "min": 0,
+          "tipico": 0,
+          "max": 0,
+          "confianca": "indisponivel"
+        },
+        "domestico-medio": {
+          "min": 0,
+          "tipico": 0,
+          "max": 0,
+          "confianca": "indisponivel"
+        },
+        "domestico-longo": {
+          "min": 0,
+          "tipico": 0,
+          "max": 0,
+          "confianca": "indisponivel"
+        },
+        "america-sul": {
+          "min": 0,
+          "tipico": 0,
+          "max": 0,
+          "confianca": "indisponivel"
+        },
+        "america-norte-central": {
+          "min": 0,
+          "tipico": 0,
+          "max": 0,
+          "confianca": "indisponivel"
+        },
+        "europa": {
+          "min": 34000,
+          "tipico": 50000,
+          "max": 85000,
+          "confianca": "interpolado"
+        },
+        "resto-mundo": {
+          "min": 50000,
+          "tipico": 78000,
+          "max": 115000,
+          "confianca": "interpolado"
+        }
+      },
+      "milhasPorReal": 14
+    }
+  },
+  "explicacaoPrecificacaoDinamica": "Os programas brasileiros usam precificacao dinamica: a quantidade de milhas acompanha o preco em dinheiro da passagem. milhasPorReal e a taxa implicita de cada programa, derivada dos pontos de tabela conhecidos. Quando o preco em dinheiro e conhecido, o motor usa preco x milhasPorReal e limita o resultado a faixa min-max da regiao. Sem preco, cai no valor tipico."
+}

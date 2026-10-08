@@ -1,0 +1,91 @@
+{
+  "atualizadoEm": "2026-10-08",
+  "cotacaoDolarReferenciaBRL": 5.06,
+  "explicacao": "Cartoes sao a forma mais barata de acumular milhas: voce ganha pontos por um gasto que ja faria. O numero que importa e pontos por dolar. Para estimar o ganho mensal: (gasto mensal em reais / cotacao do dolar) x pontos por dolar. ESTE ARQUIVO NAO CONTEM COMISSAO: dados comerciais ficam em parceiros-comercial.json e o motor nunca os le.",
+  "cartoes": [
+    {
+      "id": "brb-dux",
+      "nome": "BRB DUX",
+      "emissor": "BRB",
+      "bandeira": "Mastercard Black",
+      "pontosPorDolarNacional": 5,
+      "pontosPorDolarInternacional": 7,
+      "anuidadeBRL": 1680,
+      "isencaoGastoMensalBRL": 35000,
+      "programaDestino": "proprio",
+      "pontosExpiram": false,
+      "confianca": "pesquisado",
+      "observacao": "Maior acumulo por dolar do mercado, mas exige gasto alto para isentar a anuidade."
+    },
+    {
+      "id": "santander-smiles-infinite",
+      "nome": "Santander Smiles Visa Infinite",
+      "emissor": "Santander",
+      "bandeira": "Visa Infinite",
+      "pontosPorDolarNacional": 6.5,
+      "pontosPorDolarInternacional": 6.5,
+      "anuidadeBRL": null,
+      "isencaoGastoMensalBRL": null,
+      "programaDestino": "smiles",
+      "pontosExpiram": false,
+      "confianca": "parcial",
+      "observacao": "Ate 6,5 pontos por dolar: o teto depende do pacote de relacionamento contratado. Credita direto na Smiles, sem passar por transferencia."
+    },
+    {
+      "id": "caixa-icone-infinite",
+      "nome": "Caixa Icone Visa Infinite",
+      "emissor": "Caixa",
+      "bandeira": "Visa Infinite",
+      "pontosPorDolarNacional": 5,
+      "pontosPorDolarInternacional": 6,
+      "anuidadeBRL": null,
+      "isencaoGastoMensalBRL": null,
+      "programaDestino": "proprio",
+      "pontosExpiram": false,
+      "confianca": "parcial",
+      "observacao": "Pontos sem validade."
+    },
+    {
+      "id": "itau-the-one-black",
+      "nome": "Itau The One Black",
+      "emissor": "Itau",
+      "bandeira": "Mastercard Black",
+      "pontosPorDolarNacional": 3,
+      "pontosPorDolarInternacional": 3.5,
+      "anuidadeBRL": 4000,
+      "isencaoGastoMensalBRL": 60000,
+      "programaDestino": "proprio",
+      "pontosExpiram": false,
+      "confianca": "pesquisado",
+      "observacao": "Anuidade cai 50% com R$ 30 mil de gasto mensal e zera a partir de R$ 60 mil."
+    },
+    {
+      "id": "inter-win-black",
+      "nome": "Inter Win Mastercard Black",
+      "emissor": "Inter",
+      "bandeira": "Mastercard Black",
+      "pontosPorDolarNacional": 2.53,
+      "pontosPorDolarInternacional": 2.53,
+      "anuidadeBRL": null,
+      "isencaoGastoMensalBRL": null,
+      "programaDestino": "proprio",
+      "pontosExpiram": false,
+      "confianca": "parcial",
+      "observacao": "Divulgado como 1 ponto a cada R$ 2 gastos; convertido pela cotacao de referencia deste arquivo."
+    },
+    {
+      "id": "nubank-croma",
+      "nome": "Nubank Croma",
+      "emissor": "Nubank",
+      "bandeira": "Mastercard",
+      "pontosPorDolarNacional": 1.4,
+      "pontosPorDolarInternacional": 1.4,
+      "anuidadeBRL": null,
+      "isencaoGastoMensalBRL": null,
+      "programaDestino": "proprio",
+      "pontosExpiram": false,
+      "confianca": "pesquisado",
+      "observacao": "Alternativa: 0,8% de cashback em vez de pontos. Para quem viaja pouco, o cashback costuma render mais."
+    }
+  ]
+}

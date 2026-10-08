@@ -1,0 +1,5 @@
+{
+  "atualizadoEm": "2026-10-08",
+  "aviso": "ARQUIVO COMERCIAL. Lido exclusivamente por lib/monetizacao/parceiros.ts. Nenhum modulo de lib/milhas ou lib/tempo pode importa-lo: tests/arquitetura.test.ts quebra o build se isso acontecer. E assim que a promessa de ranking cego a comissao deixa de ser intencao e vira regra verificavel.",
+  "parceiros": []
+}

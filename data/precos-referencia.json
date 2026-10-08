@@ -1,0 +1,13 @@
+{
+  "atualizadoEm": "2026-10-08",
+  "explicacao": "Preco tipico de UM TRECHO (so ida) em classe economica partindo do Brasil. Serve de rede de seguranca: quando nao ha token da Travelpayouts configurado, ou a API nao responde, o app usa estes valores e avisa na tela que o numero e estimativa, nao cotacao. Tudo no app e por trecho, nunca ida e volta, para bater com a tabela de milhas.",
+  "porRegiaoBRL": {
+    "domestico-curto": 350,
+    "domestico-medio": 450,
+    "domestico-longo": 650,
+    "america-sul": 1400,
+    "america-norte-central": 2600,
+    "europa": 3200,
+    "resto-mundo": 4500
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "atualizadoEm": "2026-10-08",
+  "explicacao": "Clubes sao assinaturas mensais que depositam um pacote fixo de milhas na conta. O custo por milheiro de um clube e simplesmente mensalidade dividida pelas milhas do plano. Compare esse numero com o CPM alvo do programa em cpm-referencia.json antes de assinar.",
+  "clubes": [
+    {
+      "id": "clube-smiles",
+      "programa": "smiles",
+      "nome": "Clube Smiles",
+      "fonte": "milhasbot.com.br/clube-smiles",
+      "confianca": "pesquisado",
+      "beneficios": [
+        "Milhas nao expiram enquanto a assinatura estiver ativa",
+        "Bonus extra em transferencias de pontos",
+        "Descontos em resgates"
+      ],
+      "planos": [
+        { "id": "smiles-1000", "milhasMes": 1000, "mensalidadeBRL": 46 },
+        { "id": "smiles-2000", "milhasMes": 2000, "mensalidadeBRL": 82 },
+        { "id": "smiles-5000", "milhasMes": 5000, "mensalidadeBRL": 184 },
+        { "id": "smiles-10000", "milhasMes": 10000, "mensalidadeBRL": 340 },
+        { "id": "smiles-20000", "milhasMes": 20000, "mensalidadeBRL": 819 }
+      ]
+    },
+    {
+      "id": "clube-latampass",
+      "programa": "latampass",
+      "nome": "Clube LATAM Pass",
+      "fonte": "nomadglobal.com/conteudos/clube-de-milhas",
+      "confianca": "parcial",
+      "beneficios": [
+        "Pontos creditados todo mes",
+        "Validade estendida enquanto assinante"
+      ],
+      "planos": [
+        { "id": "latampass-1000", "milhasMes": 1000, "mensalidadeBRL": 40.9 }
+      ]
+    },
+    {
+      "id": "clube-tudoazul",
+      "programa": "tudoazul",
+      "nome": "Clube Azul Fidelidade",
+      "fonte": "nomadglobal.com/conteudos/clube-de-milhas",
+      "confianca": "parcial",
+      "beneficios": [
+        "Pontos creditados todo mes",
+        "Validade estendida enquanto assinante"
+      ],
+      "planos": [
+        { "id": "tudoazul-1000", "milhasMes": 1000, "mensalidadeBRL": 42 }
+      ]
+    }
+  ]
+}

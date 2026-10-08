@@ -1,0 +1,3123 @@
+{
+ "atualizadoEm": "2026-10-08",
+ "fonte": "https://api.travelpayouts.com/data/airports.json",
+ "explicacao": "Subconjunto gerado por scripts/gerar-aeroportos.mjs: todos os aeroportos do Brasil mais os principais destinos internacionais. Regenere rodando o script.",
+ "aeroportos": [
+  {
+   "iata": "AAX",
+   "cidade": "Araxa",
+   "aliases": [],
+   "cidadeIata": "AAX",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -19.5681,
+   "lon": -46.9292,
+   "nome": "Araxa Airport"
+  },
+  {
+   "iata": "ADD",
+   "cidade": "Addis Ababa",
+   "aliases": [],
+   "cidadeIata": "ADD",
+   "pais": "ET",
+   "regiao": "resto-mundo",
+   "lat": 8.9838,
+   "lon": 38.7959,
+   "nome": "Addis Ababa Bole International Airport"
+  },
+  {
+   "iata": "AEP",
+   "cidade": "Buenos Aires",
+   "aliases": [],
+   "cidadeIata": "BUE",
+   "pais": "AR",
+   "regiao": "america-sul",
+   "lat": -34.5562,
+   "lon": -58.4167,
+   "nome": "Jorge Newbery Airport"
+  },
+  {
+   "iata": "AFL",
+   "cidade": "Alta Floresta",
+   "aliases": [],
+   "cidadeIata": "AFL",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -9.8725,
+   "lon": -56.1048,
+   "nome": "Alta Floresta Airport"
+  },
+  {
+   "iata": "AIR",
+   "cidade": "Aripuana",
+   "aliases": [],
+   "cidadeIata": "AIR",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -10.25,
+   "lon": -59.3833,
+   "nome": "Aripuana"
+  },
+  {
+   "iata": "AJU",
+   "cidade": "Aracaju",
+   "aliases": [],
+   "cidadeIata": "AJU",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -10.9872,
+   "lon": -37.0728,
+   "nome": "Aracaju Airport"
+  },
+  {
+   "iata": "AKL",
+   "cidade": "Auckland",
+   "aliases": [],
+   "cidadeIata": "AKL",
+   "pais": "NZ",
+   "regiao": "resto-mundo",
+   "lat": -37.0048,
+   "lon": 174.7835,
+   "nome": "Auckland Airport"
+  },
+  {
+   "iata": "AMS",
+   "cidade": "Amsterdã",
+   "aliases": [
+    "Amsterdam"
+   ],
+   "cidadeIata": "AMS",
+   "pais": "NL",
+   "regiao": "europa",
+   "lat": 52.3091,
+   "lon": 4.7634,
+   "nome": "Amsterdam Airport Schiphol"
+  },
+  {
+   "iata": "AQA",
+   "cidade": "Araraquara",
+   "aliases": [],
+   "cidadeIata": "AQA",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -21.8167,
+   "lon": -48.1333,
+   "nome": "Araraquara"
+  },
+  {
+   "iata": "ARN",
+   "cidade": "Estocolmo",
+   "aliases": [
+    "Stockholm"
+   ],
+   "cidadeIata": "STO",
+   "pais": "SE",
+   "regiao": "europa",
+   "lat": 59.6498,
+   "lon": 17.9304,
+   "nome": "Stockholm Arlanda Airport"
+  },
+  {
+   "iata": "ARU",
+   "cidade": "Aracatuba",
+   "aliases": [],
+   "cidadeIata": "ARU",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -21.1436,
+   "lon": -50.4261,
+   "nome": "Aracatuba Airport"
+  },
+  {
+   "iata": "ARX",
+   "cidade": "Aracati",
+   "aliases": [],
+   "cidadeIata": "ARX",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -4.5686,
+   "lon": -37.8047,
+   "nome": "Dragao do Mar Regional Airport"
+  },
+  {
+   "iata": "ASU",
+   "cidade": "Assunção",
+   "aliases": [
+    "Asuncion"
+   ],
+   "cidadeIata": "ASU",
+   "pais": "PY",
+   "regiao": "america-sul",
+   "lat": -25.2418,
+   "lon": -57.5138,
+   "nome": "Silvio Pettirossi International Airport"
+  },
+  {
+   "iata": "ATH",
+   "cidade": "Atenas",
+   "aliases": [
+    "Athens"
+   ],
+   "cidadeIata": "ATH",
+   "pais": "GR",
+   "regiao": "europa",
+   "lat": 37.9363,
+   "lon": 23.9465,
+   "nome": "Eleftherios Venizelos International Airport"
+  },
+  {
+   "iata": "ATL",
+   "cidade": "Atlanta",
+   "aliases": [],
+   "cidadeIata": "ATL",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 33.6401,
+   "lon": -84.444,
+   "nome": "Hartsfield-Jackson Atlanta International Airport"
+  },
+  {
+   "iata": "ATM",
+   "cidade": "Altamira",
+   "aliases": [
+    "Altamira"
+   ],
+   "cidadeIata": "ATM",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -3.2,
+   "lon": -52.2167,
+   "nome": "Altamira Airport"
+  },
+  {
+   "iata": "AUA",
+   "cidade": "Oranjestad",
+   "aliases": [],
+   "cidadeIata": "AUA",
+   "pais": "AW",
+   "regiao": "america-norte-central",
+   "lat": 12.5022,
+   "lon": -70.0139,
+   "nome": "Reina Beatrix International Airport"
+  },
+  {
+   "iata": "AUH",
+   "cidade": "Abu Dhabi",
+   "aliases": [],
+   "cidadeIata": "AUH",
+   "pais": "AE",
+   "regiao": "resto-mundo",
+   "lat": 24.4269,
+   "lon": 54.646,
+   "nome": "Abu Dhabi International Airport"
+  },
+  {
+   "iata": "AUX",
+   "cidade": "Araguaína",
+   "aliases": [
+    "Araguaina"
+   ],
+   "cidadeIata": "AUX",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -7.2,
+   "lon": -48.2,
+   "nome": "Araguaina Airport"
+  },
+  {
+   "iata": "BAU",
+   "cidade": "Bauru",
+   "aliases": [
+    "Bauru"
+   ],
+   "cidadeIata": "JTC",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -22.3431,
+   "lon": -49.0525,
+   "nome": "Bauru"
+  },
+  {
+   "iata": "BCN",
+   "cidade": "Barcelona",
+   "aliases": [],
+   "cidadeIata": "BCN",
+   "pais": "ES",
+   "regiao": "europa",
+   "lat": 41.303,
+   "lon": 2.0759,
+   "nome": "Barcelona-El Prat Airport"
+  },
+  {
+   "iata": "BEL",
+   "cidade": "Belém",
+   "aliases": [
+    "Belem"
+   ],
+   "cidadeIata": "BEL",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -1.3899,
+   "lon": -48.48,
+   "nome": "Val De Cans International Airport"
+  },
+  {
+   "iata": "BER",
+   "cidade": "Berlim",
+   "aliases": [
+    "Berlin"
+   ],
+   "cidadeIata": "BER",
+   "pais": "DE",
+   "regiao": "europa",
+   "lat": 52.3667,
+   "lon": 13.5033,
+   "nome": "Brandenburg"
+  },
+  {
+   "iata": "BGI",
+   "cidade": "Bridgetown",
+   "aliases": [],
+   "cidadeIata": "BGI",
+   "pais": "BB",
+   "regiao": "america-norte-central",
+   "lat": 13.0807,
+   "lon": -59.4878,
+   "nome": "Grantley Adams International Airport"
+  },
+  {
+   "iata": "BKK",
+   "cidade": "Banguecoque",
+   "aliases": [
+    "Bangkok"
+   ],
+   "cidadeIata": "BKK",
+   "pais": "TH",
+   "regiao": "resto-mundo",
+   "lat": 13.6931,
+   "lon": 100.752,
+   "nome": "Suvarnabhumi Airport"
+  },
+  {
+   "iata": "BNE",
+   "cidade": "Brisbane",
+   "aliases": [],
+   "cidadeIata": "BNE",
+   "pais": "AU",
+   "regiao": "resto-mundo",
+   "lat": -27.403,
+   "lon": 153.109,
+   "nome": "Brisbane Airport"
+  },
+  {
+   "iata": "BOG",
+   "cidade": "Bogotá",
+   "aliases": [
+    "Bogota"
+   ],
+   "cidadeIata": "BOG",
+   "pais": "CO",
+   "regiao": "america-sul",
+   "lat": 4.6986,
+   "lon": -74.1431,
+   "nome": "El Dorado International Airport"
+  },
+  {
+   "iata": "BOM",
+   "cidade": "Mumbai",
+   "aliases": [],
+   "cidadeIata": "BOM",
+   "pais": "IN",
+   "regiao": "resto-mundo",
+   "lat": 19.0955,
+   "lon": 72.875,
+   "nome": "Chhatrapati Shivaji International Airport"
+  },
+  {
+   "iata": "BOS",
+   "cidade": "Boston",
+   "aliases": [],
+   "cidadeIata": "BOS",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 42.3665,
+   "lon": -71.0202,
+   "nome": "Logan International Airport"
+  },
+  {
+   "iata": "BPG",
+   "cidade": "Barra Do Garcas",
+   "aliases": [],
+   "cidadeIata": "BPG",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -15.85,
+   "lon": -52.3833,
+   "nome": "Barra Do Garcas"
+  },
+  {
+   "iata": "BPS",
+   "cidade": "Porto Seguro",
+   "aliases": [],
+   "cidadeIata": "BPS",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -16.4412,
+   "lon": -39.0811,
+   "nome": "Porto Seguro Airport"
+  },
+  {
+   "iata": "BRA",
+   "cidade": "Barreiras",
+   "aliases": [],
+   "cidadeIata": "BRA",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -12.0731,
+   "lon": -45.0083,
+   "nome": "Barreiras Airport"
+  },
+  {
+   "iata": "BRB",
+   "cidade": "Barreirinhas",
+   "aliases": [],
+   "cidadeIata": "BRB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -2.9106,
+   "lon": -57.1111,
+   "nome": "Barreirinhas"
+  },
+  {
+   "iata": "BRU",
+   "cidade": "Bruxelas",
+   "aliases": [
+    "Brussels"
+   ],
+   "cidadeIata": "BRU",
+   "pais": "BE",
+   "regiao": "europa",
+   "lat": 50.8972,
+   "lon": 4.4836,
+   "nome": "Brussels Airport"
+  },
+  {
+   "iata": "BSB",
+   "cidade": "Brasília",
+   "aliases": [
+    "Brasilia"
+   ],
+   "cidadeIata": "BSB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -15.8698,
+   "lon": -47.9215,
+   "nome": "Brasilia International Airport"
+  },
+  {
+   "iata": "BUD",
+   "cidade": "Budapeste",
+   "aliases": [
+    "Budapest"
+   ],
+   "cidadeIata": "BUD",
+   "pais": "HU",
+   "regiao": "europa",
+   "lat": 47.433,
+   "lon": 19.2616,
+   "nome": "Budapest Ferenc Liszt International Airport"
+  },
+  {
+   "iata": "BVB",
+   "cidade": "Boa Vista",
+   "aliases": [],
+   "cidadeIata": "BVB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": 2.8333,
+   "lon": -60.6667,
+   "nome": "Boa Vista Airport"
+  },
+  {
+   "iata": "BVH",
+   "cidade": "Vilhena",
+   "aliases": [],
+   "cidadeIata": "BVH",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -12.7167,
+   "lon": -60.1167,
+   "nome": "Vilhena Airport"
+  },
+  {
+   "iata": "BVS",
+   "cidade": "Breves",
+   "aliases": [],
+   "cidadeIata": "BVS",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -1.6667,
+   "lon": -50.4667,
+   "nome": "Breves"
+  },
+  {
+   "iata": "BYO",
+   "cidade": "Bonito",
+   "aliases": [],
+   "cidadeIata": "BYO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -21.2294,
+   "lon": -56.4561,
+   "nome": "Bonito Airport"
+  },
+  {
+   "iata": "CAC",
+   "cidade": "Cascavel",
+   "aliases": [
+    "Cascavel"
+   ],
+   "cidadeIata": "CAC",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -24.95,
+   "lon": -53.4667,
+   "nome": "Cascavel Airport"
+  },
+  {
+   "iata": "CAI",
+   "cidade": "Cairo",
+   "aliases": [],
+   "cidadeIata": "CAI",
+   "pais": "EG",
+   "regiao": "europa",
+   "lat": 30.1201,
+   "lon": 31.4065,
+   "nome": "Cairo International Airport"
+  },
+  {
+   "iata": "CAN",
+   "cidade": "Guangzhou",
+   "aliases": [],
+   "cidadeIata": "CAN",
+   "pais": "CN",
+   "regiao": "resto-mundo",
+   "lat": 23.3879,
+   "lon": 113.2973,
+   "nome": "Guangzhou Baiyun International Airport"
+  },
+  {
+   "iata": "CAU",
+   "cidade": "Caruaru",
+   "aliases": [],
+   "cidadeIata": "CAU",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -8.25,
+   "lon": -35.9167,
+   "nome": "Caruaru"
+  },
+  {
+   "iata": "CAW",
+   "cidade": "Campos",
+   "aliases": [],
+   "cidadeIata": "CAW",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -21.75,
+   "lon": -41.3,
+   "nome": "Bartolomeu Lisandro Airport"
+  },
+  {
+   "iata": "CAY",
+   "cidade": "Cayenne",
+   "aliases": [],
+   "cidadeIata": "CAY",
+   "pais": "GF",
+   "regiao": "america-sul",
+   "lat": 4.8167,
+   "lon": -52.3667,
+   "nome": "Felix Eboue Airport"
+  },
+  {
+   "iata": "CCS",
+   "cidade": "Caracas",
+   "aliases": [],
+   "cidadeIata": "CCS",
+   "pais": "VE",
+   "regiao": "america-sul",
+   "lat": 10.5969,
+   "lon": -67.0055,
+   "nome": "Simon Bolivar International Airport"
+  },
+  {
+   "iata": "CDG",
+   "cidade": "Paris",
+   "aliases": [],
+   "cidadeIata": "PAR",
+   "pais": "FR",
+   "regiao": "europa",
+   "lat": 49.0032,
+   "lon": 2.567,
+   "nome": "Charles de Gaulle Airport"
+  },
+  {
+   "iata": "CFB",
+   "cidade": "Cabo Frio",
+   "aliases": [],
+   "cidadeIata": "CFB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -22.925,
+   "lon": -42.0786,
+   "nome": "Cabo Frio International Airport"
+  },
+  {
+   "iata": "CGB",
+   "cidade": "Cuiabá",
+   "aliases": [
+    "Cuiaba"
+   ],
+   "cidadeIata": "CGB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -15.6517,
+   "lon": -56.1203,
+   "nome": "Marechal Rondon International Airport"
+  },
+  {
+   "iata": "CGH",
+   "cidade": "São Paulo",
+   "aliases": [
+    "Sao Paulo"
+   ],
+   "cidadeIata": "SAO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -23.6269,
+   "lon": -46.6596,
+   "nome": "Sao Paulo/Congonhas Airport"
+  },
+  {
+   "iata": "CGK",
+   "cidade": "Jacarta",
+   "aliases": [
+    "Jakarta"
+   ],
+   "cidadeIata": "JKT",
+   "pais": "ID",
+   "regiao": "resto-mundo",
+   "lat": -6.1306,
+   "lon": 106.6555,
+   "nome": "Soekarno-Hatta International Airport"
+  },
+  {
+   "iata": "CGR",
+   "cidade": "Campo Grande",
+   "aliases": [],
+   "cidadeIata": "CGR",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -20.457,
+   "lon": -54.6689,
+   "nome": "Campo Grande International Airport"
+  },
+  {
+   "iata": "CIZ",
+   "cidade": "Coari",
+   "aliases": [],
+   "cidadeIata": "CIZ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -4.0833,
+   "lon": -63.1333,
+   "nome": "Coari"
+  },
+  {
+   "iata": "CKS",
+   "cidade": "Carajas",
+   "aliases": [],
+   "cidadeIata": "CKS",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -6.1147,
+   "lon": -50.0019,
+   "nome": "Carajas Airport"
+  },
+  {
+   "iata": "CLV",
+   "cidade": "Caldas Novas",
+   "aliases": [],
+   "cidadeIata": "CLV",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -17.75,
+   "lon": -48.6333,
+   "nome": "Caldas Novas"
+  },
+  {
+   "iata": "CMG",
+   "cidade": "Corumba",
+   "aliases": [],
+   "cidadeIata": "CMG",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -19.0111,
+   "lon": -57.6722,
+   "nome": "Corumba Internacional Airport"
+  },
+  {
+   "iata": "CMN",
+   "cidade": "Casablanca",
+   "aliases": [],
+   "cidadeIata": "CMN",
+   "pais": "MA",
+   "regiao": "europa",
+   "lat": 33.3667,
+   "lon": -7.5867,
+   "nome": "Mohamed V International Airport"
+  },
+  {
+   "iata": "CNF",
+   "cidade": "Belo Horizonte",
+   "aliases": [],
+   "cidadeIata": "BHZ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -19.6324,
+   "lon": -43.9632,
+   "nome": "Tancredo Neves International Airport"
+  },
+  {
+   "iata": "CPH",
+   "cidade": "Copenhague",
+   "aliases": [
+    "Copenhagen"
+   ],
+   "cidadeIata": "CPH",
+   "pais": "DK",
+   "regiao": "europa",
+   "lat": 55.629,
+   "lon": 12.6476,
+   "nome": "Copenhagen Airport"
+  },
+  {
+   "iata": "CPT",
+   "cidade": "Cidade do Cabo",
+   "aliases": [
+    "Cape Town"
+   ],
+   "cidadeIata": "CPT",
+   "pais": "ZA",
+   "regiao": "resto-mundo",
+   "lat": -33.9689,
+   "lon": 18.5965,
+   "nome": "Cape Town International Airport"
+  },
+  {
+   "iata": "CPV",
+   "cidade": "Campina Grande",
+   "aliases": [],
+   "cidadeIata": "CPV",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -7.2667,
+   "lon": -35.9,
+   "nome": "Joao Suassuna Airport"
+  },
+  {
+   "iata": "CTG",
+   "cidade": "Cartagena",
+   "aliases": [],
+   "cidadeIata": "CTG",
+   "pais": "CO",
+   "regiao": "america-sul",
+   "lat": 10.4457,
+   "lon": -75.5166,
+   "nome": "Rafael Nunez International Airport"
+  },
+  {
+   "iata": "CUN",
+   "cidade": "Cancún",
+   "aliases": [
+    "Cancun"
+   ],
+   "cidadeIata": "CUN",
+   "pais": "MX",
+   "regiao": "america-norte-central",
+   "lat": 21.0405,
+   "lon": -86.8744,
+   "nome": "Cancun International Airport"
+  },
+  {
+   "iata": "CUR",
+   "cidade": "Curacao",
+   "aliases": [],
+   "cidadeIata": "CUR",
+   "pais": "CW",
+   "regiao": "america-norte-central",
+   "lat": 12.1846,
+   "lon": -68.9571,
+   "nome": "Curacao International Airport"
+  },
+  {
+   "iata": "CUZ",
+   "cidade": "Cusco",
+   "aliases": [],
+   "cidadeIata": "CUZ",
+   "pais": "PE",
+   "regiao": "america-sul",
+   "lat": -13.5384,
+   "lon": -71.9437,
+   "nome": "Alejandro Velasco Astete International Airport"
+  },
+  {
+   "iata": "CWB",
+   "cidade": "Curitiba",
+   "aliases": [],
+   "cidadeIata": "CWB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -25.5322,
+   "lon": -49.1765,
+   "nome": "Afonso Pena International Airport"
+  },
+  {
+   "iata": "CXJ",
+   "cidade": "Caxias do Sul",
+   "aliases": [
+    "Caxias Do Sul"
+   ],
+   "cidadeIata": "CXJ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -29.1667,
+   "lon": -51.1833,
+   "nome": "Hugo Cantergiani Regional Airport"
+  },
+  {
+   "iata": "CZS",
+   "cidade": "Cruzeiro Do Sul",
+   "aliases": [],
+   "cidadeIata": "CZS",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -7.5833,
+   "lon": -72.7833,
+   "nome": "Campo Internacional Airport"
+  },
+  {
+   "iata": "DCA",
+   "cidade": "Washington",
+   "aliases": [],
+   "cidadeIata": "WAS",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 38.8534,
+   "lon": -77.0435,
+   "nome": "Ronald Reagan National Airport"
+  },
+  {
+   "iata": "DEL",
+   "cidade": "Nova Délhi",
+   "aliases": [
+    "New Delhi"
+   ],
+   "cidadeIata": "DEL",
+   "pais": "IN",
+   "regiao": "resto-mundo",
+   "lat": 28.5566,
+   "lon": 77.1008,
+   "nome": "Indira Gandhi International Airport"
+  },
+  {
+   "iata": "DEN",
+   "cidade": "Denver",
+   "aliases": [],
+   "cidadeIata": "DEN",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 39.8494,
+   "lon": -104.6728,
+   "nome": "Denver International Airport"
+  },
+  {
+   "iata": "DFW",
+   "cidade": "Dallas",
+   "aliases": [],
+   "cidadeIata": "DFW",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 32.8975,
+   "lon": -97.0361,
+   "nome": "Dallas/Fort Worth International Airport"
+  },
+  {
+   "iata": "DIQ",
+   "cidade": "Divinopolis",
+   "aliases": [],
+   "cidadeIata": "DIQ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -20.1814,
+   "lon": -44.8694,
+   "nome": "Divinopolis"
+  },
+  {
+   "iata": "DOH",
+   "cidade": "Doha",
+   "aliases": [],
+   "cidadeIata": "DOH",
+   "pais": "QA",
+   "regiao": "resto-mundo",
+   "lat": 25.2676,
+   "lon": 51.5581,
+   "nome": "Hamad International Airport"
+  },
+  {
+   "iata": "DOU",
+   "cidade": "Dourados",
+   "aliases": [],
+   "cidadeIata": "DOU",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -22.2028,
+   "lon": -54.9256,
+   "nome": "Dourados Airport"
+  },
+  {
+   "iata": "DPS",
+   "cidade": "Denpasar (Bali)",
+   "aliases": [],
+   "cidadeIata": "DPS",
+   "pais": "ID",
+   "regiao": "resto-mundo",
+   "lat": -8.7445,
+   "lon": 115.1633,
+   "nome": "Ngurah Rai International Airport"
+  },
+  {
+   "iata": "DUB",
+   "cidade": "Dublin",
+   "aliases": [],
+   "cidadeIata": "DUB",
+   "pais": "IE",
+   "regiao": "europa",
+   "lat": 53.4273,
+   "lon": -6.2436,
+   "nome": "Dublin Airport"
+  },
+  {
+   "iata": "DUR",
+   "cidade": "Durban",
+   "aliases": [],
+   "cidadeIata": "DUR",
+   "pais": "ZA",
+   "regiao": "resto-mundo",
+   "lat": -29.6144,
+   "lon": 31.1164,
+   "nome": "King Shaka International Airport"
+  },
+  {
+   "iata": "DXB",
+   "cidade": "Dubai",
+   "aliases": [],
+   "cidadeIata": "DXB",
+   "pais": "AE",
+   "regiao": "resto-mundo",
+   "lat": 25.2487,
+   "lon": 55.3529,
+   "nome": "Dubai Airport"
+  },
+  {
+   "iata": "EDI",
+   "cidade": "Edimburgo",
+   "aliases": [
+    "Edinburgh"
+   ],
+   "cidadeIata": "EDI",
+   "pais": "GB",
+   "regiao": "europa",
+   "lat": 55.9481,
+   "lon": -3.3642,
+   "nome": "Edinburgh Airport"
+  },
+  {
+   "iata": "ERN",
+   "cidade": "Eirunepe",
+   "aliases": [],
+   "cidadeIata": "ERN",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -6.5833,
+   "lon": -69.8833,
+   "nome": "Eirunepe"
+  },
+  {
+   "iata": "EWR",
+   "cidade": "Nova York",
+   "aliases": [
+    "New York"
+   ],
+   "cidadeIata": "NYC",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 40.6891,
+   "lon": -74.1788,
+   "nome": "Newark Liberty International Airport"
+  },
+  {
+   "iata": "EZE",
+   "cidade": "Buenos Aires",
+   "aliases": [],
+   "cidadeIata": "BUE",
+   "pais": "AR",
+   "regiao": "america-sul",
+   "lat": -34.8127,
+   "lon": -58.5398,
+   "nome": "Ministro Pistarini Airport"
+  },
+  {
+   "iata": "FCO",
+   "cidade": "Roma",
+   "aliases": [
+    "Rome"
+   ],
+   "cidadeIata": "ROM",
+   "pais": "IT",
+   "regiao": "europa",
+   "lat": 41.7946,
+   "lon": 12.2503,
+   "nome": "Leonardo da Vinci-Fiumicino Airport"
+  },
+  {
+   "iata": "FEC",
+   "cidade": "Feira De Santana",
+   "aliases": [],
+   "cidadeIata": "FEC",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -12.2025,
+   "lon": -38.9061,
+   "nome": "Feira De Santana"
+  },
+  {
+   "iata": "FEN",
+   "cidade": "Fernando De Noronha",
+   "aliases": [],
+   "cidadeIata": "FEN",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -3.85,
+   "lon": -32.4167,
+   "nome": "Fernando De Noronha Airport"
+  },
+  {
+   "iata": "FLL",
+   "cidade": "Fort Lauderdale",
+   "aliases": [],
+   "cidadeIata": "FLL",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 26.0715,
+   "lon": -80.1449,
+   "nome": "Fort Lauderdale-Hollywood International Airport"
+  },
+  {
+   "iata": "FLN",
+   "cidade": "Florianópolis",
+   "aliases": [
+    "Florianopolis"
+   ],
+   "cidadeIata": "FLN",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -27.6644,
+   "lon": -48.5452,
+   "nome": "Hercilio Luz International Airport"
+  },
+  {
+   "iata": "FOR",
+   "cidade": "Fortaleza",
+   "aliases": [],
+   "cidadeIata": "FOR",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -3.7791,
+   "lon": -38.5408,
+   "nome": "Pinto Martins Airport"
+  },
+  {
+   "iata": "FRA",
+   "cidade": "Frankfurt",
+   "aliases": [],
+   "cidadeIata": "FRA",
+   "pais": "DE",
+   "regiao": "europa",
+   "lat": 50.0507,
+   "lon": 8.5708,
+   "nome": "Frankfurt Airport"
+  },
+  {
+   "iata": "GEL",
+   "cidade": "Santo Angelo",
+   "aliases": [],
+   "cidadeIata": "GEL",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -28.2811,
+   "lon": -54.1681,
+   "nome": "Sepe Tiaraju"
+  },
+  {
+   "iata": "GEO",
+   "cidade": "Georgetown",
+   "aliases": [],
+   "cidadeIata": "GEO",
+   "pais": "GY",
+   "regiao": "america-sul",
+   "lat": 6.5038,
+   "lon": -58.2531,
+   "nome": "Cheddi Jagan International Airport"
+  },
+  {
+   "iata": "GIG",
+   "cidade": "Rio de Janeiro",
+   "aliases": [],
+   "cidadeIata": "RIO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -22.8147,
+   "lon": -43.2465,
+   "nome": "Galeao Antonio Carlos Jobim International Airport"
+  },
+  {
+   "iata": "GNM",
+   "cidade": "Guanambi",
+   "aliases": [],
+   "cidadeIata": "GNM",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -14.3,
+   "lon": -42.7833,
+   "nome": "Guanambi"
+  },
+  {
+   "iata": "GPB",
+   "cidade": "Guarapuava",
+   "aliases": [],
+   "cidadeIata": "GPB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -25.3333,
+   "lon": -51.5,
+   "nome": "Tancredo Thomaz Faria"
+  },
+  {
+   "iata": "GPS",
+   "cidade": "Galapagos Islands",
+   "aliases": [],
+   "cidadeIata": "GPS",
+   "pais": "EC",
+   "regiao": "america-sul",
+   "lat": -0.4347,
+   "lon": -90.2828,
+   "nome": "Baltra Airport"
+  },
+  {
+   "iata": "GRU",
+   "cidade": "São Paulo",
+   "aliases": [
+    "Sao Paulo"
+   ],
+   "cidadeIata": "SAO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -23.4257,
+   "lon": -46.4819,
+   "nome": "Sao Paulo-Guarulhos International Airport"
+  },
+  {
+   "iata": "GUA",
+   "cidade": "Guatemala City",
+   "aliases": [],
+   "cidadeIata": "GUA",
+   "pais": "GT",
+   "regiao": "america-norte-central",
+   "lat": 14.5881,
+   "lon": -90.5307,
+   "nome": "La Aurora International Airport"
+  },
+  {
+   "iata": "GVA",
+   "cidade": "Genebra",
+   "aliases": [
+    "Geneva"
+   ],
+   "cidadeIata": "GVA",
+   "pais": "CH",
+   "regiao": "europa",
+   "lat": 46.2296,
+   "lon": 6.1058,
+   "nome": "Geneve Airport"
+  },
+  {
+   "iata": "GVR",
+   "cidade": "Governador Valadares",
+   "aliases": [],
+   "cidadeIata": "GVR",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -18.8503,
+   "lon": -41.9333,
+   "nome": "Governador Valadares Airport"
+  },
+  {
+   "iata": "GYE",
+   "cidade": "Guayaquil",
+   "aliases": [],
+   "cidadeIata": "GYE",
+   "pais": "EC",
+   "regiao": "america-sul",
+   "lat": -2.1427,
+   "lon": -79.8803,
+   "nome": "Jose Joaquin de Olmedo Airport"
+  },
+  {
+   "iata": "GYN",
+   "cidade": "Goiânia",
+   "aliases": [
+    "Goiania"
+   ],
+   "cidadeIata": "GYN",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -16.6326,
+   "lon": -49.2266,
+   "nome": "Santa Genoveva Airport"
+  },
+  {
+   "iata": "HAV",
+   "cidade": "Havana",
+   "aliases": [],
+   "cidadeIata": "HAV",
+   "pais": "CU",
+   "regiao": "america-norte-central",
+   "lat": 22.9984,
+   "lon": -82.4082,
+   "nome": "Jose Marti International Airport"
+  },
+  {
+   "iata": "HEL",
+   "cidade": "Helsinque",
+   "aliases": [
+    "Helsinki"
+   ],
+   "cidadeIata": "HEL",
+   "pais": "FI",
+   "regiao": "europa",
+   "lat": 60.318,
+   "lon": 24.9664,
+   "nome": "Helsinki-Vantaa Airport"
+  },
+  {
+   "iata": "HKG",
+   "cidade": "Hong Kong",
+   "aliases": [],
+   "cidadeIata": "HKG",
+   "pais": "HK",
+   "regiao": "resto-mundo",
+   "lat": 22.3152,
+   "lon": 113.9365,
+   "nome": "Hong Kong International Airport"
+  },
+  {
+   "iata": "HKT",
+   "cidade": "Phuket",
+   "aliases": [],
+   "cidadeIata": "HKT",
+   "pais": "TH",
+   "regiao": "resto-mundo",
+   "lat": 8.1076,
+   "lon": 98.3064,
+   "nome": "Phuket International Airport"
+  },
+  {
+   "iata": "HND",
+   "cidade": "Tóquio",
+   "aliases": [
+    "Tokyo"
+   ],
+   "cidadeIata": "TYO",
+   "pais": "JP",
+   "regiao": "resto-mundo",
+   "lat": 35.5491,
+   "lon": 139.7845,
+   "nome": "Haneda Airport"
+  },
+  {
+   "iata": "IAD",
+   "cidade": "Washington",
+   "aliases": [],
+   "cidadeIata": "WAS",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 38.9532,
+   "lon": -77.4477,
+   "nome": "Washington Dulles International Airport"
+  },
+  {
+   "iata": "IAH",
+   "cidade": "Houston",
+   "aliases": [],
+   "cidadeIata": "HOU",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 29.9833,
+   "lon": -95.34,
+   "nome": "George Bush Intercontinental Airport"
+  },
+  {
+   "iata": "ICN",
+   "cidade": "Seul",
+   "aliases": [
+    "Seoul"
+   ],
+   "cidadeIata": "SEL",
+   "pais": "KR",
+   "regiao": "resto-mundo",
+   "lat": 37.4485,
+   "lon": 126.4512,
+   "nome": "Incheon International Airport"
+  },
+  {
+   "iata": "IGU",
+   "cidade": "Foz do Iguaçu",
+   "aliases": [],
+   "cidadeIata": "IGU",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -25.5979,
+   "lon": -54.4888,
+   "nome": "Cataratas International Airport"
+  },
+  {
+   "iata": "IMP",
+   "cidade": "Imperatriz",
+   "aliases": [],
+   "cidadeIata": "IMP",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -5.5319,
+   "lon": -47.4806,
+   "nome": "Imperatriz Airport"
+  },
+  {
+   "iata": "IOS",
+   "cidade": "Ilhéus",
+   "aliases": [
+    "Ilheus"
+   ],
+   "cidadeIata": "IOS",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -14.8139,
+   "lon": -39.03,
+   "nome": "Ilheus/Bahia-Jorge Amado Airport"
+  },
+  {
+   "iata": "IPN",
+   "cidade": "Ipatinga",
+   "aliases": [],
+   "cidadeIata": "IPN",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -19.5,
+   "lon": -42.5333,
+   "nome": "Usiminas Airport"
+  },
+  {
+   "iata": "IRZ",
+   "cidade": "Santa Isabel Rio Negro",
+   "aliases": [],
+   "cidadeIata": "IRZ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -0.3803,
+   "lon": -64.996,
+   "nome": "Tapuruquara"
+  },
+  {
+   "iata": "IST",
+   "cidade": "Istambul",
+   "aliases": [
+    "Istanbul"
+   ],
+   "cidadeIata": "IST",
+   "pais": "TR",
+   "regiao": "europa",
+   "lat": 40.9769,
+   "lon": 28.8206,
+   "nome": "Istanbul New Airport"
+  },
+  {
+   "iata": "ITB",
+   "cidade": "Itaituba",
+   "aliases": [],
+   "cidadeIata": "ITB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -4.2833,
+   "lon": -55.9833,
+   "nome": "Itaituba"
+  },
+  {
+   "iata": "IZA",
+   "cidade": "Juiz de Fora",
+   "aliases": [],
+   "cidadeIata": "JDF",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -21.5131,
+   "lon": -43.1731,
+   "nome": "Zona da Mata Regional Airport"
+  },
+  {
+   "iata": "JDO",
+   "cidade": "Juazeiro do Norte",
+   "aliases": [
+    "Juazeiro Do Norte"
+   ],
+   "cidadeIata": "JDO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -7.2,
+   "lon": -39.3167,
+   "nome": "Orlando Bezerra de Menezes Airport"
+  },
+  {
+   "iata": "JFK",
+   "cidade": "Nova York",
+   "aliases": [
+    "New York"
+   ],
+   "cidadeIata": "NYC",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 40.6423,
+   "lon": -73.7882,
+   "nome": "John F. Kennedy International Airport"
+  },
+  {
+   "iata": "JJD",
+   "cidade": "Jericoacoara",
+   "aliases": [],
+   "cidadeIata": "JJD",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -2.9067,
+   "lon": -40.3581,
+   "nome": "Jericoacoara"
+  },
+  {
+   "iata": "JJG",
+   "cidade": "Jaguaruna",
+   "aliases": [],
+   "cidadeIata": "JJG",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -28.6753,
+   "lon": -49.0603,
+   "nome": "Humberto Bortoluzzi"
+  },
+  {
+   "iata": "JMA",
+   "cidade": "Manhuaçu",
+   "aliases": [],
+   "cidadeIata": "JMA",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -20.2597,
+   "lon": -42.1839,
+   "nome": "Elias Breder Airport"
+  },
+  {
+   "iata": "JNB",
+   "cidade": "Joanesburgo",
+   "aliases": [
+    "Johannesburg"
+   ],
+   "cidadeIata": "JNB",
+   "pais": "ZA",
+   "regiao": "resto-mundo",
+   "lat": -26.1327,
+   "lon": 28.2313,
+   "nome": "O.R. Tambo International Airport"
+  },
+  {
+   "iata": "JOI",
+   "cidade": "Joinville",
+   "aliases": [],
+   "cidadeIata": "JOI",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -26.2333,
+   "lon": -48.7833,
+   "nome": "Joinville-Lauro Carneiro de Loyola Airport"
+  },
+  {
+   "iata": "JPA",
+   "cidade": "João Pessoa",
+   "aliases": [
+    "Joao Pessoa"
+   ],
+   "cidadeIata": "JPA",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -7.1454,
+   "lon": -34.9482,
+   "nome": "Presidente Castro Pinto International Airport"
+  },
+  {
+   "iata": "JPR",
+   "cidade": "Ji-Parana",
+   "aliases": [],
+   "cidadeIata": "JPR",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -10.8706,
+   "lon": -61.8467,
+   "nome": "Ji-Parana Airport"
+  },
+  {
+   "iata": "JTC",
+   "cidade": "Bauru",
+   "aliases": [
+    "Bauru"
+   ],
+   "cidadeIata": "JTC",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -22.166,
+   "lon": -49.0723,
+   "nome": "Bauru-Arealva Airport"
+  },
+  {
+   "iata": "KIX",
+   "cidade": "Osaka",
+   "aliases": [],
+   "cidadeIata": "OSA",
+   "pais": "JP",
+   "regiao": "resto-mundo",
+   "lat": 34.4353,
+   "lon": 135.244,
+   "nome": "Kansai International Airport"
+  },
+  {
+   "iata": "KUL",
+   "cidade": "Kuala Lumpur",
+   "aliases": [],
+   "cidadeIata": "KUL",
+   "pais": "MY",
+   "regiao": "resto-mundo",
+   "lat": 2.7557,
+   "lon": 101.7054,
+   "nome": "Kuala Lumpur International Airport"
+  },
+  {
+   "iata": "LAD",
+   "cidade": "Luanda",
+   "aliases": [],
+   "cidadeIata": "LAD",
+   "pais": "AO",
+   "regiao": "resto-mundo",
+   "lat": -8.848,
+   "lon": 13.2349,
+   "nome": "Quatro de Fevereiro Airport"
+  },
+  {
+   "iata": "LAJ",
+   "cidade": "Lages",
+   "aliases": [],
+   "cidadeIata": "LAJ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -27.8,
+   "lon": -50.3167,
+   "nome": "Correia Pinto Airport"
+  },
+  {
+   "iata": "LAS",
+   "cidade": "Las Vegas",
+   "aliases": [],
+   "cidadeIata": "LAS",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 36.0869,
+   "lon": -115.1486,
+   "nome": "McCarran International Airport"
+  },
+  {
+   "iata": "LAX",
+   "cidade": "Los Angeles",
+   "aliases": [],
+   "cidadeIata": "LAX",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 33.9434,
+   "lon": -118.4083,
+   "nome": "Los Angeles International Airport"
+  },
+  {
+   "iata": "LBR",
+   "cidade": "Labrea",
+   "aliases": [],
+   "cidadeIata": "LBR",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -7.25,
+   "lon": -64.85,
+   "nome": "Labrea"
+  },
+  {
+   "iata": "LDB",
+   "cidade": "Londrina",
+   "aliases": [],
+   "cidadeIata": "LDB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -23.3285,
+   "lon": -51.1377,
+   "nome": "Londrina Airport"
+  },
+  {
+   "iata": "LEC",
+   "cidade": "Lençóis",
+   "aliases": [
+    "Lencois"
+   ],
+   "cidadeIata": "LEC",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -12.48,
+   "lon": -41.2811,
+   "nome": "Coronel Horacio de Mattos Airport"
+  },
+  {
+   "iata": "LGA",
+   "cidade": "Nova York",
+   "aliases": [
+    "New York"
+   ],
+   "cidadeIata": "NYC",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 40.7743,
+   "lon": -73.8716,
+   "nome": "LaGuardia Airport"
+  },
+  {
+   "iata": "LGW",
+   "cidade": "Londres",
+   "aliases": [
+    "London"
+   ],
+   "cidadeIata": "LON",
+   "pais": "GB",
+   "regiao": "europa",
+   "lat": 51.1568,
+   "lon": -0.1619,
+   "nome": "London Gatwick Airport"
+  },
+  {
+   "iata": "LHN",
+   "cidade": "Linhares",
+   "aliases": [],
+   "cidadeIata": "LHN",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -19.3894,
+   "lon": -40.0678,
+   "nome": "Linhares Regional Airport"
+  },
+  {
+   "iata": "LHR",
+   "cidade": "Londres",
+   "aliases": [
+    "London"
+   ],
+   "cidadeIata": "LON",
+   "pais": "GB",
+   "regiao": "europa",
+   "lat": 51.4696,
+   "lon": -0.4536,
+   "nome": "London Heathrow Airport"
+  },
+  {
+   "iata": "LIM",
+   "cidade": "Lima",
+   "aliases": [],
+   "cidadeIata": "LIM",
+   "pais": "PE",
+   "regiao": "america-sul",
+   "lat": -12.0194,
+   "lon": -77.1077,
+   "nome": "Jorge Chavez International Airport"
+  },
+  {
+   "iata": "LIS",
+   "cidade": "Lisboa",
+   "aliases": [
+    "Lisbon"
+   ],
+   "cidadeIata": "LIS",
+   "pais": "PT",
+   "regiao": "europa",
+   "lat": 38.77,
+   "lon": -9.1282,
+   "nome": "Lisbon Portela Airport"
+  },
+  {
+   "iata": "LPB",
+   "cidade": "La Paz",
+   "aliases": [],
+   "cidadeIata": "LPB",
+   "pais": "BO",
+   "regiao": "america-sul",
+   "lat": -16.5089,
+   "lon": -68.1769,
+   "nome": "El Alto International Airport"
+  },
+  {
+   "iata": "LYS",
+   "cidade": "Lyon",
+   "aliases": [],
+   "cidadeIata": "LYS",
+   "pais": "FR",
+   "regiao": "europa",
+   "lat": 45.7214,
+   "lon": 5.0803,
+   "nome": "Lyon Saint-Exupery International Airport"
+  },
+  {
+   "iata": "MAB",
+   "cidade": "Marabá",
+   "aliases": [
+    "Maraba"
+   ],
+   "cidadeIata": "MAB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -5.3667,
+   "lon": -49.1667,
+   "nome": "Maraba Airport"
+  },
+  {
+   "iata": "MAD",
+   "cidade": "Madri",
+   "aliases": [
+    "Madrid"
+   ],
+   "cidadeIata": "MAD",
+   "pais": "ES",
+   "regiao": "europa",
+   "lat": 40.4652,
+   "lon": -3.5702,
+   "nome": "Adolfo Suarez Madrid-Barajas Airport"
+  },
+  {
+   "iata": "MAO",
+   "cidade": "Manaus",
+   "aliases": [],
+   "cidadeIata": "MAO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -3.0313,
+   "lon": -60.0461,
+   "nome": "Eduardo Gomes International Airport"
+  },
+  {
+   "iata": "MBJ",
+   "cidade": "Montego Bay",
+   "aliases": [],
+   "cidadeIata": "MBJ",
+   "pais": "JM",
+   "regiao": "america-norte-central",
+   "lat": 18.4985,
+   "lon": -77.9166,
+   "nome": "Sangster International Airport"
+  },
+  {
+   "iata": "MBZ",
+   "cidade": "Maues",
+   "aliases": [],
+   "cidadeIata": "MBZ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -3.4,
+   "lon": -57.7,
+   "nome": "Maues"
+  },
+  {
+   "iata": "MCO",
+   "cidade": "Orlando",
+   "aliases": [],
+   "cidadeIata": "ORL",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 28.4322,
+   "lon": -81.3083,
+   "nome": "Orlando International Airport"
+  },
+  {
+   "iata": "MCP",
+   "cidade": "Macapá",
+   "aliases": [
+    "Macapa"
+   ],
+   "cidadeIata": "MCP",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": 0.0499,
+   "lon": -51.0684,
+   "nome": "Macapa International Airport"
+  },
+  {
+   "iata": "MCZ",
+   "cidade": "Maceió",
+   "aliases": [
+    "Maceio"
+   ],
+   "cidadeIata": "MCZ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -9.5125,
+   "lon": -35.8004,
+   "nome": "Maceio-Zumbi dos Palmares International Airport"
+  },
+  {
+   "iata": "MDE",
+   "cidade": "Medellin",
+   "aliases": [],
+   "cidadeIata": "MDE",
+   "pais": "CO",
+   "regiao": "america-sul",
+   "lat": 6.1714,
+   "lon": -75.4282,
+   "nome": "Jose Maria Cordova International Airport"
+  },
+  {
+   "iata": "MEL",
+   "cidade": "Melbourne",
+   "aliases": [],
+   "cidadeIata": "MEL",
+   "pais": "AU",
+   "regiao": "resto-mundo",
+   "lat": -37.6696,
+   "lon": 144.8498,
+   "nome": "Tullamarine Airport"
+  },
+  {
+   "iata": "MEU",
+   "cidade": "Monte Dourado",
+   "aliases": [],
+   "cidadeIata": "MEU",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -0.8833,
+   "lon": -52.5833,
+   "nome": "Monte Dourado"
+  },
+  {
+   "iata": "MEX",
+   "cidade": "Cidade do México",
+   "aliases": [
+    "Mexico City"
+   ],
+   "cidadeIata": "MEX",
+   "pais": "MX",
+   "regiao": "america-norte-central",
+   "lat": 19.4353,
+   "lon": -99.0728,
+   "nome": "Benito Juarez International Airport"
+  },
+  {
+   "iata": "MGF",
+   "cidade": "Maringá",
+   "aliases": [
+    "Maringa"
+   ],
+   "cidadeIata": "MGF",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -23.3836,
+   "lon": -51.9333,
+   "nome": "Regional De Maringa"
+  },
+  {
+   "iata": "MIA",
+   "cidade": "Miami",
+   "aliases": [],
+   "cidadeIata": "MIA",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 25.796,
+   "lon": -80.2782,
+   "nome": "Miami International Airport"
+  },
+  {
+   "iata": "MII",
+   "cidade": "Marilia",
+   "aliases": [],
+   "cidadeIata": "MII",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -22.2,
+   "lon": -49.9333,
+   "nome": "Dr Gastao Vidigal Airport"
+  },
+  {
+   "iata": "MLE",
+   "cidade": "Malé",
+   "aliases": [
+    "Male"
+   ],
+   "cidadeIata": "MLE",
+   "pais": "MV",
+   "regiao": "resto-mundo",
+   "lat": 4.2014,
+   "lon": 73.5244,
+   "nome": "Male International Airport"
+  },
+  {
+   "iata": "MNL",
+   "cidade": "Manila",
+   "aliases": [],
+   "cidadeIata": "MNL",
+   "pais": "PH",
+   "regiao": "resto-mundo",
+   "lat": 14.5096,
+   "lon": 121.0125,
+   "nome": "Ninoy Aquino International Airport"
+  },
+  {
+   "iata": "MNX",
+   "cidade": "Manicore",
+   "aliases": [],
+   "cidadeIata": "MNX",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -5.8167,
+   "lon": -61.2833,
+   "nome": "Manicore"
+  },
+  {
+   "iata": "MOC",
+   "cidade": "Montes Claros",
+   "aliases": [],
+   "cidadeIata": "MOC",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -16.7078,
+   "lon": -43.8172,
+   "nome": "Montes Claros Airport"
+  },
+  {
+   "iata": "MPM",
+   "cidade": "Maputo",
+   "aliases": [],
+   "cidadeIata": "MPM",
+   "pais": "MZ",
+   "regiao": "resto-mundo",
+   "lat": -25.9244,
+   "lon": 32.5743,
+   "nome": "Maputo International Airport"
+  },
+  {
+   "iata": "MRU",
+   "cidade": "Mauritius",
+   "aliases": [],
+   "cidadeIata": "MRU",
+   "pais": "MU",
+   "regiao": "resto-mundo",
+   "lat": -20.432,
+   "lon": 57.6766,
+   "nome": "Sir Seewoosagur Ramgoolam International Airport"
+  },
+  {
+   "iata": "MUC",
+   "cidade": "Munique",
+   "aliases": [
+    "Munich"
+   ],
+   "cidadeIata": "MUC",
+   "pais": "DE",
+   "regiao": "europa",
+   "lat": 48.353,
+   "lon": 11.7901,
+   "nome": "Franz Josef Strauss Airport"
+  },
+  {
+   "iata": "MVD",
+   "cidade": "Montevidéu",
+   "aliases": [
+    "Montevideo"
+   ],
+   "cidadeIata": "MVD",
+   "pais": "UY",
+   "regiao": "america-sul",
+   "lat": -34.8412,
+   "lon": -56.0265,
+   "nome": "Carrasco International Airport"
+  },
+  {
+   "iata": "MVF",
+   "cidade": "Mossoró",
+   "aliases": [
+    "Mossoro"
+   ],
+   "cidadeIata": "MVF",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -5.1667,
+   "lon": -37.25,
+   "nome": "Dixsept Rosado"
+  },
+  {
+   "iata": "MXP",
+   "cidade": "Milão",
+   "aliases": [
+    "Milan"
+   ],
+   "cidadeIata": "MIL",
+   "pais": "IT",
+   "regiao": "europa",
+   "lat": 45.6274,
+   "lon": 8.7124,
+   "nome": "Milano Malpensa Airport"
+  },
+  {
+   "iata": "NAP",
+   "cidade": "Nápoles",
+   "aliases": [
+    "Naples"
+   ],
+   "cidadeIata": "NAP",
+   "pais": "IT",
+   "regiao": "europa",
+   "lat": 40.8861,
+   "lon": 14.2917,
+   "nome": "Naples International Airport"
+  },
+  {
+   "iata": "NAS",
+   "cidade": "Nassau",
+   "aliases": [],
+   "cidadeIata": "NAS",
+   "pais": "BS",
+   "regiao": "america-norte-central",
+   "lat": 25.0482,
+   "lon": -77.4638,
+   "nome": "Lynden Pindling International Airport"
+  },
+  {
+   "iata": "NAT",
+   "cidade": "Natal",
+   "aliases": [],
+   "cidadeIata": "NAT",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -5.9168,
+   "lon": -35.2502,
+   "nome": "Sao Goncalo do Amarante-Governador Aluizio Alves Intl Airport"
+  },
+  {
+   "iata": "NBO",
+   "cidade": "Nairobi",
+   "aliases": [],
+   "cidadeIata": "NBO",
+   "pais": "KE",
+   "regiao": "resto-mundo",
+   "lat": -1.3192,
+   "lon": 36.9258,
+   "nome": "Jomo Kenyatta International Airport"
+  },
+  {
+   "iata": "NRT",
+   "cidade": "Tóquio",
+   "aliases": [
+    "Tokyo"
+   ],
+   "cidadeIata": "TYO",
+   "pais": "JP",
+   "regiao": "resto-mundo",
+   "lat": 35.7732,
+   "lon": 140.3874,
+   "nome": "Narita International Airport"
+  },
+  {
+   "iata": "NSR",
+   "cidade": "Sao Raimundo Nonato",
+   "aliases": [],
+   "cidadeIata": "NSR",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -9.0833,
+   "lon": -42.6447,
+   "nome": "Serra da Capivara Airport"
+  },
+  {
+   "iata": "NVT",
+   "cidade": "Navegantes",
+   "aliases": [],
+   "cidadeIata": "NVT",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -26.8667,
+   "lon": -48.6333,
+   "nome": "Navegantes Airport"
+  },
+  {
+   "iata": "OAL",
+   "cidade": "Cacoal",
+   "aliases": [],
+   "cidadeIata": "OAL",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -11.4339,
+   "lon": -61.4825,
+   "nome": "Cacoal Airport"
+  },
+  {
+   "iata": "OIA",
+   "cidade": "Ourilandia do Norte       ",
+   "aliases": [],
+   "cidadeIata": "OIA",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -6.7613,
+   "lon": -51.049,
+   "nome": "Ourilandia"
+  },
+  {
+   "iata": "OPO",
+   "cidade": "Porto",
+   "aliases": [],
+   "cidadeIata": "OPO",
+   "pais": "PT",
+   "regiao": "europa",
+   "lat": 41.2378,
+   "lon": -8.6703,
+   "nome": "Porto Airport"
+  },
+  {
+   "iata": "OPS",
+   "cidade": "Sinop",
+   "aliases": [],
+   "cidadeIata": "OPS",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -11.8786,
+   "lon": -55.5816,
+   "nome": "Sinop Airport"
+  },
+  {
+   "iata": "ORD",
+   "cidade": "Chicago",
+   "aliases": [],
+   "cidadeIata": "CHI",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 41.9769,
+   "lon": -87.9049,
+   "nome": "O'Hare International Airport"
+  },
+  {
+   "iata": "ORY",
+   "cidade": "Paris",
+   "aliases": [],
+   "cidadeIata": "PAR",
+   "pais": "FR",
+   "regiao": "europa",
+   "lat": 48.7283,
+   "lon": 2.3597,
+   "nome": "Paris Orly Airport"
+  },
+  {
+   "iata": "OSL",
+   "cidade": "Oslo",
+   "aliases": [],
+   "cidadeIata": "OSL",
+   "pais": "NO",
+   "regiao": "europa",
+   "lat": 60.1942,
+   "lon": 11.1004,
+   "nome": "Oslo Airport Gardermoen"
+  },
+  {
+   "iata": "PAV",
+   "cidade": "Paulo Afonso",
+   "aliases": [],
+   "cidadeIata": "PAV",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -9.3978,
+   "lon": -38.2222,
+   "nome": "Paulo Afonso Airport"
+  },
+  {
+   "iata": "PBM",
+   "cidade": "Paramaribo",
+   "aliases": [],
+   "cidadeIata": "PBM",
+   "pais": "SR",
+   "regiao": "america-sul",
+   "lat": 5.4514,
+   "lon": -55.1911,
+   "nome": "Zanderij International Airport"
+  },
+  {
+   "iata": "PDP",
+   "cidade": "Punta Del Este",
+   "aliases": [],
+   "cidadeIata": "PDP",
+   "pais": "UY",
+   "regiao": "america-sul",
+   "lat": -34.9144,
+   "lon": -54.9192,
+   "nome": "Capitan de Corbeta Carlos A. Curbelo International Airport"
+  },
+  {
+   "iata": "PEK",
+   "cidade": "Pequim",
+   "aliases": [
+    "Beijing"
+   ],
+   "cidadeIata": "BJS",
+   "pais": "CN",
+   "regiao": "resto-mundo",
+   "lat": 40.0785,
+   "lon": 116.5871,
+   "nome": "Beijing Capital International Airport"
+  },
+  {
+   "iata": "PET",
+   "cidade": "Pelotas",
+   "aliases": [],
+   "cidadeIata": "PET",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -31.7181,
+   "lon": -52.3244,
+   "nome": "Pelotas–João Simões Lopes Neto International Airport"
+  },
+  {
+   "iata": "PFB",
+   "cidade": "Passo Fundo",
+   "aliases": [
+    "Passo Fundo"
+   ],
+   "cidadeIata": "PFB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -28.25,
+   "lon": -52.3333,
+   "nome": "Passo Fundo Airport"
+  },
+  {
+   "iata": "PGZ",
+   "cidade": "Ponta Grossa",
+   "aliases": [],
+   "cidadeIata": "PGZ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -25.0833,
+   "lon": -50.15,
+   "nome": "Comte Antonio Amilton Beraldo Airport"
+  },
+  {
+   "iata": "PHB",
+   "cidade": "Parnaíba",
+   "aliases": [
+    "Parnaiba"
+   ],
+   "cidadeIata": "PHB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -2.8917,
+   "lon": -41.7383,
+   "nome": "Santos Dumont"
+  },
+  {
+   "iata": "PHL",
+   "cidade": "Philadelphia",
+   "aliases": [],
+   "cidadeIata": "PHL",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 39.8764,
+   "lon": -75.2433,
+   "nome": "Philadelphia International Airport"
+  },
+  {
+   "iata": "PIN",
+   "cidade": "Parintins",
+   "aliases": [],
+   "cidadeIata": "PIN",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -2.6692,
+   "lon": -56.77,
+   "nome": "Parintins"
+  },
+  {
+   "iata": "PLU",
+   "cidade": "Belo Horizonte",
+   "aliases": [],
+   "cidadeIata": "BHZ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -19.75,
+   "lon": -43.75,
+   "nome": "Belo Horizonte Airport"
+  },
+  {
+   "iata": "PMG",
+   "cidade": "Ponta Pora",
+   "aliases": [],
+   "cidadeIata": "PMG",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -22.55,
+   "lon": -55.7,
+   "nome": "Ponta Pora International"
+  },
+  {
+   "iata": "PMW",
+   "cidade": "Palmas",
+   "aliases": [],
+   "cidadeIata": "PMW",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -10.2417,
+   "lon": -48.3528,
+   "nome": "Palmas Airport"
+  },
+  {
+   "iata": "PNZ",
+   "cidade": "Petrolina",
+   "aliases": [],
+   "cidadeIata": "PNZ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -9.3933,
+   "lon": -40.4906,
+   "nome": "Petrolina International Airport"
+  },
+  {
+   "iata": "POA",
+   "cidade": "Porto Alegre",
+   "aliases": [],
+   "cidadeIata": "POA",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -29.9896,
+   "lon": -51.1771,
+   "nome": "Salgado Filho International Airport"
+  },
+  {
+   "iata": "POJ",
+   "cidade": "Patos De Minas",
+   "aliases": [],
+   "cidadeIata": "POJ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -18.6717,
+   "lon": -46.4908,
+   "nome": "Patos De Minas"
+  },
+  {
+   "iata": "PPB",
+   "cidade": "Presidente Prudente",
+   "aliases": [],
+   "cidadeIata": "PPB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -22.1,
+   "lon": -51.45,
+   "nome": "A. De Barros Airport"
+  },
+  {
+   "iata": "PPT",
+   "cidade": "Papeete",
+   "aliases": [],
+   "cidadeIata": "PPT",
+   "pais": "PF",
+   "regiao": "resto-mundo",
+   "lat": -17.5596,
+   "lon": -149.6094,
+   "nome": "Tahiti Faa'a Airport"
+  },
+  {
+   "iata": "PRG",
+   "cidade": "Praga",
+   "aliases": [
+    "Prague"
+   ],
+   "cidadeIata": "PRG",
+   "pais": "CZ",
+   "regiao": "europa",
+   "lat": 50.1062,
+   "lon": 14.2666,
+   "nome": "Vaclav Havel Airport Prague"
+  },
+  {
+   "iata": "PTO",
+   "cidade": "Pato Branco",
+   "aliases": [],
+   "cidadeIata": "PTO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -26.2167,
+   "lon": -52.6667,
+   "nome": "Pato Branco"
+  },
+  {
+   "iata": "PTQ",
+   "cidade": "Porto de Moz",
+   "aliases": [],
+   "cidadeIata": "PTQ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -1.7389,
+   "lon": -52.2444,
+   "nome": "Porto de Moz"
+  },
+  {
+   "iata": "PTY",
+   "cidade": "Cidade do Panamá",
+   "aliases": [
+    "Panama City"
+   ],
+   "cidadeIata": "PTY",
+   "pais": "PA",
+   "regiao": "america-norte-central",
+   "lat": 9.0669,
+   "lon": -79.3876,
+   "nome": "Tocumen International Airport"
+  },
+  {
+   "iata": "PUJ",
+   "cidade": "Punta Cana",
+   "aliases": [],
+   "cidadeIata": "PUJ",
+   "pais": "DO",
+   "regiao": "america-norte-central",
+   "lat": 18.5625,
+   "lon": -68.364,
+   "nome": "Punta Cana International Airport"
+  },
+  {
+   "iata": "PVG",
+   "cidade": "Xangai",
+   "aliases": [
+    "Shanghai"
+   ],
+   "cidadeIata": "SHA",
+   "pais": "CN",
+   "regiao": "resto-mundo",
+   "lat": 31.1518,
+   "lon": 121.7998,
+   "nome": "Shanghai Pudong International Airport"
+  },
+  {
+   "iata": "PVH",
+   "cidade": "Porto Velho",
+   "aliases": [],
+   "cidadeIata": "PVH",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -8.7143,
+   "lon": -63.8983,
+   "nome": "Porto Velho International Airport"
+  },
+  {
+   "iata": "RAK",
+   "cidade": "Marrakech",
+   "aliases": [],
+   "cidadeIata": "RAK",
+   "pais": "MA",
+   "regiao": "europa",
+   "lat": 31.6019,
+   "lon": -8.0269,
+   "nome": "Menara Airport"
+  },
+  {
+   "iata": "RAO",
+   "cidade": "Ribeirão Preto",
+   "aliases": [
+    "Ribeirao Preto"
+   ],
+   "cidadeIata": "RAO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -21.1358,
+   "lon": -47.7733,
+   "nome": "Dr. Leite Lopes State Airport"
+  },
+  {
+   "iata": "RBB",
+   "cidade": "Borba",
+   "aliases": [],
+   "cidadeIata": "RBB",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -4.4,
+   "lon": -59.5833,
+   "nome": "Borba"
+  },
+  {
+   "iata": "RBR",
+   "cidade": "Rio Branco",
+   "aliases": [],
+   "cidadeIata": "RBR",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -9.9667,
+   "lon": -67.8,
+   "nome": "Pres. Medici Airport"
+  },
+  {
+   "iata": "REC",
+   "cidade": "Recife",
+   "aliases": [],
+   "cidadeIata": "REC",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -8.1315,
+   "lon": -34.9179,
+   "nome": "Guararapes-Gilberto Freyre International Airport"
+  },
+  {
+   "iata": "RIA",
+   "cidade": "Santa Maria",
+   "aliases": [],
+   "cidadeIata": "RIA",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -29.7106,
+   "lon": -53.6875,
+   "nome": "Santa Maria Airport"
+  },
+  {
+   "iata": "ROO",
+   "cidade": "Rondonópolis",
+   "aliases": [
+    "Rondonopolis"
+   ],
+   "cidadeIata": "ROO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -16.4333,
+   "lon": -54.7167,
+   "nome": "Rondonopolis Airport"
+  },
+  {
+   "iata": "RRJ",
+   "cidade": "Rio de Janeiro",
+   "aliases": [],
+   "cidadeIata": "RIO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -22.9875,
+   "lon": -43.37,
+   "nome": "Jacarepaguá Airport"
+  },
+  {
+   "iata": "RTE",
+   "cidade": "São Paulo",
+   "aliases": [
+    "Sao Paulo"
+   ],
+   "cidadeIata": "SAO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -23.5521,
+   "lon": -46.6472,
+   "nome": "Campo de Marte Airport"
+  },
+  {
+   "iata": "RVD",
+   "cidade": "Rio Verde",
+   "aliases": [],
+   "cidadeIata": "RVD",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -17.7167,
+   "lon": -50.9333,
+   "nome": "Rio Verde Airport"
+  },
+  {
+   "iata": "SAL",
+   "cidade": "San Salvador",
+   "aliases": [],
+   "cidadeIata": "SAL",
+   "pais": "SV",
+   "regiao": "america-norte-central",
+   "lat": 13.4451,
+   "lon": -89.0572,
+   "nome": "El Salvador International Airport"
+  },
+  {
+   "iata": "SCL",
+   "cidade": "Santiago",
+   "aliases": [],
+   "cidadeIata": "SCL",
+   "pais": "CL",
+   "regiao": "america-sul",
+   "lat": -33.3972,
+   "lon": -70.7938,
+   "nome": "Arturo Merino Benitez Airport"
+  },
+  {
+   "iata": "SDQ",
+   "cidade": "Santo Domingo",
+   "aliases": [],
+   "cidadeIata": "SDQ",
+   "pais": "DO",
+   "regiao": "america-norte-central",
+   "lat": 18.4301,
+   "lon": -69.6767,
+   "nome": "Las Americas International Airport"
+  },
+  {
+   "iata": "SDU",
+   "cidade": "Rio de Janeiro",
+   "aliases": [],
+   "cidadeIata": "RIO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -22.9115,
+   "lon": -43.1671,
+   "nome": "Santos Dumont Airport"
+  },
+  {
+   "iata": "SEA",
+   "cidade": "Seattle",
+   "aliases": [],
+   "cidadeIata": "SEA",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 47.4438,
+   "lon": -122.3017,
+   "nome": "Seattle-Tacoma International Airport"
+  },
+  {
+   "iata": "SET",
+   "cidade": "Serra Talhada",
+   "aliases": [],
+   "cidadeIata": "SET",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -7.9833,
+   "lon": -38.3,
+   "nome": "Santa Magalhaes"
+  },
+  {
+   "iata": "SEZ",
+   "cidade": "Mahe",
+   "aliases": [],
+   "cidadeIata": "SEZ",
+   "pais": "SC",
+   "regiao": "resto-mundo",
+   "lat": -4.6713,
+   "lon": 55.5113,
+   "nome": "Seychelles International Airport"
+  },
+  {
+   "iata": "SFO",
+   "cidade": "San Francisco",
+   "aliases": [],
+   "cidadeIata": "SFO",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 37.6152,
+   "lon": -122.3899,
+   "nome": "San Francisco International Airport"
+  },
+  {
+   "iata": "SIN",
+   "cidade": "Singapura",
+   "aliases": [
+    "Singapore"
+   ],
+   "cidadeIata": "SIN",
+   "pais": "SG",
+   "regiao": "resto-mundo",
+   "lat": 1.3612,
+   "lon": 103.9902,
+   "nome": "Changi International Airport"
+  },
+  {
+   "iata": "SJK",
+   "cidade": "São José dos Campos",
+   "aliases": [
+    "Sao Jose Dos Campos"
+   ],
+   "cidadeIata": "SJK",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -23.1833,
+   "lon": -46.1167,
+   "nome": "Sao Jose Dos Campos"
+  },
+  {
+   "iata": "SJL",
+   "cidade": "São Gabriel",
+   "aliases": [
+    "Sao Gabriel"
+   ],
+   "cidadeIata": "SJL",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -0.1483,
+   "lon": -66.9856,
+   "nome": "Da Cachoeira"
+  },
+  {
+   "iata": "SJO",
+   "cidade": "San José",
+   "aliases": [
+    "San Jose"
+   ],
+   "cidadeIata": "SJO",
+   "pais": "CR",
+   "regiao": "america-norte-central",
+   "lat": 9.9982,
+   "lon": -84.2041,
+   "nome": "Juan Santamaria International Airport"
+  },
+  {
+   "iata": "SJP",
+   "cidade": "São José do Rio Preto",
+   "aliases": [
+    "Sao Jose Do Rio Preto"
+   ],
+   "cidadeIata": "SJP",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -20.8167,
+   "lon": -49.4167,
+   "nome": "Sao Jose do Rio Preto Airport"
+  },
+  {
+   "iata": "SJU",
+   "cidade": "San Juan",
+   "aliases": [],
+   "cidadeIata": "SJU",
+   "pais": "PR",
+   "regiao": "america-norte-central",
+   "lat": 18.4374,
+   "lon": -66.0047,
+   "nome": "Luis Munoz Marin International Airport"
+  },
+  {
+   "iata": "SLZ",
+   "cidade": "São Luis",
+   "aliases": [],
+   "cidadeIata": "SLZ",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -2.5833,
+   "lon": -44.2367,
+   "nome": "Marechal Cunha Machado International Airport"
+  },
+  {
+   "iata": "SMT",
+   "cidade": "Sorriso",
+   "aliases": [],
+   "cidadeIata": "SMT",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -12.545,
+   "lon": -55.7108,
+   "nome": "Sorriso Airport"
+  },
+  {
+   "iata": "SSA",
+   "cidade": "Salvador",
+   "aliases": [],
+   "cidadeIata": "SSA",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -12.914,
+   "lon": -38.3352,
+   "nome": "Deputado Luis Eduardo Magalhaes International Airport"
+  },
+  {
+   "iata": "STM",
+   "cidade": "Santarém",
+   "aliases": [
+    "Santarem"
+   ],
+   "cidadeIata": "STM",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -2.4249,
+   "lon": -54.7864,
+   "nome": "Santarem-Maestro Wilson Fonseca Airport"
+  },
+  {
+   "iata": "SYD",
+   "cidade": "Sidney",
+   "aliases": [
+    "Sydney"
+   ],
+   "cidadeIata": "SYD",
+   "pais": "AU",
+   "regiao": "resto-mundo",
+   "lat": -33.9329,
+   "lon": 151.1799,
+   "nome": "Sydney (Kingsford Smith) Airport"
+  },
+  {
+   "iata": "TBT",
+   "cidade": "Tabatinga",
+   "aliases": [],
+   "cidadeIata": "TBT",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -4.2333,
+   "lon": -69.9333,
+   "nome": "Tabatinga International Airport"
+  },
+  {
+   "iata": "TFF",
+   "cidade": "Tefe",
+   "aliases": [],
+   "cidadeIata": "TFF",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -3.3667,
+   "lon": -64.7,
+   "nome": "Tefe Airport"
+  },
+  {
+   "iata": "TFL",
+   "cidade": "Teofilo Otoni",
+   "aliases": [],
+   "cidadeIata": "TFL",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -17.85,
+   "lon": -41.5,
+   "nome": "Teofilo Otoni"
+  },
+  {
+   "iata": "THE",
+   "cidade": "Teresina",
+   "aliases": [],
+   "cidadeIata": "THE",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -5.0633,
+   "lon": -42.8211,
+   "nome": "Teresina Airport"
+  },
+  {
+   "iata": "TLV",
+   "cidade": "Tel Aviv Yafo",
+   "aliases": [],
+   "cidadeIata": "TLV",
+   "pais": "IL",
+   "regiao": "resto-mundo",
+   "lat": 32.0005,
+   "lon": 34.8707,
+   "nome": "Ben Gurion International Airport"
+  },
+  {
+   "iata": "TMT",
+   "cidade": "Trombetas",
+   "aliases": [],
+   "cidadeIata": "TMT",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -1.9167,
+   "lon": -55.5833,
+   "nome": "Trombetas"
+  },
+  {
+   "iata": "TPA",
+   "cidade": "Tampa",
+   "aliases": [],
+   "cidadeIata": "TPA",
+   "pais": "US",
+   "regiao": "america-norte-central",
+   "lat": 27.9799,
+   "lon": -82.5354,
+   "nome": "Tampa International Airport"
+  },
+  {
+   "iata": "TPE",
+   "cidade": "Taipé",
+   "aliases": [
+    "Taipei"
+   ],
+   "cidadeIata": "TPE",
+   "pais": "TW",
+   "regiao": "resto-mundo",
+   "lat": 25.0764,
+   "lon": 121.2239,
+   "nome": "Taiwan Taoyuan International Airport"
+  },
+  {
+   "iata": "TUR",
+   "cidade": "Tucurui",
+   "aliases": [],
+   "cidadeIata": "TUR",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -3.7,
+   "lon": -49.7333,
+   "nome": "Tucurui"
+  },
+  {
+   "iata": "TXF",
+   "cidade": "Teixeira de Freitas",
+   "aliases": [],
+   "cidadeIata": "TXF",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -7.1333,
+   "lon": -37.1833,
+   "nome": "Teixeira de Freitas Airport"
+  },
+  {
+   "iata": "UBA",
+   "cidade": "Uberaba",
+   "aliases": [],
+   "cidadeIata": "UBA",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -19.7764,
+   "lon": -47.9583,
+   "nome": "Uberaba Airport"
+  },
+  {
+   "iata": "UDI",
+   "cidade": "Uberlândia",
+   "aliases": [
+    "Uberlandia"
+   ],
+   "cidadeIata": "UDI",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -18.9,
+   "lon": -48.2333,
+   "nome": "Uberlandia-Ten. Cel. Av. Cesar Bombonato Airport"
+  },
+  {
+   "iata": "UIO",
+   "cidade": "Quito",
+   "aliases": [],
+   "cidadeIata": "UIO",
+   "pais": "EC",
+   "regiao": "america-sul",
+   "lat": -0.1455,
+   "lon": -78.4905,
+   "nome": "Mariscal Sucre International Airport"
+  },
+  {
+   "iata": "UMU",
+   "cidade": "Umuarama",
+   "aliases": [],
+   "cidadeIata": "UMU",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -23.7983,
+   "lon": -53.3133,
+   "nome": "Ernesto Geisel"
+  },
+  {
+   "iata": "UNA",
+   "cidade": "Una",
+   "aliases": [],
+   "cidadeIata": "UNA",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -15.3533,
+   "lon": -38.9972,
+   "nome": "Una"
+  },
+  {
+   "iata": "URG",
+   "cidade": "Uruguaiana",
+   "aliases": [],
+   "cidadeIata": "URG",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -29.7817,
+   "lon": -57.0383,
+   "nome": "Ruben Berta Airport"
+  },
+  {
+   "iata": "VAG",
+   "cidade": "Varginha",
+   "aliases": [],
+   "cidadeIata": "VAG",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -21.55,
+   "lon": -45.4333,
+   "nome": "Major-Brigadeiro Trompowsky Airport"
+  },
+  {
+   "iata": "VCE",
+   "cidade": "Veneza",
+   "aliases": [
+    "Venice"
+   ],
+   "cidadeIata": "VCE",
+   "pais": "IT",
+   "regiao": "europa",
+   "lat": 45.5023,
+   "lon": 12.3379,
+   "nome": "Venice Marco Polo Airport"
+  },
+  {
+   "iata": "VCP",
+   "cidade": "São Paulo",
+   "aliases": [
+    "Sao Paulo"
+   ],
+   "cidadeIata": "SAO",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -23.0099,
+   "lon": -47.1417,
+   "nome": "Viracopos Airport"
+  },
+  {
+   "iata": "VDC",
+   "cidade": "Vitória da Conquista",
+   "aliases": [
+    "Vitoria Da Conquista"
+   ],
+   "cidadeIata": "VDC",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -14.8833,
+   "lon": -40.8667,
+   "nome": "Vitoria Da Conquista Airport"
+  },
+  {
+   "iata": "VIE",
+   "cidade": "Viena",
+   "aliases": [
+    "Vienna"
+   ],
+   "cidadeIata": "VIE",
+   "pais": "AT",
+   "regiao": "europa",
+   "lat": 48.1197,
+   "lon": 16.5636,
+   "nome": "Vienna International Airport"
+  },
+  {
+   "iata": "VIX",
+   "cidade": "Vitória",
+   "aliases": [
+    "Vitoria"
+   ],
+   "cidadeIata": "VIX",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -20.2568,
+   "lon": -40.2896,
+   "nome": "Eurico de Aguiar Salles Airport"
+  },
+  {
+   "iata": "VVI",
+   "cidade": "Santa Cruz",
+   "aliases": [],
+   "cidadeIata": "SRZ",
+   "pais": "BO",
+   "regiao": "america-sul",
+   "lat": -17.6482,
+   "lon": -63.1405,
+   "nome": "Viru Viru International Airport"
+  },
+  {
+   "iata": "WAW",
+   "cidade": "Varsóvia",
+   "aliases": [
+    "Warsaw"
+   ],
+   "cidadeIata": "WAW",
+   "pais": "PL",
+   "regiao": "europa",
+   "lat": 52.1709,
+   "lon": 20.9733,
+   "nome": "Frederic Chopin Airport"
+  },
+  {
+   "iata": "XAP",
+   "cidade": "Chapecó",
+   "aliases": [
+    "Chapeco"
+   ],
+   "cidadeIata": "XAP",
+   "pais": "BR",
+   "regiao": "brasil",
+   "lat": -27.0886,
+   "lon": -52.6297,
+   "nome": "Chapeco Airport"
+  },
+  {
+   "iata": "YUL",
+   "cidade": "Montreal",
+   "aliases": [],
+   "cidadeIata": "YMQ",
+   "pais": "CA",
+   "regiao": "america-norte-central",
+   "lat": 45.4577,
+   "lon": -73.7499,
+   "nome": "Montreal-Pierre Elliott Trudeau International Airport"
+  },
+  {
+   "iata": "YVR",
+   "cidade": "Vancouver",
+   "aliases": [],
+   "cidadeIata": "YVR",
+   "pais": "CA",
+   "regiao": "america-norte-central",
+   "lat": 49.1947,
+   "lon": -123.1792,
+   "nome": "Vancouver International Airport"
+  },
+  {
+   "iata": "YYZ",
+   "cidade": "Toronto",
+   "aliases": [],
+   "cidadeIata": "YTO",
+   "pais": "CA",
+   "regiao": "america-norte-central",
+   "lat": 43.6816,
+   "lon": -79.6115,
+   "nome": "Pearson International Airport"
+  },
+  {
+   "iata": "ZRH",
+   "cidade": "Zurique",
+   "aliases": [
+    "Zurich"
+   ],
+   "cidadeIata": "ZRH",
+   "pais": "CH",
+   "regiao": "europa",
+   "lat": 47.4506,
+   "lon": 8.5617,
+   "nome": "Zurich Airport"
+  }
+ ]
+}

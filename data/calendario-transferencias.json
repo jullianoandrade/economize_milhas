@@ -1,0 +1,59 @@
+{
+  "atualizadoEm": "2026-10-08",
+  "explicacao": "Transferencia bonificada e o caminho mais barato para quem ja acumula pontos em banco ou programa de coalizao. Com 100% de bonus, cada 1.000 pontos viram 2.000 milhas, o que corta o custo por milheiro pela metade. Este arquivo guarda as paridades fixas e o PADRAO HISTORICO de promocoes. Os bonus VIGENTES ficam no Supabase (tabela bonus_transferencia), porque mudam toda semana.",
+  "origens": [
+    {
+      "id": "livelo",
+      "nome": "Livelo",
+      "tipo": "coalizao",
+      "observacao": "Principal hub do mercado brasileiro. Acumula via cartoes de varios bancos e compras em parceiros."
+    },
+    {
+      "id": "esfera",
+      "nome": "Esfera",
+      "tipo": "coalizao",
+      "observacao": "Programa do Santander. Minimos de transferencia mais altos que os da Livelo."
+    }
+  ],
+  "paridades": [
+    { "origem": "livelo", "destino": "smiles", "pontosOrigem": 1, "milhasDestino": 1, "minimoPontos": 10000, "confianca": "pesquisado" },
+    { "origem": "livelo", "destino": "latampass", "pontosOrigem": 1, "milhasDestino": 1, "minimoPontos": 12000, "confianca": "pesquisado" },
+    { "origem": "livelo", "destino": "tudoazul", "pontosOrigem": 1, "milhasDestino": 1, "minimoPontos": 1000, "confianca": "pesquisado" },
+    { "origem": "livelo", "destino": "tapmilesgo", "pontosOrigem": 1, "milhasDestino": 1, "minimoPontos": 0, "confianca": "restrito", "observacao": "Desde 19/08/2024 so para portadores do Bradesco Amex The Centurion Card." },
+    { "origem": "esfera", "destino": "smiles", "pontosOrigem": 1, "milhasDestino": 1, "minimoPontos": 30000, "confianca": "pesquisado" },
+    { "origem": "esfera", "destino": "latampass", "pontosOrigem": 1, "milhasDestino": 1, "minimoPontos": 30000, "confianca": "pesquisado" },
+    { "origem": "esfera", "destino": "tudoazul", "pontosOrigem": 1, "milhasDestino": 1, "minimoPontos": 30000, "confianca": "pesquisado" },
+    { "origem": "esfera", "destino": "tapmilesgo", "pontosOrigem": 2.7, "milhasDestino": 1, "minimoPontos": 0, "confianca": "pesquisado", "observacao": "2,2 pontos por milha para assinantes do Clube Esfera." }
+  ],
+  "padraoHistorico": [
+    {
+      "destino": "smiles",
+      "bonusMedianoPct": 80,
+      "bonusMaximoObservadoPct": 100,
+      "frequenciaPorAno": 10,
+      "quinzenaTipica": 2,
+      "observacao": "Costuma lancar promocao na segunda quinzena do mes. Bonus de 100% ficaram raros em 2026."
+    },
+    {
+      "destino": "tudoazul",
+      "bonusMedianoPct": 90,
+      "bonusMaximoObservadoPct": 133,
+      "frequenciaPorAno": 10,
+      "quinzenaTipica": 2,
+      "observacao": "Historicamente o mais agressivo dos tres."
+    },
+    {
+      "destino": "latampass",
+      "bonusMedianoPct": 25,
+      "bonusMaximoObservadoPct": 60,
+      "frequenciaPorAno": 8,
+      "quinzenaTipica": 1,
+      "observacao": "Reduziu bastante em 2026: 25% virou o novo normal."
+    }
+  ],
+  "fontes": [
+    "alertademilhas.com.br/blog/transferencias/calendario-bonus-transferencia-quando-cada-programa-lanca-promo",
+    "melhorescartoes.com.br/reducao-bonus-transferencias-latam-pass.html",
+    "cartoeseviagens.com.br/parceiros-livelo-transferencia"
+  ]
+}

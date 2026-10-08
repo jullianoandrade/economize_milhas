@@ -1,0 +1,61 @@
+{
+  "atualizadoEm": "2026-10-08",
+  "observacao": "Dados curados manualmente a partir de fontes publicas. Sempre confirme no site do programa antes de resgatar.",
+  "programas": [
+    {
+      "id": "smiles",
+      "nome": "Smiles",
+      "companhia": "GOL",
+      "unidade": "milhas",
+      "site": "https://www.smiles.com.br",
+      "validadeMeses": 36,
+      "validadeObservacao": "Nao expiram enquanto o Clube Smiles estiver ativo.",
+      "pontoForte": "Boa malha domestica e no Nordeste; bonus de transferencia frequentes.",
+      "pontoFraco": "Taxas de embarque costumam ser mais altas que as da concorrencia."
+    },
+    {
+      "id": "latampass",
+      "nome": "LATAM Pass",
+      "companhia": "LATAM",
+      "unidade": "pontos",
+      "site": "https://latampass.latam.com",
+      "validadeMeses": 36,
+      "validadeObservacao": "Cada voo renova o prazo; nao expiram no nivel Elite.",
+      "pontoForte": "Melhor malha internacional propria e parceiros oneworld.",
+      "pontoFraco": "Tabela de resgate mais cara e bonus de transferencia menores (~25%)."
+    },
+    {
+      "id": "tudoazul",
+      "nome": "Azul Fidelidade",
+      "companhia": "Azul",
+      "unidade": "pontos",
+      "site": "https://www.voeazul.com.br/br/pt/home/programa-fidelidade",
+      "validadeMeses": 36,
+      "validadeObservacao": "Validade estendida para assinantes do clube.",
+      "pontoForte": "Resgate domestico mais barato dos tres e boa cobertura de cidades menores.",
+      "pontoFraco": "Depende muito de Campinas (VCP) como conexao."
+    },
+    {
+      "id": "tapmilesgo",
+      "nome": "TAP Miles&Go",
+      "companhia": "TAP Air Portugal",
+      "unidade": "milhas",
+      "site": "https://www.flytap.com/pt-br/miles-and-go",
+      "validadeMeses": 36,
+      "validadeObservacao": "Validade renovada por atividade na conta.",
+      "pontoForte": "Rota direta Brasil-Portugal e acesso a Star Alliance.",
+      "pontoFraco": "Acesso restrito pela Livelo desde 2024; a Esfera transfere a 2,7 pontos por milha."
+    },
+    {
+      "id": "iberiaplus",
+      "nome": "Iberia Plus",
+      "companhia": "Iberia",
+      "unidade": "Avios",
+      "site": "https://www.iberia.com/br/iberia-plus/",
+      "validadeMeses": 36,
+      "validadeObservacao": "Avios expiram sem atividade por 36 meses.",
+      "pontoForte": "Tabela por distancia costuma favorecer trechos curtos na Europa.",
+      "pontoFraco": "Taxas de embarque altas em voos operados pela British Airways."
+    }
+  ]
+}
