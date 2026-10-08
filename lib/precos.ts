@@ -1,5 +1,6 @@
 import "server-only";
 
+import { connection } from "next/server";
 import { precosReferencia } from "@/lib/dados";
 import type { RotaClassificada } from "@/lib/milhas/regioes";
 import {
@@ -71,6 +72,13 @@ export async function curvaMensal(
   if (!temToken()) {
     return { dados: estimada, fonte: "estimativa", observacao: SEM_TOKEN };
   }
+
+  // A consulta do calendario depende do mes corrente, e data do relogio e
+  // valor instavel: sem declarar que isto roda no momento da requisicao, o
+  // Next recusa pre-renderizar a rota. A curva de preco e dado vivo mesmo,
+  // entao a fronteira esta no lugar certo -- a casca da pagina continua
+  // estatica e so este trecho espera.
+  await connection();
 
   const real = await precosPorMes(rota.origem.iata, rota.destino.iata);
   // Menos de 6 meses cobertos nao forma curva: metade do ano em branco

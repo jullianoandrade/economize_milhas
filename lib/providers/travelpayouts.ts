@@ -103,7 +103,9 @@ export async function precoMaisBarato(
   });
   if (!dados) return null;
 
-  const ofertas = Object.values(dados[destino] ?? {});
+  const ofertas = Object.values(dados?.[destino] ?? {}).filter(
+    (o) => o?.price > 0,
+  );
   if (ofertas.length === 0) return null;
 
   const maisBarata = ofertas.reduce((a, b) => (b.price < a.price ? b : a));
@@ -191,11 +193,15 @@ export async function precosObservados(
 
 export type PrecoDeMes = { mes: number; precoBRL: number };
 
-type RespostaCalendario = Array<{
-  value: number;
-  depart_date: string;
-  number_of_changes?: number;
-}>;
+/**
+ * Atencao ao formato: /v1/prices/calendar devolve um OBJETO indexado por
+ * data ("2026-10-08": {...}), nao um array, e o campo da data e
+ * departure_at. Assumir array aqui derrubava a pagina inteira.
+ */
+type RespostaCalendario = Record<
+  string,
+  { price: number; departure_at?: string; transfers?: number }
+>;
 
 /**
  * Menor preco encontrado para cada mes do ano, usado na curva de
@@ -214,21 +220,31 @@ export async function precosPorMes(
   });
   if (!dados) return null;
 
-  const menorPorMes = new Map<number, number>();
-  for (const item of dados) {
-    const mes = new Date(item.depart_date).getUTCMonth() + 1;
-    if (Number.isNaN(mes)) continue;
-    const atual = menorPorMes.get(mes);
-    if (atual === undefined || item.value < atual) {
-      menorPorMes.set(mes, item.value);
+  // Toda leitura de resposta externa fica protegida: uma mudanca de
+  // formato do provedor deve virar fallback para a base curada, nunca
+  // uma pagina quebrada na cara do usuario.
+  try {
+    const menorPorMes = new Map<number, number>();
+
+    for (const [data, item] of Object.entries(dados ?? {})) {
+      const quando = item?.departure_at ?? data;
+      const mes = new Date(quando).getUTCMonth() + 1;
+      if (!Number.isFinite(mes) || !(item?.price > 0)) continue;
+
+      const atual = menorPorMes.get(mes);
+      if (atual === undefined || item.price < atual) {
+        menorPorMes.set(mes, item.price);
+      }
     }
+
+    if (menorPorMes.size === 0) return null;
+
+    return [...menorPorMes.entries()]
+      .map(([mes, precoBRL]) => ({ mes, precoBRL }))
+      .sort((a, b) => a.mes - b.mes);
+  } catch {
+    return null;
   }
-
-  if (menorPorMes.size === 0) return null;
-
-  return [...menorPorMes.entries()]
-    .map(([mes, precoBRL]) => ({ mes, precoBRL }))
-    .sort((a, b) => a.mes - b.mes);
 }
 
 /* ------------------------------------------------------------------ */

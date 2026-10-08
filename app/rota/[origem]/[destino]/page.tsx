@@ -2,10 +2,16 @@ import { Suspense } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { CardPrograma } from "@/components/CardPrograma";
+import { CardQuandoComprar } from "@/components/CardQuandoComprar";
 import { CardVeredito } from "@/components/CardVeredito";
-import { precoDoTrecho } from "@/lib/precos";
+import { CurvaDeMeses } from "@/components/CurvaDeMeses";
+import { curvaMensal, precoDoTrecho } from "@/lib/precos";
+import { observacoesDaRota, precosMensaisDaRota } from "@/lib/historico";
+import { heuristicasTempo } from "@/lib/dados";
 import { AeroportoDesconhecidoError, classificarRota } from "@/lib/milhas/regioes";
 import { calcularVeredito } from "@/lib/milhas/veredito";
+import { janelaDeCompra } from "@/lib/tempo/antecedencia";
+import { calcularSazonalidade } from "@/lib/tempo/sazonalidade";
 
 export async function generateMetadata({
   params,
@@ -49,6 +55,25 @@ async function Conteudo({
   const preco = await precoDoTrecho(rota);
   const veredito = calcularVeredito(rota, preco.dados);
 
+  // As tres consultas sao independentes: em serie, a pagina esperaria a
+  // soma delas em vez do maior tempo entre elas.
+  const [curvaDaApi, mensaisProprios, observacoes] = await Promise.all([
+    curvaMensal(rota, heuristicasTempo.sazonalidadeBrasil.indicePorMes),
+    precosMensaisDaRota(rota.origem.iata, rota.destino.iata),
+    observacoesDaRota(rota.origem.iata, rota.destino.iata),
+  ]);
+
+  // O historico proprio cobre o ano inteiro; o cache da Travelpayouts
+  // cobre poucos meses. Quando o nosso tem mais meses, ele ganha.
+  const usaProprio = mensaisProprios.length > curvaDaApi.dados.length;
+  const precosPorMes = usaProprio ? mensaisProprios : curvaDaApi.dados;
+
+  const sazonalidade = veredito.melhor
+    ? calcularSazonalidade(rota, precosPorMes, veredito.melhor.programa.id)
+    : null;
+
+  const janela = janelaDeCompra(rota.internacional, null, observacoes);
+
   return (
     <>
       <header className="mb-5">
@@ -89,6 +114,24 @@ async function Conteudo({
         observacaoDaFonte={preco.observacao}
       />
 
+      {sazonalidade ? (
+        <div className="mt-6">
+          <CurvaDeMeses
+            sazonalidade={sazonalidade}
+            fonte={usaProprio ? "travelpayouts" : curvaDaApi.fonte}
+            observacaoDaFonte={
+              usaProprio
+                ? "Montada a partir do nosso histórico próprio de preços desta rota."
+                : curvaDaApi.observacao
+            }
+          />
+        </div>
+      ) : null}
+
+      <div className="mt-4">
+        <CardQuandoComprar janela={janela} />
+      </div>
+
       {veredito.opcoes.length > 0 ? (
         <section className="mt-6">
           <h2 className="mb-1 text-lg font-semibold tracking-tight text-tinta">
@@ -120,12 +163,11 @@ function ProximasFases() {
   return (
     <section className="mt-6 rounded-2xl border border-dashed border-borda bg-superficie-2 p-5">
       <p className="text-xs font-semibold uppercase tracking-wide text-tinta-fraca">
-        Fase 6
+        Fase 7
       </p>
       <p className="mt-2 text-sm leading-relaxed text-tinta-media">
-        Ainda vêm nesta tela: a curva de preço dos 12 meses com o mês em que a
-        milha rende mais, a janela ideal de compra e o ganho por mudar a data
-        ou o aeroporto de saída.
+        Ainda vêm nesta tela: o ganho por mudar a data ou o aeroporto de saída,
+        e o plano de acúmulo ligado a este destino.
       </p>
     </section>
   );

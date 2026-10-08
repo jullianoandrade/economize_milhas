@@ -39,6 +39,20 @@
   --alerta-fundo: #fdecec;
   --atencao: #a16207;
 
+  /* Graficos.
+     Tons proprios, separados dos de texto: os tokens --milhas e --dinheiro
+     foram escolhidos para legibilidade de TEXTO, e como preenchimento de
+     barra ficam fora da banda de luminosidade recomendada. Estes aqui
+     passaram no validador de paleta (banda, croma, contraste e separacao
+     para daltonismo) sobre a superficie de cada modo.
+
+     A separacao verde/ambar fica na faixa 6-8 de delta E para protanopia,
+     o que torna o rotulo em texto OBRIGATORIO: nenhuma informacao do
+     grafico pode depender so da cor. */
+  --grafico-milhas: #b45309;
+  --grafico-dinheiro: #047857;
+  --grafico-neutro: #c8cedd;
+
   /* Elevacao */
   --sombra-card: 0 1px 2px rgb(16 21 43 / 0.05), 0 4px 12px rgb(16 21 43 / 0.05);
 }
@@ -71,6 +85,12 @@
     --alerta-fundo: #2d1414;
     --atencao: #fbbf24;
 
+    /* Reescolhidos para a superficie escura, nao clareados a esmo:
+       os tons do modo claro reprovam na banda de luminosidade aqui. */
+    --grafico-milhas: #c08622;
+    --grafico-dinheiro: #1f9c6c;
+    --grafico-neutro: #39456b;
+
     --sombra-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 12px rgb(0 0 0 / 0.25);
   }
 }
@@ -99,6 +119,10 @@
   --color-dinheiro: var(--dinheiro);
   --color-dinheiro-fundo: var(--dinheiro-fundo);
   --color-dinheiro-borda: var(--dinheiro-borda);
+
+  --color-grafico-milhas: var(--grafico-milhas);
+  --color-grafico-dinheiro: var(--grafico-dinheiro);
+  --color-grafico-neutro: var(--grafico-neutro);
 
   --color-alerta: var(--alerta);
   --color-alerta-fundo: var(--alerta-fundo);
