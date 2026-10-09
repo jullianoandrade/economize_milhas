@@ -2,11 +2,17 @@ import { Suspense } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { CardPrograma } from "@/components/CardPrograma";
+import { CardFlexibilidade } from "@/components/CardFlexibilidade";
 import { CardQuandoComprar } from "@/components/CardQuandoComprar";
 import { CardVeredito } from "@/components/CardVeredito";
 import { CurvaDeMeses } from "@/components/CurvaDeMeses";
 import { curvaMensal, precoDoTrecho } from "@/lib/precos";
-import { observacoesDaRota, precosMensaisDaRota } from "@/lib/historico";
+import {
+  observacoesDaRota,
+  observacoesDatadasDaRota,
+  precosMensaisDaRota,
+} from "@/lib/historico";
+import { precosDasAlternativas } from "@/lib/alternativas";
 import { heuristicasTempo } from "@/lib/dados";
 import {
   AeroportoDesconhecidoError,
@@ -17,6 +23,7 @@ import { calcularVeredito } from "@/lib/milhas/veredito";
 import rotasDestaque from "@/data/rotas-destaque.json";
 import { janelaDeCompra } from "@/lib/tempo/antecedencia";
 import { calcularSazonalidade } from "@/lib/tempo/sazonalidade";
+import { compararOrigens, datasMaisBaratas } from "@/lib/tempo/flexibilidade";
 
 /**
  * Pre-renderiza as rotas de maior valor de busca.
@@ -87,11 +94,14 @@ async function Conteudo({
 
   // As tres consultas sao independentes: em serie, a pagina esperaria a
   // soma delas em vez do maior tempo entre elas.
-  const [curvaDaApi, mensaisProprios, observacoes] = await Promise.all([
-    curvaMensal(rota, heuristicasTempo.sazonalidadeBrasil.indicePorMes),
-    precosMensaisDaRota(rota.origem.iata, rota.destino.iata),
-    observacoesDaRota(rota.origem.iata, rota.destino.iata),
-  ]);
+  const [curvaDaApi, mensaisProprios, observacoes, datadas, alternativas] =
+    await Promise.all([
+      curvaMensal(rota, heuristicasTempo.sazonalidadeBrasil.indicePorMes),
+      precosMensaisDaRota(rota.origem.iata, rota.destino.iata),
+      observacoesDaRota(rota.origem.iata, rota.destino.iata),
+      observacoesDatadasDaRota(rota.origem.iata, rota.destino.iata),
+      precosDasAlternativas(rota.origem, rota.destino.iata),
+    ]);
 
   // O historico proprio cobre o ano inteiro; o cache da Travelpayouts
   // cobre poucos meses. Quando o nosso tem mais meses, ele ganha.
@@ -103,6 +113,9 @@ async function Conteudo({
     : null;
 
   const janela = janelaDeCompra(rota.internacional, null, observacoes);
+
+  const { referenciaBRL, datas } = datasMaisBaratas(datadas);
+  const outrasOrigens = compararOrigens(rota.origem, preco.dados, alternativas);
 
   return (
     <>
@@ -162,6 +175,14 @@ async function Conteudo({
         <CardQuandoComprar janela={janela} />
       </div>
 
+      <div className="mt-4">
+        <CardFlexibilidade
+          datas={datas}
+          referenciaBRL={referenciaBRL}
+          alternativas={outrasOrigens}
+        />
+      </div>
+
       {veredito.opcoes.length > 0 ? (
         <section className="mt-6">
           <h2 className="mb-1 text-lg font-semibold tracking-tight text-tinta">
@@ -184,22 +205,8 @@ async function Conteudo({
         </section>
       ) : null}
 
-      <ProximasFases />
-    </>
-  );
-}
 
-function ProximasFases() {
-  return (
-    <section className="mt-6 rounded-2xl border border-dashed border-borda bg-superficie-2 p-5">
-      <p className="text-xs font-semibold uppercase tracking-wide text-tinta-fraca">
-        Fase 7
-      </p>
-      <p className="mt-2 text-sm leading-relaxed text-tinta-media">
-        Ainda vêm nesta tela: o ganho por mudar a data ou o aeroporto de saída,
-        e o plano de acúmulo ligado a este destino.
-      </p>
-    </section>
+    </>
   );
 }
 

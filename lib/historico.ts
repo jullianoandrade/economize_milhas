@@ -38,6 +38,29 @@ export async function observacoesDaRota(
   }));
 }
 
+/** Observacoes com a data de partida, para a analise de flexibilidade. */
+export async function observacoesDatadasDaRota(
+  origem: string,
+  destino: string,
+): Promise<Array<{ partidaEm: string; precoBRL: number }>> {
+  const banco = leitor();
+  if (!banco) return [];
+
+  const { data, error } = await banco
+    .from("precos_snapshot")
+    .select("partida_em, valor_brl")
+    .eq("origem", origem)
+    .eq("destino", destino)
+    .limit(LIMITE);
+
+  if (error || !data) return [];
+
+  return data.map((linha) => ({
+    partidaEm: String(linha.partida_em),
+    precoBRL: Number(linha.valor_brl),
+  }));
+}
+
 /**
  * Menor preco observado por mes de embarque, a partir do historico
  * proprio. Complementa a API: o cache da Travelpayouts cobre poucos
