@@ -1,5 +1,73 @@
 {
-  "atualizadoEm": "2026-10-08",
-  "aviso": "ARQUIVO COMERCIAL. Lido exclusivamente por lib/monetizacao/parceiros.ts. Nenhum modulo de lib/milhas ou lib/tempo pode importa-lo: tests/arquitetura.test.ts quebra o build se isso acontecer. E assim que a promessa de ranking cego a comissao deixa de ser intencao e vira regra verificavel.",
-  "parceiros": []
+  "atualizadoEm": "2026-10-09",
+  "aviso": "ARQUIVO COMERCIAL. Lido exclusivamente por lib/monetizacao/parceiros.ts. Nenhum modulo de lib/milhas ou lib/tempo pode importa-lo, e tests/arquitetura.test.ts quebra o build se isso acontecer -- inclusive por caminho indireto, porque o teste exige que este arquivo tenha um unico leitor no projeto inteiro. E assim que a promessa de ranking cego a comissao deixa de ser intencao e vira regra verificavel.",
+  "explicacao": "As URLs aqui sao os enderecos publicos dos parceiros, sem marker. O marker so e anexado em tempo de execucao, e apenas quando NEXT_PUBLIC_MONETIZACAO_ATIVA for true. Com a flag desligada os links saem limpos e nada e declarado, porque nao ha comissao a declarar.",
+  "parceiros": [
+    {
+      "id": "travelpayouts-voo",
+      "nome": "Busca de passagens",
+      "tipo": "voo",
+      "rede": "travelpayouts",
+      "url": "https://www.aviasales.com",
+      "parametroDeMarker": "marker",
+      "comissao": { "modelo": "percentual", "min": 1.1, "max": 1.5 },
+      "cookieDias": 30,
+      "observacao": "Comissao baixa: voo e o que traz a pessoa, nao o que paga a conta."
+    },
+    {
+      "id": "travelpayouts-hotel",
+      "nome": "Hospedagem",
+      "tipo": "hotel",
+      "rede": "travelpayouts",
+      "url": "https://hotellook.com",
+      "parametroDeMarker": "marker",
+      "comissao": { "modelo": "percentual", "min": 4, "max": 5 },
+      "cookieDias": 30,
+      "observacao": "Paga cerca de tres vezes mais que a passagem sobre o mesmo gasto."
+    },
+    {
+      "id": "cartoes-cpa",
+      "nome": "Cartoes de credito",
+      "tipo": "cartao",
+      "rede": "a-definir",
+      "url": "",
+      "parametroDeMarker": "",
+      "comissao": { "modelo": "cpa", "min": 56, "max": 300 },
+      "cookieDias": 30,
+      "observacao": "CPA por cartao aprovado, via redes como Rakuten, Lomadee ou Admitad. Maior ticket do conjunto, e justamente o que o plano de acumulo recomenda -- motivo pelo qual o ranking de cartoes nunca pode enxergar este numero."
+    },
+    {
+      "id": "seguro-viagem",
+      "nome": "Seguro viagem",
+      "tipo": "seguro",
+      "rede": "a-definir",
+      "url": "",
+      "parametroDeMarker": "",
+      "comissao": { "modelo": "percentual", "min": 0, "max": 0 },
+      "cookieDias": 30,
+      "observacao": "Percentual nao publicado pelas plataformas brasileiras; depende de negociacao direta."
+    },
+    {
+      "id": "esim",
+      "nome": "Chip internacional (eSIM)",
+      "tipo": "esim",
+      "rede": "a-definir",
+      "url": "",
+      "parametroDeMarker": "",
+      "comissao": { "modelo": "percentual", "min": 10, "max": 20 },
+      "cookieDias": 30,
+      "observacao": "Airalo e Holafly pagam 10% de base, negociavel ate 20% em volume."
+    },
+    {
+      "id": "cambio",
+      "nome": "Conta global e cambio",
+      "tipo": "cambio",
+      "rede": "a-definir",
+      "url": "",
+      "parametroDeMarker": "",
+      "comissao": { "modelo": "cpa", "min": 0, "max": 0 },
+      "cookieDias": 30,
+      "observacao": "CPA por conta aberta com deposito. Valores variam muito por emissor."
+    }
+  ]
 }

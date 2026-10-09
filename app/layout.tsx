@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
@@ -46,10 +47,22 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Pular para o conteúdo
         </a>
 
-        {/* pb-20 reserva o espaco da nav inferior fixa */}
-        <main id="conteudo" className="mx-auto max-w-lg px-4 pb-24 pt-5">
+        {/* pb-24 reserva o espaco da nav inferior fixa */}
+        <main id="conteudo" className="mx-auto max-w-lg px-4 pb-4 pt-5">
           {children}
         </main>
+
+        <footer className="mx-auto max-w-lg px-4 pb-24 pt-6">
+          <p className="border-t border-borda pt-4 text-center text-xs text-tinta-fraca">
+            Valores em milhas são estimativas.{" "}
+            <Link
+              href="/como-nos-sustentamos"
+              className="underline underline-offset-2 hover:text-marca"
+            >
+              Como nos sustentamos
+            </Link>
+          </p>
+        </footer>
 
         {/* usePathname e dado dinamico: sem esta fronteira, a nav
             impediria qualquer pagina do app de ser pre-renderizada. */}
