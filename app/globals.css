@@ -66,7 +66,9 @@
 
     --tinta: #eef1fa;
     --tinta-media: #a8b0cc;
-    --tinta-fraca: #7b85a6;
+    /* 4,5:1 sobre a superficie secundaria. O tom anterior (#7b85a6) dava
+       4,22 e reprovava no texto pequeno -- medido, nao estimado. */
+    --tinta-fraca: #8891b0;
 
     --marca: #8b8bf5;
     --marca-forte: #a5a5f8;

@@ -90,6 +90,14 @@ export default function Promocoes() {
         }
       />
 
+      {/* O espaco da faixa de bonus e reservado durante o carregamento.
+          Sem isso ela surge depois do fetch e empurra a lista inteira
+          para baixo, o que o Lighthouse mede como deslocamento de
+          layout -- e o usuario sente como a tela pulando na mao. */}
+      {carregando ? (
+        <div className="mb-5 h-[9.5rem] animate-pulse rounded-2xl bg-superficie-2" />
+      ) : null}
+
       {dados && dados.bonusVigentes.length > 0 ? (
         <section className="mb-5 rounded-2xl border border-milhas-borda bg-milhas-fundo p-4">
           <h2 className="mb-2 text-sm font-semibold text-tinta">
@@ -192,11 +200,12 @@ export default function Promocoes() {
   );
 }
 
+/** A altura imita a do card real, pelo mesmo motivo do bloco acima. */
 function Esqueleto() {
   return (
     <div className="animate-pulse space-y-3" aria-label="Carregando">
-      {[0, 1, 2, 3].map((i) => (
-        <div key={i} className="h-28 rounded-2xl bg-superficie-2" />
+      {[0, 1, 2, 3, 4].map((i) => (
+        <div key={i} className="h-[8.75rem] rounded-2xl bg-superficie-2" />
       ))}
     </div>
   );

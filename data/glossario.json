@@ -1,85 +1,95 @@
 {
-  "atualizadoEm": "2026-10-08",
+  "atualizadoEm": "2026-10-09",
   "termos": [
     {
       "id": "cpm",
       "termo": "CPM (custo por milheiro)",
-      "resumo": "Quanto voce PAGA por 1.000 milhas.",
-      "explicacao": "E o preco de aquisicao. Se voce assina um clube de R$ 184 por mes que deposita 5.000 milhas, seu CPM e 184 dividido por 5, ou seja R$ 36,80. Esse numero e a base de qualquer decisao: sem ele, nao da para saber se um resgate foi bom.",
-      "exemplo": "Clube de R$ 184/mes com 5.000 milhas = CPM de R$ 36,80."
+      "resumo": "Quanto você PAGA por 1.000 milhas.",
+      "explicacao": "É o preço de aquisição. Se você assina um clube de R$ 184 por mês que deposita 5.000 milhas, seu CPM é 184 dividido por 5, ou seja R$ 36,80. Esse número é a base de qualquer decisão: sem ele, não dá para saber se um resgate foi bom ou ruim. É o primeiro número que você precisa descobrir.",
+      "exemplo": "Clube de R$ 184/mês com 5.000 milhas = CPM de R$ 36,80."
     },
     {
       "id": "valor-extraido",
-      "termo": "Valor extraido por milheiro",
-      "resumo": "Quanto cada 1.000 milhas VALEU naquele resgate.",
-      "explicacao": "E o outro lado da moeda do CPM. Pegue o preco da passagem em dinheiro, divida pelas milhas do resgate e multiplique por mil. Se o valor extraido for maior que o seu CPM, o resgate valeu a pena. Se for menor, voce queimou milhas que custaram mais caro do que a passagem.",
-      "exemplo": "Passagem de R$ 3.280 por 80.000 milhas = R$ 41 extraidos por milheiro. Se voce pagou R$ 16 no milheiro, foi um otimo resgate."
+      "termo": "Valor extraído por milheiro",
+      "resumo": "Quanto cada 1.000 milhas VALERAM naquele resgate.",
+      "explicacao": "É o outro lado da moeda do CPM. Pegue o preço da passagem em dinheiro, desconte as taxas de embarque (você paga elas de qualquer jeito), divida pelas milhas do resgate e multiplique por mil. Se o valor extraído for maior que o seu CPM, o resgate valeu a pena. Se for menor, você queimou milhas que custaram mais caro do que a passagem.",
+      "exemplo": "Passagem de R$ 3.280 com R$ 350 de taxa, por 80.000 milhas: (3.280 − 350) ÷ 80.000 × 1.000 = R$ 36,63 por milheiro."
     },
     {
       "id": "transferencia-bonificada",
-      "termo": "Transferencia bonificada",
-      "resumo": "Promocao que multiplica seus pontos ao transferir.",
-      "explicacao": "Programas como Livelo e Esfera periodicamente oferecem bonus para mover pontos para as companhias aereas. Com 100% de bonus, 10.000 pontos viram 20.000 milhas, o que corta o seu CPM pela metade. E o caminho mais barato de acumulo para quem ja junta pontos pelo cartao.",
-      "exemplo": "10.000 pontos Livelo com 80% de bonus viram 18.000 milhas Smiles."
+      "termo": "Transferência bonificada",
+      "resumo": "Promoção que multiplica seus pontos ao transferir.",
+      "explicacao": "Livelo e Esfera periodicamente oferecem bônus para mover pontos para as companhias aéreas. Com 100% de bônus, 10.000 pontos viram 20.000 milhas, o que corta o seu custo pela metade. Mas atenção a uma sutileza que quase ninguém conta: o bônus só é vantagem de verdade quando os pontos de origem saíram de graça do seu cartão. Comprar pontos Livelo em promoção para depois transferir costuma dar quase na mesma que comprar a milha pronta.",
+      "exemplo": "10.000 pontos Livelo com 80% de bônus viram 18.000 milhas Smiles."
     },
     {
       "id": "clube",
       "termo": "Clube de pontos",
       "resumo": "Assinatura mensal que deposita milhas na sua conta.",
-      "explicacao": "Voce paga uma mensalidade fixa e recebe um pacote de milhas todo mes. O custo por milheiro de um clube costuma ficar entre R$ 34 e R$ 46, bem acima do CPM alvo dos programas. Isso significa que o clube so compensa quando voce consegue extrair mais do que isso no resgate, o que normalmente acontece em viagens internacionais e na alta temporada. Para trechos domesticos baratos, o clube quase nunca se paga.",
-      "exemplo": "Clube de R$ 46 por 1.000 milhas e um CPM de R$ 46. Se o seu resgate extrai R$ 30 por milheiro, voce perdeu dinheiro."
+      "explicacao": "Você paga uma mensalidade fixa e recebe um pacote de milhas todo mês. O custo por milheiro de um clube fica entre R$ 34 e R$ 46, bem acima do preço de mercado das próprias milhas. Isso significa que o clube só compensa quando você consegue extrair mais do que isso no resgate — o que normalmente acontece em viagens internacionais e na alta temporada. Para trechos domésticos baratos, o clube quase nunca se paga.",
+      "exemplo": "Clube de R$ 46 por 1.000 milhas é um CPM de R$ 46. Se o seu resgate extrai R$ 30 por milheiro, você perdeu dinheiro."
     },
     {
       "id": "taxa-embarque",
       "termo": "Taxa de embarque",
-      "resumo": "O dinheiro que voce paga mesmo resgatando com milhas.",
-      "explicacao": "Nenhum resgate e totalmente gratuito. Alem das milhas, voce paga taxas em reais que variam por aeroporto e companhia. Num trecho domestico costumam ficar perto de R$ 50; na Europa passam dos R$ 300. Ignorar a taxa e o erro mais comum de quem esta comecando, porque ela pode transformar um resgate bom em um resgate medio."
+      "resumo": "O dinheiro que você paga mesmo resgatando com milhas.",
+      "explicacao": "Nenhum resgate é totalmente gratuito. Além das milhas, você paga taxas em reais que variam por aeroporto e companhia. Num trecho doméstico costumam ficar perto de R$ 50; na Europa passam dos R$ 300. Ignorar a taxa é o erro mais comum de quem está começando, porque ela pode transformar um resgate bom num resgate medíocre."
     },
     {
       "id": "coalizao",
-      "termo": "Programa de coalizao",
-      "resumo": "Livelo e Esfera: hubs onde os pontos esperam.",
-      "explicacao": "Nao sao programas de companhia aerea. Voce acumula pontos ali pelo cartao e so decide o destino depois, transferindo para Smiles, LATAM Pass ou Azul quando aparecer a melhor promocao. Guardar pontos no hub em vez de transferir na hora e uma das estrategias mais eficientes que existem."
+      "termo": "Programa de coalizão",
+      "resumo": "Livelo e Esfera: onde os pontos esperam.",
+      "explicacao": "Não são programas de companhia aérea. Você acumula pontos ali pelo cartão e só decide o destino depois, transferindo para Smiles, LATAM Pass ou Azul quando aparecer a melhor promoção. Guardar os pontos no hub em vez de transferir na hora é uma das estratégias mais eficientes que existem — e não custa nada."
     },
     {
       "id": "paridade",
       "termo": "Paridade",
-      "resumo": "A taxa de cambio entre dois programas.",
-      "explicacao": "Quantos pontos de origem viram quantas milhas no destino. Livelo para Smiles e 1:1, ou seja, um ponto vira uma milha. Esfera para TAP e 2,7:1, bem pior: voce precisa de 2.700 pontos para conseguir 1.000 milhas."
+      "resumo": "A taxa de câmbio entre dois programas.",
+      "explicacao": "Quantos pontos de origem viram quantas milhas no destino. Livelo para Smiles é 1:1, ou seja, um ponto vira uma milha. Esfera para a TAP é 2,7:1, bem pior: você precisa de 2.700 pontos para conseguir 1.000 milhas."
+    },
+    {
+      "id": "precificacao-dinamica",
+      "termo": "Precificação dinâmica",
+      "resumo": "A tabela de milhas não é mais fixa.",
+      "explicacao": "Os programas brasileiros deixaram de ter tabela fixa: hoje a quantidade de milhas acompanha o preço em dinheiro da passagem. Passagem mais cara, resgate mais caro. Mas a tabela ainda tem piso e teto, e é justamente isso que cria as oportunidades — quando a tarifa dispara, as milhas param de subir no teto e cada uma passa a comprar mais."
     },
     {
       "id": "alta-temporada",
       "termo": "Alta e baixa temporada",
-      "resumo": "Janeiro, julho e dezembro sao os meses caros.",
-      "explicacao": "No Brasil o preco acompanha as ferias escolares e os feriados. Marco a maio e setembro a novembro sao os meses mais baratos para viajar. E aqui esta o detalhe que quase ninguem explica: como a tabela de milhas e quase fixa o ano inteiro, e justamente na alta temporada que as milhas rendem mais."
+      "resumo": "Janeiro, julho e dezembro são os meses caros.",
+      "explicacao": "No Brasil o preço acompanha as férias escolares e os feriados. Março a maio e setembro a novembro costumam ser os meses mais baratos para viajar. E aqui está o detalhe que vale dinheiro: por causa do piso e do teto da tabela de resgate, o melhor mês para pagar em dinheiro quase nunca é o melhor mês para usar milhas."
     },
     {
       "id": "antecedencia",
-      "termo": "Antecedencia de compra",
+      "termo": "Antecedência de compra",
       "resumo": "Nem cedo demais, nem em cima da hora.",
-      "explicacao": "Existe uma janela em que a passagem fica mais barata. Para voos domesticos no Brasil ela costuma ficar entre 28 e 90 dias antes do embarque, com o ponto otimo perto de 39 dias. Para internacionais, entre 60 e 120 dias. Comprar com um ano de antecedencia raramente ajuda: as companhias ainda nao abriram as tarifas promocionais."
+      "explicacao": "Existe uma janela em que a passagem fica mais barata. Para voos domésticos no Brasil ela costuma ficar entre 28 e 90 dias antes do embarque, com o ponto ótimo perto de 39 dias. Para internacionais, entre 60 e 120 dias. Comprar com um ano de antecedência raramente ajuda: as companhias ainda não abriram as tarifas promocionais."
     }
   ],
   "quandoNaoUsarMilhas": [
     {
-      "titulo": "Quando a passagem esta barata em dinheiro",
-      "explicacao": "Num trecho domestico de R$ 400, gastar 8.000 milhas significa extrair R$ 50 por milheiro... menos a taxa de embarque. Se suas milhas custaram R$ 40 cada mil, voce praticamente empatou e perdeu a flexibilidade. Milha e um ativo: use quando ela rende mais que o dinheiro."
+      "titulo": "Quando a economia é pequena",
+      "explicacao": "Num trecho doméstico barato o resgate até compensa na conta, mas economiza pouco. O problema não é a conta — é o custo de oportunidade: as mesmas milhas renderiam três ou quatro vezes mais numa internacional. Milha é um ativo. Gaste onde ela rende."
     },
     {
       "titulo": "Quando as taxas comem o desconto",
-      "explicacao": "Alguns resgates internacionais cobram mais de R$ 400 de taxa por trecho. Some as taxas ao custo das milhas antes de comparar com a tarifa em dinheiro. O app ja faz essa conta para voce."
+      "explicacao": "Alguns resgates internacionais cobram mais de R$ 400 de taxa por trecho. Some as taxas ao custo das milhas antes de comparar com a tarifa em dinheiro. O app já faz essa conta para você, mas vale saber que ela existe."
     },
     {
-      "titulo": "Quando voce esta comprando milhas so para aquela viagem",
-      "explicacao": "Comprar milhas de tabela sai entre R$ 70 e R$ 80 o milheiro, mais caro que quase qualquer passagem avaliada por milheiro. Comprar milhas no desespero e a forma mais rapida de perder dinheiro no mundo das milhas."
+      "titulo": "Quando você está comprando milhas só para aquela viagem",
+      "explicacao": "Comprar milhas de tabela sai entre R$ 70 e R$ 80 o milheiro, mais caro do que quase qualquer passagem avaliada por milheiro. Comprar milhas no desespero é a forma mais rápida de perder dinheiro nesse mundo."
     },
     {
-      "titulo": "Quando a data e inflexivel",
-      "explicacao": "Resgates dependem de disponibilidade de assentos. Se voce precisa viajar numa data exata e so ha tarifa cara em milhas, o dinheiro costuma sair melhor. Guarde as milhas para quando voce puder escolher a data."
+      "titulo": "Quando a data é inflexível",
+      "explicacao": "Resgates dependem de disponibilidade de assentos. Se você precisa viajar numa data exata e só há tarifa cara em milhas, o dinheiro costuma sair melhor. Guarde as milhas para quando puder escolher a data."
     },
     {
-      "titulo": "Quando voce ainda nao sabe o seu CPM",
-      "explicacao": "Sem saber quanto suas milhas custaram, nao da para dizer se um resgate foi bom. Esse e o primeiro numero a descobrir, e e por ele que este app comeca."
+      "titulo": "Quando a passagem está em promoção profunda",
+      "explicacao": "Numa promoção muito agressiva o preço em dinheiro cai, mas as milhas travam no piso da tabela. Resultado: o resgate rende menos justamente quando a passagem está mais barata. Nessas horas, pague em dinheiro e guarde as milhas."
+    },
+    {
+      "titulo": "Quando você ainda não sabe o seu CPM",
+      "explicacao": "Sem saber quanto suas milhas custaram, não dá para dizer se um resgate foi bom. Esse é o primeiro número a descobrir, e é por ele que este app começa."
     }
   ]
 }

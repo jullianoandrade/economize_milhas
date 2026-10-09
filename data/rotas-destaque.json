@@ -1,0 +1,11 @@
+{
+  "atualizadoEm": "2026-10-09",
+  "explicacao": "Rotas pre-renderizadas em tempo de build. Duas razoes: sao as que tem valor de busca organica, e so uma pagina pre-renderizada consegue colocar titulo e descricao no <head> inicial -- com rota dinamica a metadata chega por streaming, depois da casca, e buscador nao espera. Espelha as rotas que o cron coleta diariamente. Qualquer outra rota continua funcionando, apenas gerada sob demanda.",
+  "rotas": [
+    ["GRU", "LIS"], ["GRU", "MAD"], ["GRU", "CDG"], ["GRU", "LHR"],
+    ["GRU", "FCO"], ["GRU", "MIA"], ["GRU", "JFK"], ["GRU", "MCO"],
+    ["GRU", "LAX"], ["GRU", "EZE"], ["GRU", "SCL"], ["GRU", "MEX"],
+    ["GRU", "SDU"], ["GRU", "REC"], ["GRU", "SSA"], ["GRU", "FOR"],
+    ["GRU", "BSB"], ["GRU", "POA"], ["GIG", "LIS"], ["REC", "LIS"]
+  ]
+}

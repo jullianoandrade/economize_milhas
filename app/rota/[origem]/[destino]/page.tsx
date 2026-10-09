@@ -8,16 +8,46 @@ import { CurvaDeMeses } from "@/components/CurvaDeMeses";
 import { curvaMensal, precoDoTrecho } from "@/lib/precos";
 import { observacoesDaRota, precosMensaisDaRota } from "@/lib/historico";
 import { heuristicasTempo } from "@/lib/dados";
-import { AeroportoDesconhecidoError, classificarRota } from "@/lib/milhas/regioes";
+import {
+  AeroportoDesconhecidoError,
+  aeroportoPorIata,
+  classificarRota,
+} from "@/lib/milhas/regioes";
 import { calcularVeredito } from "@/lib/milhas/veredito";
+import rotasDestaque from "@/data/rotas-destaque.json";
 import { janelaDeCompra } from "@/lib/tempo/antecedencia";
 import { calcularSazonalidade } from "@/lib/tempo/sazonalidade";
+
+/**
+ * Pre-renderiza as rotas de maior valor de busca.
+ *
+ * Nao e so performance: pagina gerada sob demanda tem a metadata chegando
+ * por streaming, depois da casca, e buscador le o <head> inicial. So com
+ * pre-renderizacao o titulo e a descricao entram no HTML servido.
+ *
+ * Qualquer outra rota continua funcionando normalmente, gerada na hora.
+ */
+export async function generateStaticParams() {
+  return rotasDestaque.rotas.map(([origem, destino]) => ({ origem, destino }));
+}
 
 export async function generateMetadata({
   params,
 }: PageProps<"/rota/[origem]/[destino]">): Promise<Metadata> {
+  // Sem isto a metadata depende de dado de runtime e chega por streaming,
+  // depois da casca -- entao a descricao nao esta no <head> inicial, que e
+  // justamente o que buscadores leem. Com "use cache" ela entra no HTML
+  // pre-renderizado. A rota em si e a chave do cache.
+  "use cache";
   const { origem, destino } = await params;
-  return { title: `${origem.toUpperCase()} para ${destino.toUpperCase()}` };
+  const o = aeroportoPorIata(origem);
+  const d = aeroportoPorIata(destino);
+  const trecho = o && d ? `${o.cidade} para ${d.cidade}` : `${origem.toUpperCase()} para ${destino.toUpperCase()}`;
+
+  return {
+    title: trecho,
+    description: `Quanto custa ${trecho} em dinheiro e em milhas, em que mês ir, quando comprar e quanto você economiza.`,
+  };
 }
 
 export default function PaginaDaRota({
@@ -193,13 +223,23 @@ function RotaNaoEncontrada({ iata }: { iata: string }) {
   );
 }
 
+/**
+ * As alturas aqui imitam as do conteudo final de proposito. Como a pagina
+ * usa pre-renderizacao parcial, a casca aparece antes e o miolo chega em
+ * seguida; um esqueleto de altura errada faz a tela pular na troca, o que
+ * o Lighthouse mede como deslocamento de layout.
+ */
 function Esqueleto() {
   return (
     <div className="animate-pulse space-y-4" aria-label="Calculando">
-      <div className="h-6 w-2/3 rounded-lg bg-superficie-2" />
-      <div className="h-44 rounded-2xl bg-superficie-2" />
-      <div className="h-36 rounded-2xl bg-superficie-2" />
-      <div className="h-36 rounded-2xl bg-superficie-2" />
+      <div className="space-y-2">
+        <div className="h-4 w-24 rounded bg-superficie-2" />
+        <div className="h-8 w-2/3 rounded-lg bg-superficie-2" />
+        <div className="h-4 w-1/2 rounded bg-superficie-2" />
+      </div>
+      <div className="h-64 rounded-2xl bg-superficie-2" />
+      <div className="h-96 rounded-2xl bg-superficie-2" />
+      <div className="h-80 rounded-2xl bg-superficie-2" />
     </div>
   );
 }

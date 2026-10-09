@@ -120,37 +120,37 @@ export function CurvaDeMeses({
       </svg>
 
       {/* Identidade em TEXTO, nao em cor: e o que torna o grafico legivel
-          para quem nao distingue verde de ambar. */}
+          para quem nao distingue verde de ambar.
+
+          A estrutura importa: <dl> so aceita dt, dd ou div como filho
+          direto, e o div precisa conter o par diretamente. Aninhar dois
+          niveis quebrava a leitura em leitores de tela. */}
       <dl className="mt-2 space-y-2 border-t border-borda pt-3 text-sm">
-        <div className="flex items-start gap-2">
-          <span
-            aria-hidden="true"
-            className="mt-1 size-3 shrink-0 rounded-sm bg-grafico-dinheiro"
-          />
-          <div>
-            <dt className="font-medium text-tinta">
-              Mais barato em dinheiro: {nomeDoMes(mesMaisBaratoEmDinheiro.mes)}
-            </dt>
-            <dd className="tabular text-tinta-media">
-              {reais(mesMaisBaratoEmDinheiro.precoBRL)} a passagem
-            </dd>
-          </div>
+        <div>
+          <dt className="flex items-center gap-2 font-medium text-tinta">
+            <span
+              aria-hidden="true"
+              className="size-3 shrink-0 rounded-sm bg-grafico-dinheiro"
+            />
+            Mais barato em dinheiro: {nomeDoMes(mesMaisBaratoEmDinheiro.mes)}
+          </dt>
+          <dd className="tabular pl-5 text-tinta-media">
+            {reais(mesMaisBaratoEmDinheiro.precoBRL)} a passagem
+          </dd>
         </div>
 
-        <div className="flex items-start gap-2">
-          <span
-            aria-hidden="true"
-            className="mt-1 size-3 shrink-0 rounded-sm bg-grafico-milhas"
-          />
-          <div>
-            <dt className="font-medium text-tinta">
-              Milhas rendem mais: {nomeDoMes(mesComMelhorResgate.mes)}
-            </dt>
-            <dd className="tabular text-tinta-media">
-              {reaisExatos(mesComMelhorResgate.valorExtraidoPorMilheiroBRL)} por
-              milheiro
-            </dd>
-          </div>
+        <div>
+          <dt className="flex items-center gap-2 font-medium text-tinta">
+            <span
+              aria-hidden="true"
+              className="size-3 shrink-0 rounded-sm bg-grafico-milhas"
+            />
+            Milhas rendem mais: {nomeDoMes(mesComMelhorResgate.mes)}
+          </dt>
+          <dd className="tabular pl-5 text-tinta-media">
+            {reaisExatos(mesComMelhorResgate.valorExtraidoPorMilheiroBRL)} por
+            milheiro
+          </dd>
         </div>
       </dl>
 
