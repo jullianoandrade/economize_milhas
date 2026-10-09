@@ -2,42 +2,51 @@
 
 /* ============================================================
    Tokens de design
-   Fonte unica da verdade das cores. Definidos como variaveis
-   CSS para que o modo escuro apenas as redefina, sem duplicar
-   classe nenhuma nos componentes.
 
-   A paleta e lavanda/violeta: a familia de cor que o mercado de
-   viagem usa para "planejamento" e "sonho", e nao a de alerta
-   financeiro. Cada valor abaixo foi medido contra a superficie
-   em que ele aparece -- nenhum foi escolhido so por parecer
-   bonito na tela clara.
+   Uma regra organiza tudo aqui: AS CORES SEMANTICAS NAO MUDAM.
+   Ambar e milhas, verde e dinheiro, vermelho e alerta -- esses tres
+   carregam o veredito, foram medidos e validados para daltonismo, e
+   sao iguais em qualquer paleta. O que troca de uma paleta para outra
+   e so a marca e as superficies.
+
+   Isso nao e organizacao por organizacao: e o que garante que a cor da
+   marca nunca compita com a cor que significa alguma coisa. Marca verde
+   brigaria com "dinheiro"; marca laranja brigaria com "milhas". Por isso
+   as duas candidatas sao azuis.
+
+   Contraste de cada par verificado com script, nao estimado no olho.
    ============================================================ */
+
+/* ------------------------------------------------------------
+   Paleta padrao: grafite + azul-ardosia
+   Interface quase neutra, acento azul profundo de baixa croma.
+   ------------------------------------------------------------ */
 
 :root {
   /* Superficies */
-  --fundo: #f5f4fd;
+  --fundo: #f7f8fa;
   --superficie: #ffffff;
-  --superficie-2: #f1effb;
-  --borda: #e4e1f5;
+  --superficie-2: #eff1f5;
+  --borda: #e2e6ee;
 
   /* Texto */
-  --tinta: #1b1340;
-  --tinta-media: #504a73;
-  /* 5,5:1 sobre branco e 4,8:1 sobre a superficie secundaria.
-     O tom mais claro que eu queria (#7a7299) dava 4,49 -- reprovava
-     por dois centesimos, entao nao entrou. */
-  --tinta-fraca: #6b6391;
+  --tinta: #14181f;
+  --tinta-media: #4b5563;
+  /* 5,04:1 sobre a superficie secundaria. O tom que eu queria (#64748B)
+     dava 4,11 ali e reprovava -- medido, nao estimado. */
+  --tinta-fraca: #5a6878;
 
   /* Marca */
-  --marca: #5b3fd6;
-  --marca-forte: #4a30b8;
-  --marca-fraca: #efebff;
+  --marca: #2a4d8f;
+  --marca-forte: #1e3a6e;
+  --marca-fraca: #e8edf7;
   /* So para decoracao: gradiente, ilustracao, traco de fundo.
      Nunca para texto nem para borda que carregue significado. */
-  --marca-suave: #a89bf0;
+  --marca-suave: #7e9ccb;
   --marca-contraste: #ffffff;
 
-  /* Veredito: milhas (dourado) x dinheiro (verde) */
+  /* Veredito: milhas (ambar) x dinheiro (verde).
+     Iguais em toda paleta -- ver o cabecalho deste arquivo. */
   --milhas: #b45309;
   --milhas-fundo: #fef5e6;
   --milhas-borda: #f3d9a8;
@@ -63,62 +72,122 @@
      grafico pode depender so da cor. */
   --grafico-milhas: #b45309;
   --grafico-dinheiro: #047857;
-  --grafico-neutro: #cdc7e8;
+  --grafico-neutro: #c7cdd8;
 
   /* Elevacao */
-  --sombra-card: 0 1px 2px rgb(27 19 64 / 0.04), 0 4px 14px rgb(27 19 64 / 0.06);
+  --sombra-card: 0 1px 2px rgb(20 24 31 / 0.04), 0 4px 14px rgb(20 24 31 / 0.06);
   /* A nav flutua sobre o conteudo: precisa de uma sombra que a separe
      de verdade, nao do mesmo realce dos cartoes. */
-  --sombra-flutuante: 0 4px 10px rgb(27 19 64 / 0.08), 0 12px 32px rgb(27 19 64 / 0.14);
+  --sombra-flutuante: 0 4px 10px rgb(20 24 31 / 0.08), 0 12px 32px rgb(20 24 31 / 0.14);
 
-  /* Superficie de destaque: usada no topo das telas de abertura e nos
-     cartoes de objetivo. */
-  --gradiente-marca: linear-gradient(140deg, #6d5ce8 0%, #8b78f2 48%, #b9a9fa 100%);
-  --gradiente-ceu: linear-gradient(180deg, #e9e5fd 0%, #f5f4fd 100%);
+  /* Superficie de destaque dos paineis de abertura e dos objetivos. */
+  --gradiente-marca: linear-gradient(140deg, #1e3a6e 0%, #2a4d8f 52%, #4a6fa8 100%);
+  --gradiente-ceu: linear-gradient(180deg, #e8edf7 0%, #f7f8fa 100%);
+
+  /* Cor da barra de status no aparelho. O seletor de paleta reescreve a
+     meta tag; este valor e o de partida. */
+  --barra-do-sistema: #f7f8fa;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --fundo: #0d0a1f;
-    --superficie: #171231;
-    --superficie-2: #211a42;
-    --borda: #332a5c;
+/* ------------------------------------------------------------
+   Paleta alternativa: Van Gogh
 
-    --tinta: #f0ecfd;
-    --tinta-media: #b0a8d0;
-    /* 4,9:1 sobre a superficie secundaria -- medido, nao estimado. */
-    --tinta-fraca: #8f87b4;
+   Nao e a paleta dele repintada na interface -- isso destruiria a
+   legibilidade e brigaria com o veredito. E a ESTRUTURA dele: campo
+   azul-ultramar profundo, superficie de tela crua, e o amarelo-ocre
+   como a unica coisa que brilha.
 
-    --marca: #a594fa;
-    --marca-forte: #bcaffc;
-    --marca-fraca: #241c4d;
-    --marca-suave: #6d5cc4;
-    --marca-contraste: #130e2b;
+   O acaso util: o nosso ambar de "milhas" ja e praticamente o ocre dos
+   Girassois, entao a cor que ja significava alguma coisa no app e a
+   mesma que acende o quadro.
+   ------------------------------------------------------------ */
 
-    --milhas: #fbbf4c;
-    --milhas-fundo: #2e2410;
-    --milhas-borda: #57430f;
+:root[data-paleta="vangogh"] {
+  --fundo: #f8f5ec;
+  --superficie: #fffdf7;
+  --superficie-2: #f1ecdd;
+  --borda: #e5decb;
 
-    --dinheiro: #4ade9f;
-    --dinheiro-fundo: #0f2c22;
-    --dinheiro-borda: #1f5c44;
+  --tinta: #15233f;
+  --tinta-media: #4a5876;
+  --tinta-fraca: #5e677f;
 
-    --alerta: #f87171;
-    --alerta-fundo: #2d1414;
-    --atencao: #fbbf24;
+  --marca: #20406f;
+  --marca-forte: #16304f;
+  --marca-fraca: #e7edf7;
+  --marca-suave: #6189c0;
+  --marca-contraste: #fffdf7;
 
-    /* Reescolhidos para a superficie escura, nao clareados a esmo:
-       os tons do modo claro reprovam na banda de luminosidade aqui. */
-    --grafico-milhas: #c08622;
-    --grafico-dinheiro: #1f9c6c;
-    --grafico-neutro: #3b3268;
+  /* O ambar e o verde continuam os mesmos; so o fundo deles esquenta
+     para acompanhar a superficie. O ambar sobre creme ficou em 4,48 e
+     reprovava -- este valor devolve 4,63. */
+  --milhas-fundo: #fdf5e6;
+  --milhas-borda: #ecd5a6;
 
-    --sombra-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 12px rgb(0 0 0 / 0.25);
-    --sombra-flutuante: 0 4px 10px rgb(0 0 0 / 0.4), 0 12px 32px rgb(0 0 0 / 0.5);
+  --dinheiro-fundo: #e6f3ec;
+  --dinheiro-borda: #a5d8c1;
 
-    --gradiente-marca: linear-gradient(140deg, #3d2f8a 0%, #52429f 48%, #6d5cc4 100%);
-    --gradiente-ceu: linear-gradient(180deg, #1a1440 0%, #0d0a1f 100%);
-  }
+  --alerta-fundo: #fbeae6;
+
+  --grafico-neutro: #cfc7b3;
+
+  --sombra-card: 0 1px 2px rgb(33 25 10 / 0.05), 0 4px 14px rgb(33 25 10 / 0.07);
+  --sombra-flutuante: 0 4px 10px rgb(33 25 10 / 0.1), 0 12px 32px rgb(33 25 10 / 0.16);
+
+  --gradiente-marca: linear-gradient(140deg, #16304f 0%, #20406f 45%, #3e63a0 100%);
+  --gradiente-ceu: linear-gradient(180deg, #efe9d8 0%, #f8f5ec 100%);
+
+  --barra-do-sistema: #f8f5ec;
+}
+
+/* ------------------------------------------------------------
+   Modo escuro -- DORMENTE por enquanto.
+
+   Nao esta em prefers-color-scheme de proposito: enquanto a paleta
+   clara nao estiver decidida, o aparelho no modo escuro mostraria
+   cores que ninguem escolheu. Volta a valer, derivado da paleta
+   vencedora, quando ela for definida.
+   ------------------------------------------------------------ */
+
+:root[data-tema="escuro"] {
+  --fundo: #0d0f14;
+  --superficie: #161a22;
+  --superficie-2: #1e2430;
+  --borda: #2c3442;
+
+  --tinta: #eef1f6;
+  --tinta-media: #aab3c2;
+  --tinta-fraca: #8c95a6;
+
+  --marca: #8fb0e8;
+  --marca-forte: #abc4f0;
+  --marca-fraca: #1b2435;
+  --marca-suave: #5a7cb5;
+  --marca-contraste: #0d0f14;
+
+  --milhas: #fbbf4c;
+  --milhas-fundo: #2e2410;
+  --milhas-borda: #57430f;
+
+  --dinheiro: #4ade9f;
+  --dinheiro-fundo: #0f2c22;
+  --dinheiro-borda: #1f5c44;
+
+  --alerta: #f87171;
+  --alerta-fundo: #2d1414;
+  --atencao: #fbbf24;
+
+  --grafico-milhas: #c08622;
+  --grafico-dinheiro: #1f9c6c;
+  --grafico-neutro: #39414f;
+
+  --sombra-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 12px rgb(0 0 0 / 0.25);
+  --sombra-flutuante: 0 4px 10px rgb(0 0 0 / 0.4), 0 12px 32px rgb(0 0 0 / 0.5);
+
+  --gradiente-marca: linear-gradient(140deg, #1b2a45 0%, #27395c 48%, #3b5278 100%);
+  --gradiente-ceu: linear-gradient(180deg, #161d2b 0%, #0d0f14 100%);
+
+  --barra-do-sistema: #0d0f14;
 }
 
 /* Expoe os tokens como utilitarios do Tailwind:

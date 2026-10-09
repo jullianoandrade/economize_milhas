@@ -44,11 +44,19 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f5f4fd" },
-    { media: "(prefers-color-scheme: dark)", color: "#0d0a1f" },
-  ],
+  // Sem variante escura enquanto a paleta clara nao estiver decidida.
+  // O seletor de paleta reescreve esta meta tag ao trocar.
+  themeColor: "#f7f8fa",
 };
+
+/**
+ * Aplica a paleta guardada ANTES da primeira pintura.
+ *
+ * Precisa ser script sincrono no inicio do body: se a troca acontecesse
+ * depois da hidratacao, quem escolheu Van Gogh veria a tela piscar em
+ * ardosia a cada carregamento.
+ */
+const APLICAR_PALETA = `try{var p=localStorage.getItem("milhas-paleta");if(p&&p!=="ardosia")document.documentElement.setAttribute("data-paleta",p)}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -57,6 +65,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full">
+        <script dangerouslySetInnerHTML={{ __html: APLICAR_PALETA }} />
+
         <a
           href="#conteudo"
           className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-lg focus:bg-marca focus:px-4 focus:py-2 focus:text-marca-contraste"

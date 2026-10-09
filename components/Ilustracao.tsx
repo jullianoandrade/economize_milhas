@@ -21,7 +21,7 @@ export type Cena = "viagem" | "meta" | "transparencia";
 const TOM_CLARO = {
   "--marca": "#ffffff",
   "--marca-suave": "#ffffff",
-  "--superficie": "#ddd5ff",
+  "--superficie": "#e6ecf6",
 } as React.CSSProperties;
 
 export function Ilustracao({
