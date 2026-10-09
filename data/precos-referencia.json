@@ -1,13 +1,17 @@
 {
-  "atualizadoEm": "2026-10-08",
-  "explicacao": "Preco tipico de UM TRECHO (so ida) em classe economica partindo do Brasil. Serve de rede de seguranca: quando nao ha token da Travelpayouts configurado, ou a API nao responde, o app usa estes valores e avisa na tela que o numero e estimativa, nao cotacao. Tudo no app e por trecho, nunca ida e volta, para bater com a tabela de milhas.",
+  "atualizadoEm": "2026-10-09",
+  "explicacao": "Preco tipico de UM TRECHO (so ida) em classe economica partindo do Brasil. Serve de rede de seguranca quando nao ha token da Travelpayouts configurado ou a API nao responde: nesses casos o app usa estes valores e marca na tela que o numero e estimativa, nao cotacao. Tambem e a linha de corte da aba de promocoes, que so lista o que esta abaixo do tipico.",
+  "procedencia": "Mediana de 3.610 observacoes de preco de ida coletadas pelo nosso proprio cron, em 2026-10-09. A primeira versao desta tabela foi montada a mao antes de descobrirmos que a API devolvia ida e volta, e errava para os dois lados: subestimava o domestico e superestimava o longo curso.",
   "porRegiaoBRL": {
-    "domestico-curto": 350,
-    "domestico-medio": 450,
-    "domestico-longo": 650,
-    "america-sul": 1400,
-    "america-norte-central": 2600,
-    "europa": 3200,
-    "resto-mundo": 4500
+    "domestico-curto": 430,
+    "domestico-medio": 675,
+    "domestico-longo": 720,
+    "america-sul": 740,
+    "america-norte-central": 2100,
+    "europa": 2480,
+    "resto-mundo": 3500
+  },
+  "observacaoPorRegiao": {
+    "resto-mundo": "Sem rota da Asia ou Oceania entre as monitoradas ainda: valor escalado a partir da Europa. Deve ser recalibrado quando houver coleta."
   }
 }

@@ -241,6 +241,21 @@ describe("avaliacao de um resgate", () => {
 });
 
 describe("veredito", () => {
+  it("concorda o demonstrativo com a unidade do programa", () => {
+    // "milhas" e feminino, "pontos" e masculino. Sem tratar isso a frase
+    // sai como "essas mesmas 4.200 pontos", que aparece na tela principal.
+    const v = calcularVeredito(rota("GRU", "SDU"), 350);
+    for (const opcao of v.opcoes) {
+      const texto = calcularVeredito(rota("GRU", "SDU"), 350).ressalva ?? "";
+      if (!texto) continue;
+      const esperado =
+        v.melhor!.programa.unidade === "milhas" ? "Essas mesmas" : "Esses mesmos";
+      expect(texto).toContain(esperado);
+      break;
+    }
+    expect(v.opcoes.length).toBeGreaterThan(0);
+  });
+
   it("avisa do custo de oportunidade num trecho domestico barato", () => {
     // O teste mais importante da suite, e o que me fez corrigir o motor.
     //

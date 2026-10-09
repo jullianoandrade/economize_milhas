@@ -263,5 +263,7 @@ export type RegiaoGeografica = z.infer<
 export const EsquemaPrecosReferencia = z.object({
   atualizadoEm: dataISO,
   explicacao: z.string(),
+  procedencia: z.string(),
   porRegiaoBRL: z.record(z.string(), z.number().positive()),
+  observacaoPorRegiao: z.record(z.string(), z.string()).optional(),
 });

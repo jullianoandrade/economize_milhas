@@ -170,9 +170,17 @@ function ressalvar(
 
   const onde = rota.internacional ? "numa viagem mais longa" : "numa internacional";
 
+  // "milhas" e feminino, "pontos" e masculino, e cada programa usa a sua
+  // palavra. Sem isto a frase sai como "essas mesmas 4.200 pontos".
+  const demonstrativo =
+    melhor.programa.unidade.endsWith("s") &&
+    melhor.programa.unidade.startsWith("milha")
+      ? "Essas mesmas"
+      : "Esses mesmos";
+
   return (
     `O resgate compensa, mas economiza só ${reais(economiaBRL)}. ` +
-    `Essas mesmas ${melhor.milhas.toLocaleString("pt-BR")} ${melhor.programa.unidade} ` +
+    `${demonstrativo} ${melhor.milhas.toLocaleString("pt-BR")} ${melhor.programa.unidade} ` +
     `rendem bem mais ${onde} ou na alta temporada, quando a passagem em dinheiro ` +
     `dispara e a tabela de milhas quase não muda. Se você não tem pressa, guarde.`
   );
