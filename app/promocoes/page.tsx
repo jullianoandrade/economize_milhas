@@ -56,24 +56,24 @@ const NOME_DO_PROGRAMA: Record<string, string> = {
 export default function Promocoes() {
   const origemIata = usarPerfil((p) => p.origemIata);
   const [dados, setDados] = useState<Resposta | null>(null);
-  const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(false);
+
+  // Carregando nao e estado proprio: e a ausencia de resposta e de erro.
+  // Guardar os tres separados abre espaco para eles se contradizerem.
+  const carregando = dados === null && !erro;
 
   useEffect(() => {
     const controlador = new AbortController();
-    setCarregando(true);
-    setErro(false);
 
     fetch(`/api/promocoes?origem=${origemIata}`, { signal: controlador.signal })
       .then((r) => r.json())
       .then((corpo: Resposta) => {
         setDados(corpo);
-        setCarregando(false);
+        setErro(false);
       })
       .catch((e) => {
         if (e.name === "AbortError") return;
         setErro(true);
-        setCarregando(false);
       });
 
     return () => controlador.abort();

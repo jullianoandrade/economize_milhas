@@ -20,11 +20,16 @@ export function CampoDeLugar({
   rotulo,
   valorInicial = "",
   autoFocus = false,
+  // "claro" e para quando o campo esta sobre o painel violeta da home:
+  // so o rotulo muda de cor, o campo em si continua branco para o
+  // contraste do texto digitado nao depender do fundo da tela.
+  tom = "padrao",
   aoSelecionar,
 }: {
   rotulo: string;
   valorInicial?: string;
   autoFocus?: boolean;
+  tom?: "padrao" | "claro";
   aoSelecionar: (lugar: Lugar) => void;
 }) {
   const id = useId();
@@ -34,11 +39,14 @@ export function CampoDeLugar({
   const [destacado, setDestacado] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Texto curto demais nao tem sugestao: isso e consequencia do que foi
+  // digitado, nao estado proprio. Derivar em vez de limpar a lista dentro
+  // do efeito poupa um render a cada tecla apagada.
+  const curtoDemais = texto.trim().length < 2;
+  const visiveis = curtoDemais ? [] : sugestoes;
+
   useEffect(() => {
-    if (texto.trim().length < 2) {
-      setSugestoes([]);
-      return;
-    }
+    if (curtoDemais) return;
 
     // AbortController evita que uma resposta lenta de uma busca antiga
     // sobrescreva o resultado de uma busca mais recente.
@@ -62,7 +70,7 @@ export function CampoDeLugar({
       controlador.abort();
       clearTimeout(temporizador);
     };
-  }, [texto]);
+  }, [texto, curtoDemais]);
 
   useEffect(() => {
     function aoClicarFora(evento: MouseEvent) {
@@ -81,17 +89,17 @@ export function CampoDeLugar({
   }
 
   function aoTeclar(evento: React.KeyboardEvent) {
-    if (!aberto || sugestoes.length === 0) return;
+    if (!aberto || visiveis.length === 0) return;
 
     if (evento.key === "ArrowDown") {
       evento.preventDefault();
-      setDestacado((i) => (i + 1) % sugestoes.length);
+      setDestacado((i) => (i + 1) % visiveis.length);
     } else if (evento.key === "ArrowUp") {
       evento.preventDefault();
-      setDestacado((i) => (i - 1 + sugestoes.length) % sugestoes.length);
+      setDestacado((i) => (i - 1 + visiveis.length) % visiveis.length);
     } else if (evento.key === "Enter") {
       evento.preventDefault();
-      escolher(sugestoes[destacado]);
+      escolher(visiveis[destacado]);
     } else if (evento.key === "Escape") {
       setAberto(false);
     }
@@ -101,7 +109,9 @@ export function CampoDeLugar({
     <div ref={containerRef} className="relative">
       <label
         htmlFor={id}
-        className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-tinta-fraca"
+        className={`mb-1.5 block text-xs font-semibold uppercase tracking-wide ${
+          tom === "claro" ? "text-white/80" : "text-tinta-fraca"
+        }`}
       >
         {rotulo}
       </label>
@@ -117,19 +127,19 @@ export function CampoDeLugar({
         aria-autocomplete="list"
         value={texto}
         onChange={(e) => setTexto(e.target.value)}
-        onFocus={() => sugestoes.length > 0 && setAberto(true)}
+        onFocus={() => visiveis.length > 0 && setAberto(true)}
         onKeyDown={aoTeclar}
         placeholder="Lisboa, Buenos Aires, Recife…"
         className="w-full rounded-2xl border border-borda bg-superficie px-4 py-3.5 text-base text-tinta shadow-card outline-none placeholder:text-tinta-fraca focus:border-marca"
       />
 
-      {aberto && sugestoes.length > 0 ? (
+      {aberto && visiveis.length > 0 ? (
         <ul
           id={`${id}-lista`}
           role="listbox"
           className="absolute inset-x-0 top-full z-20 mt-1.5 overflow-hidden rounded-2xl border border-borda bg-superficie shadow-card"
         >
-          {sugestoes.map((lugar, indice) => (
+          {visiveis.map((lugar, indice) => (
             <li key={lugar.iata} role="option" aria-selected={indice === destacado}>
               <button
                 type="button"

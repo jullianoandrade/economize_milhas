@@ -5,24 +5,36 @@
    Fonte unica da verdade das cores. Definidos como variaveis
    CSS para que o modo escuro apenas as redefina, sem duplicar
    classe nenhuma nos componentes.
+
+   A paleta e lavanda/violeta: a familia de cor que o mercado de
+   viagem usa para "planejamento" e "sonho", e nao a de alerta
+   financeiro. Cada valor abaixo foi medido contra a superficie
+   em que ele aparece -- nenhum foi escolhido so por parecer
+   bonito na tela clara.
    ============================================================ */
 
 :root {
   /* Superficies */
-  --fundo: #f6f7fb;
+  --fundo: #f5f4fd;
   --superficie: #ffffff;
-  --superficie-2: #f1f3f9;
-  --borda: #e2e6ef;
+  --superficie-2: #f1effb;
+  --borda: #e4e1f5;
 
   /* Texto */
-  --tinta: #10152b;
-  --tinta-media: #4a5270;
-  --tinta-fraca: #79819c;
+  --tinta: #1b1340;
+  --tinta-media: #504a73;
+  /* 5,5:1 sobre branco e 4,8:1 sobre a superficie secundaria.
+     O tom mais claro que eu queria (#7a7299) dava 4,49 -- reprovava
+     por dois centesimos, entao nao entrou. */
+  --tinta-fraca: #6b6391;
 
   /* Marca */
-  --marca: #4338ca;
-  --marca-forte: #312e9e;
-  --marca-fraca: #eef0ff;
+  --marca: #5b3fd6;
+  --marca-forte: #4a30b8;
+  --marca-fraca: #efebff;
+  /* So para decoracao: gradiente, ilustracao, traco de fundo.
+     Nunca para texto nem para borda que carregue significado. */
+  --marca-suave: #a89bf0;
   --marca-contraste: #ffffff;
 
   /* Veredito: milhas (dourado) x dinheiro (verde) */
@@ -51,29 +63,37 @@
      grafico pode depender so da cor. */
   --grafico-milhas: #b45309;
   --grafico-dinheiro: #047857;
-  --grafico-neutro: #c8cedd;
+  --grafico-neutro: #cdc7e8;
 
   /* Elevacao */
-  --sombra-card: 0 1px 2px rgb(16 21 43 / 0.05), 0 4px 12px rgb(16 21 43 / 0.05);
+  --sombra-card: 0 1px 2px rgb(27 19 64 / 0.04), 0 4px 14px rgb(27 19 64 / 0.06);
+  /* A nav flutua sobre o conteudo: precisa de uma sombra que a separe
+     de verdade, nao do mesmo realce dos cartoes. */
+  --sombra-flutuante: 0 4px 10px rgb(27 19 64 / 0.08), 0 12px 32px rgb(27 19 64 / 0.14);
+
+  /* Superficie de destaque: usada no topo das telas de abertura e nos
+     cartoes de objetivo. */
+  --gradiente-marca: linear-gradient(140deg, #6d5ce8 0%, #8b78f2 48%, #b9a9fa 100%);
+  --gradiente-ceu: linear-gradient(180deg, #e9e5fd 0%, #f5f4fd 100%);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --fundo: #0a0e1c;
-    --superficie: #131a30;
-    --superficie-2: #1b2340;
-    --borda: #2a3355;
+    --fundo: #0d0a1f;
+    --superficie: #171231;
+    --superficie-2: #211a42;
+    --borda: #332a5c;
 
-    --tinta: #eef1fa;
-    --tinta-media: #a8b0cc;
-    /* 4,5:1 sobre a superficie secundaria. O tom anterior (#7b85a6) dava
-       4,22 e reprovava no texto pequeno -- medido, nao estimado. */
-    --tinta-fraca: #8891b0;
+    --tinta: #f0ecfd;
+    --tinta-media: #b0a8d0;
+    /* 4,9:1 sobre a superficie secundaria -- medido, nao estimado. */
+    --tinta-fraca: #8f87b4;
 
-    --marca: #8b8bf5;
-    --marca-forte: #a5a5f8;
-    --marca-fraca: #1e2448;
-    --marca-contraste: #0a0e1c;
+    --marca: #a594fa;
+    --marca-forte: #bcaffc;
+    --marca-fraca: #241c4d;
+    --marca-suave: #6d5cc4;
+    --marca-contraste: #130e2b;
 
     --milhas: #fbbf4c;
     --milhas-fundo: #2e2410;
@@ -91,9 +111,13 @@
        os tons do modo claro reprovam na banda de luminosidade aqui. */
     --grafico-milhas: #c08622;
     --grafico-dinheiro: #1f9c6c;
-    --grafico-neutro: #39456b;
+    --grafico-neutro: #3b3268;
 
     --sombra-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 12px rgb(0 0 0 / 0.25);
+    --sombra-flutuante: 0 4px 10px rgb(0 0 0 / 0.4), 0 12px 32px rgb(0 0 0 / 0.5);
+
+    --gradiente-marca: linear-gradient(140deg, #3d2f8a 0%, #52429f 48%, #6d5cc4 100%);
+    --gradiente-ceu: linear-gradient(180deg, #1a1440 0%, #0d0a1f 100%);
   }
 }
 
@@ -112,6 +136,7 @@
   --color-marca: var(--marca);
   --color-marca-forte: var(--marca-forte);
   --color-marca-fraca: var(--marca-fraca);
+  --color-marca-suave: var(--marca-suave);
   --color-marca-contraste: var(--marca-contraste);
 
   --color-milhas: var(--milhas);
@@ -131,8 +156,10 @@
   --color-atencao: var(--atencao);
 
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-display: var(--font-display), Georgia, serif;
 
   --shadow-card: var(--sombra-card);
+  --shadow-flutuante: var(--sombra-flutuante);
 }
 
 /* ============================================================
@@ -152,6 +179,15 @@ body {
   overflow-x: hidden;
 }
 
+/* Titulos de tela usam a serifa.
+   Ela carrega a personalidade do app -- o resto da interface e numero, e
+   numero pede a fonte sem serifa, que tem tabular. */
+.display {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
 /* Numeros alinhados em tabelas e comparativos de preco:
    sem isso o "1" ocupa menos espaco que o "8" e as colunas dancam. */
 .tabular {
@@ -161,6 +197,33 @@ body {
 /* Area segura do iPhone (barra de gestos) para a nav inferior */
 .safe-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Faixas que rolam na horizontal: calendario de precos, carrossel de
+   oportunidades. O snap faz o dedo parar em cima de um item inteiro em
+   vez de no meio de dois. */
+.faixa-rolante {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x proximal;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.faixa-rolante::-webkit-scrollbar {
+  display: none;
+}
+
+.faixa-rolante > * {
+  scroll-snap-align: start;
+}
+
+.gradiente-marca {
+  background: var(--gradiente-marca);
+}
+
+.gradiente-ceu {
+  background: var(--gradiente-ceu);
 }
 
 @media (prefers-reduced-motion: reduce) {

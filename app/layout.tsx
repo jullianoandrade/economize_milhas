@@ -1,13 +1,27 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Fraunces, Geist } from "next/font/google";
 import { NavegacaoInferior } from "@/components/NavegacaoInferior";
 import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+});
+
+/**
+ * A serifa dos titulos.
+ *
+ * Carregada so com os pesos que a interface usa: uma variavel completa
+ * traria sete eixos de desenho que nenhuma tela pede, e peso de fonte e
+ * o tipo de gordura que aparece direto na metrica de carregamento.
+ */
+const fraunces = Fraunces({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -31,14 +45,17 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f7fb" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0e1c" },
+    { media: "(prefers-color-scheme: light)", color: "#f5f4fd" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d0a1f" },
   ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={`${geistSans.variable} h-full antialiased`}>
+    <html
+      lang="pt-BR"
+      className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}
+    >
       <body className="min-h-full">
         <a
           href="#conteudo"
@@ -47,14 +64,21 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Pular para o conteúdo
         </a>
 
-        {/* pb-24 reserva o espaco da nav inferior fixa */}
         <main id="conteudo" className="mx-auto max-w-lg px-4 pb-4 pt-5">
           {children}
         </main>
 
-        <footer className="mx-auto max-w-lg px-4 pb-24 pt-6">
-          <p className="border-t border-borda pt-4 text-center text-xs text-tinta-fraca">
+        {/* pb-28 reserva o espaco da nav flutuante */}
+        <footer className="mx-auto max-w-lg px-4 pb-28 pt-6">
+          <p className="border-t border-borda pt-4 text-center text-xs leading-relaxed text-tinta-fraca">
             Valores em milhas são estimativas.{" "}
+            <Link
+              href="/boas-vindas"
+              className="underline underline-offset-2 hover:text-marca"
+            >
+              Como o app funciona
+            </Link>{" "}
+            ·{" "}
             <Link
               href="/como-nos-sustentamos"
               className="underline underline-offset-2 hover:text-marca"

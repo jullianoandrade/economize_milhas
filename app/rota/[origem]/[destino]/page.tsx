@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { CardPrograma } from "@/components/CardPrograma";
+import { CalendarioDePrecos } from "@/components/CalendarioDePrecos";
 import { CardFlexibilidade } from "@/components/CardFlexibilidade";
 import { FaixaDaJornada } from "@/components/FaixaDaJornada";
 import { SeletorDeData } from "@/components/SeletorDeData";
@@ -26,6 +27,7 @@ import rotasDestaque from "@/data/rotas-destaque.json";
 import { janelaDeCompra } from "@/lib/tempo/antecedencia";
 import { calcularSazonalidade } from "@/lib/tempo/sazonalidade";
 import { compararOrigens, datasMaisBaratas } from "@/lib/tempo/flexibilidade";
+import { montarCalendario } from "@/lib/tempo/calendario";
 import { diasAte, faseDaJornada } from "@/lib/monetizacao/jornada";
 
 /**
@@ -137,6 +139,7 @@ async function Conteudo({
 
   const { referenciaBRL, datas } = datasMaisBaratas(datadas);
   const outrasOrigens = compararOrigens(rota.origem, preco.dados, alternativas);
+  const calendario = montarCalendario(datadas, new Date());
 
   return (
     <>
@@ -191,8 +194,16 @@ async function Conteudo({
         observacaoDaFonte={preco.observacao}
       />
 
+      <div className="mt-4">
+        <CalendarioDePrecos
+          calendario={calendario}
+          rotaHref={`/rota/${rota.origem.iata}/${rota.destino.iata}`}
+          dataEscolhida={dataEscolhida}
+        />
+      </div>
+
       {sazonalidade ? (
-        <div className="mt-6">
+        <div className="mt-4">
           <CurvaDeMeses
             sazonalidade={sazonalidade}
             fonte={usaProprio ? "travelpayouts" : curvaDaApi.fonte}
@@ -239,7 +250,35 @@ async function Conteudo({
         </section>
       ) : null}
 
-
+      <section className="mt-6 rounded-[24px] bg-marca-forte p-5 text-white">
+        <h2 className="display mb-1.5 text-xl">
+          Ainda não tem as milhas para {rota.destino.cidade}?
+        </h2>
+        <p className="mb-4 text-sm leading-relaxed text-white/85">
+          Transforme esta rota num objetivo. O app guarda o seu saldo de hoje
+          como ponto de partida e passa a mostrar quanto você já andou, quanto
+          falta e se no seu ritmo dá tempo.
+        </p>
+        <Link
+          href={`/objetivos?destino=${rota.destino.iata}`}
+          className="inline-flex min-h-12 items-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-marca-forte"
+        >
+          Criar objetivo
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            className="size-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M5 12h13" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </Link>
+      </section>
     </>
   );
 }
