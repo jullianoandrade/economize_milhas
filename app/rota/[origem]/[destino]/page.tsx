@@ -3,6 +3,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { CardPrograma } from "@/components/CardPrograma";
 import { CardFlexibilidade } from "@/components/CardFlexibilidade";
+import { FaixaDaJornada } from "@/components/FaixaDaJornada";
+import { SeletorDeData } from "@/components/SeletorDeData";
 import { CardQuandoComprar } from "@/components/CardQuandoComprar";
 import { CardVeredito } from "@/components/CardVeredito";
 import { CurvaDeMeses } from "@/components/CurvaDeMeses";
@@ -24,6 +26,7 @@ import rotasDestaque from "@/data/rotas-destaque.json";
 import { janelaDeCompra } from "@/lib/tempo/antecedencia";
 import { calcularSazonalidade } from "@/lib/tempo/sazonalidade";
 import { compararOrigens, datasMaisBaratas } from "@/lib/tempo/flexibilidade";
+import { diasAte, faseDaJornada } from "@/lib/monetizacao/jornada";
 
 /**
  * Pre-renderiza as rotas de maior valor de busca.
@@ -59,6 +62,7 @@ export async function generateMetadata({
 
 export default function PaginaDaRota({
   params,
+  searchParams,
 }: PageProps<"/rota/[origem]/[destino]">) {
   // params NAO e aguardado aqui de proposito. Com Cache Components
   // ligado, tocar em dado dinamico fora de um <Suspense> impede o Next
@@ -67,17 +71,24 @@ export default function PaginaDaRota({
   // sai na hora e so o miolo espera.
   return (
     <Suspense fallback={<Esqueleto />}>
-      <Conteudo params={params} />
+      <Conteudo params={params} searchParams={searchParams} />
     </Suspense>
   );
 }
 
 async function Conteudo({
   params,
+  searchParams,
 }: {
   params: PageProps<"/rota/[origem]/[destino]">["params"];
+  searchParams: PageProps<"/rota/[origem]/[destino]">["searchParams"];
 }) {
   const { origem, destino } = await params;
+  const consulta = await searchParams;
+  const dataEscolhida =
+    typeof consulta.data === "string" && /^\d{4}-\d{2}-\d{2}$/.test(consulta.data)
+      ? consulta.data
+      : null;
 
   let rota;
   try {
@@ -112,7 +123,17 @@ async function Conteudo({
     ? calcularSazonalidade(rota, precosPorMes, veredito.melhor.programa.id)
     : null;
 
-  const janela = janelaDeCompra(rota.internacional, null, observacoes);
+  // A data do relogio so pode ser lida depois que o trecho ja esta
+  // marcado como dinamico; curvaMensal faz isso acima, via connection().
+  const diasAteAViagem = dataEscolhida
+    ? diasAte(new Date(`${dataEscolhida}T12:00:00`), new Date())
+    : null;
+
+  const janela = janelaDeCompra(
+    rota.internacional,
+    diasAteAViagem,
+    observacoes,
+  );
 
   const { referenciaBRL, datas } = datasMaisBaratas(datadas);
   const outrasOrigens = compararOrigens(rota.origem, preco.dados, alternativas);
@@ -150,6 +171,19 @@ async function Conteudo({
           Valores por trecho, só ida, em classe econômica.
         </p>
       </header>
+
+      <div className="mb-4">
+        <SeletorDeData valor={dataEscolhida} />
+      </div>
+
+      {diasAteAViagem !== null ? (
+        <div className="mb-4">
+          <FaixaDaJornada
+            fase={faseDaJornada(diasAteAViagem)}
+            diasAteAViagem={diasAteAViagem}
+          />
+        </div>
+      ) : null}
 
       <CardVeredito
         veredito={veredito}
