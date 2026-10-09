@@ -1,21 +1,203 @@
-import type { Metadata } from "next";
-import { Cabecalho } from "@/components/Cabecalho";
-import { EmBreve } from "@/components/EmBreve";
+"use client";
 
-export const metadata: Metadata = { title: "Promoções do momento" };
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Cabecalho } from "@/components/Cabecalho";
+import { usarPerfil } from "@/store/perfil";
+import { milhas, reais, reaisExatos } from "@/lib/format";
+
+/**
+ * Oportunidades saindo da cidade da pessoa.
+ *
+ * Componente de cliente porque a origem mora no localStorage -- nao ha
+ * nada a pre-renderizar numa lista que e diferente para cada usuario. O
+ * calculo pesado fica no servidor, em /api/promocoes.
+ */
+
+type Oportunidade = {
+  destino: { iata: string; cidade: string; pais: string };
+  precoBRL: number;
+  precoTipicoBRL: number;
+  descontoPct: number;
+  rotulo: string;
+  recomendacao: "milhas" | "dinheiro";
+  economiaBRL: number;
+  programa: string;
+  milhas: number;
+  qualidade: "excelente" | "bom" | "regular" | "ruim";
+  valorExtraidoPorMilheiroBRL: number;
+};
+
+type Resposta = {
+  origem: { iata: string; cidade: string };
+  fonte: string;
+  observacao: string;
+  oportunidades: Oportunidade[];
+  bonusVigentes: Array<{
+    destino: string;
+    bonusMedianoPct: number;
+    observacao: string;
+  }>;
+};
+
+const ESTILO_QUALIDADE: Record<Oportunidade["qualidade"], string> = {
+  excelente: "bg-dinheiro-fundo text-dinheiro",
+  bom: "bg-dinheiro-fundo text-dinheiro",
+  regular: "bg-superficie-2 text-tinta-media",
+  ruim: "bg-alerta-fundo text-alerta",
+};
+
+const NOME_DO_PROGRAMA: Record<string, string> = {
+  smiles: "Smiles",
+  latampass: "LATAM Pass",
+  tudoazul: "Azul Fidelidade",
+};
 
 export default function Promocoes() {
+  const origemIata = usarPerfil((p) => p.origemIata);
+  const [dados, setDados] = useState<Resposta | null>(null);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(false);
+
+  useEffect(() => {
+    const controlador = new AbortController();
+    setCarregando(true);
+    setErro(false);
+
+    fetch(`/api/promocoes?origem=${origemIata}`, { signal: controlador.signal })
+      .then((r) => r.json())
+      .then((corpo: Resposta) => {
+        setDados(corpo);
+        setCarregando(false);
+      })
+      .catch((e) => {
+        if (e.name === "AbortError") return;
+        setErro(true);
+        setCarregando(false);
+      });
+
+    return () => controlador.abort();
+  }, [origemIata]);
+
   return (
     <>
       <Cabecalho
         titulo="Promoções do momento"
-        subtitulo="As melhores oportunidades saindo da sua cidade — não só preço baixo, mas resgate que vale a pena."
+        subtitulo={
+          dados
+            ? `Saindo de ${dados.origem.cidade}. Só entram passagens abaixo do preço típico da rota, em trecho de ida.`
+            : "Carregando as melhores oportunidades perto de você."
+        }
       />
-      <EmBreve fase="Fase 7">
-        Vai listar os destinos populares a partir do seu aeroporto, cada um já
-        passado pelo motor de milhas, com os bônus de transferência vigentes no
-        topo.
-      </EmBreve>
+
+      {dados && dados.bonusVigentes.length > 0 ? (
+        <section className="mb-5 rounded-2xl border border-milhas-borda bg-milhas-fundo p-4">
+          <h2 className="mb-2 text-sm font-semibold text-tinta">
+            Bônus de transferência: o que esperar
+          </h2>
+          <ul className="space-y-1.5 text-sm text-tinta-media">
+            {dados.bonusVigentes.map((b) => (
+              <li key={b.destino} className="flex justify-between gap-3">
+                <span>{NOME_DO_PROGRAMA[b.destino] ?? b.destino}</span>
+                <span className="tabular shrink-0 font-semibold text-milhas">
+                  ~{b.bonusMedianoPct}%
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs leading-relaxed text-tinta-media">
+            Percentual mediano histórico de cada programa. Transferir só quando
+            há bônus é o que derruba o custo da sua milha pela metade.
+          </p>
+        </section>
+      ) : null}
+
+      {carregando ? <Esqueleto /> : null}
+
+      {erro ? (
+        <p className="rounded-2xl border border-borda bg-superficie p-5 text-sm text-tinta-media">
+          Não consegui carregar as oportunidades agora. Tente de novo em
+          instantes.
+        </p>
+      ) : null}
+
+      {dados && !carregando && dados.oportunidades.length === 0 ? (
+        <p className="rounded-2xl border border-dashed border-borda bg-superficie-2 p-5 text-sm leading-relaxed text-tinta-media">
+          Nenhuma oportunidade encontrada saindo de {dados.origem.cidade} agora.
+          Isso costuma acontecer em aeroportos menores, onde há poucas buscas
+          recentes. Tente trocar a origem na tela de busca.
+        </p>
+      ) : null}
+
+      <ul className="space-y-3">
+        {dados?.oportunidades.map((o) => (
+          <li key={o.destino.iata}>
+            <Link
+              href={`/rota/${dados.origem.iata}/${o.destino.iata}`}
+              className="block rounded-2xl border border-borda bg-superficie p-4 shadow-card transition-colors hover:border-marca"
+            >
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h3 className="truncate font-semibold text-tinta">
+                    {o.destino.cidade}
+                  </h3>
+                  <p className="text-xs text-tinta-fraca">{o.rotulo}</p>
+                </div>
+                <span className="shrink-0 rounded-full bg-dinheiro-fundo px-2 py-0.5 text-[11px] font-bold text-dinheiro">
+                  {o.descontoPct}% abaixo do normal
+                </span>
+              </div>
+
+              <dl className="tabular grid grid-cols-3 gap-2 border-t border-borda pt-2.5 text-center">
+                <div>
+                  <dt className="text-[11px] text-tinta-fraca">Em dinheiro</dt>
+                  <dd className="text-sm font-semibold text-tinta">
+                    {reais(o.precoBRL)}
+                  </dd>
+                  <dd className="text-[10px] text-tinta-fraca line-through">
+                    {reais(o.precoTipicoBRL)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[11px] text-tinta-fraca">
+                    {o.programa}
+                  </dt>
+                  <dd className="text-sm font-semibold text-tinta">
+                    {milhas(o.milhas)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[11px] text-tinta-fraca">Por milheiro</dt>
+                  <dd className="text-sm font-semibold text-dinheiro">
+                    {reaisExatos(o.valorExtraidoPorMilheiroBRL)}
+                  </dd>
+                  <dd
+                    className={`text-[10px] ${ESTILO_QUALIDADE[o.qualidade]} rounded-full px-1`}
+                  >
+                    {o.qualidade === "ruim" ? "não compensa" : o.qualidade}
+                  </dd>
+                </div>
+              </dl>
+            </Link>
+          </li>
+        ))}
+      </ul>
+
+      {dados && dados.oportunidades.length > 0 ? (
+        <p className="mt-4 text-xs leading-relaxed text-tinta-fraca">
+          {dados.observacao}
+        </p>
+      ) : null}
     </>
+  );
+}
+
+function Esqueleto() {
+  return (
+    <div className="animate-pulse space-y-3" aria-label="Carregando">
+      {[0, 1, 2, 3].map((i) => (
+        <div key={i} className="h-28 rounded-2xl bg-superficie-2" />
+      ))}
+    </div>
   );
 }

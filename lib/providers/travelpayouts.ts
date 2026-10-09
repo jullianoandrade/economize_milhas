@@ -75,47 +75,52 @@ export type PrecoDeRota = {
   precoBRL: number;
   paradas: number;
   partidaEm: string | null;
-  encontradoEm: string | null;
 };
 
-type RespostaCheap = Record<
-  string,
-  Record<
-    string,
-    {
-      price: number;
-      airline?: string;
-      departure_at?: string;
-      return_at?: string;
-      expires_at?: string;
-    }
-  >
->;
+type RespostaPorDatas = Array<{
+  price: number;
+  departure_at?: string;
+  transfers?: number;
+  return_transfers?: number;
+}>;
 
-/** Passagem mais barata encontrada recentemente para a rota. */
+/**
+ * Passagem de IDA mais barata encontrada recentemente.
+ *
+ * O one_way nao e detalhe: /v1/prices/cheap e /v1/city-directions
+ * devolvem ida e volta, e usar aquele numero contra milhas de um unico
+ * trecho dobrava o valor aparente da milha. Como a tabela de resgate e
+ * por trecho, o app inteiro trabalha com so ida.
+ */
 export async function precoMaisBarato(
   origem: string,
   destino: string,
 ): Promise<PrecoDeRota | null> {
-  const dados = await buscar<RespostaCheap>("/v1/prices/cheap", {
-    origin: origem,
-    destination: destino,
-  });
-  if (!dados) return null;
-
-  const ofertas = Object.values(dados?.[destino] ?? {}).filter(
-    (o) => o?.price > 0,
+  const dados = await buscar<RespostaPorDatas>(
+    "/aviasales/v3/prices_for_dates",
+    {
+      origin: origem,
+      destination: destino,
+      one_way: "true",
+      sorting: "price",
+      limit: 30,
+    },
   );
-  if (ofertas.length === 0) return null;
 
-  const maisBarata = ofertas.reduce((a, b) => (b.price < a.price ? b : a));
+  try {
+    const ofertas = (dados ?? []).filter((o) => o?.price > 0);
+    if (ofertas.length === 0) return null;
 
-  return {
-    precoBRL: maisBarata.price,
-    paradas: 0,
-    partidaEm: maisBarata.departure_at ?? null,
-    encontradoEm: null,
-  };
+    const maisBarata = ofertas.reduce((a, b) => (b.price < a.price ? b : a));
+
+    return {
+      precoBRL: maisBarata.price,
+      paradas: maisBarata.transfers ?? 0,
+      partidaEm: maisBarata.departure_at ?? null,
+    };
+  } catch {
+    return null;
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -194,57 +199,32 @@ export async function precosObservados(
 export type PrecoDeMes = { mes: number; precoBRL: number };
 
 /**
- * Atencao ao formato: /v1/prices/calendar devolve um OBJETO indexado por
- * data ("2026-10-08": {...}), nao um array, e o campo da data e
- * departure_at. Assumir array aqui derrubava a pagina inteira.
- */
-type RespostaCalendario = Record<
-  string,
-  { price: number; departure_at?: string; transfers?: number }
->;
-
-/**
- * Menor preco encontrado para cada mes do ano, usado na curva de
- * sazonalidade. Uma chamada por mes seria caro; aqui se pede o periodo
- * inteiro de uma vez e se agrupa por mes de embarque.
+ * Menor preco de IDA por mes de embarque, para a curva de sazonalidade.
+ *
+ * Derivado das mesmas observacoes de so ida: o endpoint de calendario
+ * devolve ida e volta e cobre apenas uns 48 dias, o que nao forma curva
+ * anual nem bate com o resto do app.
  */
 export async function precosPorMes(
   origem: string,
   destino: string,
 ): Promise<PrecoDeMes[] | null> {
-  const dados = await buscar<RespostaCalendario>("/v1/prices/calendar", {
-    origin: origem,
-    destination: destino,
-    calendar_type: "departure_date",
-    depart_date: new Date().toISOString().slice(0, 7),
-  });
-  if (!dados) return null;
+  const observacoes = await precosObservados(origem, destino, 1000);
+  if (!observacoes || observacoes.length === 0) return null;
 
-  // Toda leitura de resposta externa fica protegida: uma mudanca de
-  // formato do provedor deve virar fallback para a base curada, nunca
-  // uma pagina quebrada na cara do usuario.
-  try {
-    const menorPorMes = new Map<number, number>();
-
-    for (const [data, item] of Object.entries(dados ?? {})) {
-      const quando = item?.departure_at ?? data;
-      const mes = new Date(quando).getUTCMonth() + 1;
-      if (!Number.isFinite(mes) || !(item?.price > 0)) continue;
-
-      const atual = menorPorMes.get(mes);
-      if (atual === undefined || item.price < atual) {
-        menorPorMes.set(mes, item.price);
-      }
-    }
-
-    if (menorPorMes.size === 0) return null;
-
-    return [...menorPorMes.entries()]
-      .map(([mes, precoBRL]) => ({ mes, precoBRL }))
-      .sort((a, b) => a.mes - b.mes);
-  } catch {
-    return null;
+  const menorPorMes = new Map<number, number>();
+  for (const o of observacoes) {
+    const mes = Number(o.partidaEm.slice(5, 7));
+    if (!mes) continue;
+    const atual = menorPorMes.get(mes);
+    if (atual === undefined || o.precoBRL < atual) menorPorMes.set(mes, o.precoBRL);
   }
+
+  if (menorPorMes.size === 0) return null;
+
+  return [...menorPorMes.entries()]
+    .map(([mes, precoBRL]) => ({ mes, precoBRL }))
+    .sort((a, b) => a.mes - b.mes);
 }
 
 /* ------------------------------------------------------------------ */
@@ -255,25 +235,46 @@ export type DestinoPopular = {
   partidaEm: string | null;
 };
 
-type RespostaDirecoes = Record<
-  string,
-  { price: number; departure_at?: string; destination: string }
->;
-
-/** Destinos mais buscados a partir de uma cidade. Base da aba Promocoes. */
+/**
+ * Destinos mais buscados a partir de uma cidade, com preco de IDA.
+ *
+ * Nao usa /v1/city-directions: aquele endpoint devolve ida e volta, e
+ * misturar isso com milhas de um trecho inflava o valor das milhas em
+ * cerca de duas vezes. O endpoint de observacoes recentes aceita
+ * one_way e, sem destino informado, cobre centenas de cidades de uma vez.
+ */
 export async function destinosPopulares(
   origem: string,
 ): Promise<DestinoPopular[] | null> {
-  const dados = await buscar<RespostaDirecoes>("/v1/city-directions", {
+  const observacoes = await buscar<
+    Array<{ destination: string; value: number; depart_date: string }>
+  >("/v2/prices/latest", {
     origin: origem,
+    period_type: "year",
+    one_way: "true",
+    limit: 500,
+    sorting: "price",
   });
-  if (!dados) return null;
 
-  const lista = Object.entries(dados).map(([iata, oferta]) => ({
-    destinoIata: oferta.destination ?? iata,
-    precoBRL: oferta.price,
-    partidaEm: oferta.departure_at ?? null,
-  }));
+  try {
+    const maisBaratoPorDestino = new Map<string, DestinoPopular>();
 
-  return lista.length > 0 ? lista.sort((a, b) => a.precoBRL - b.precoBRL) : null;
+    for (const item of observacoes ?? []) {
+      if (!item?.destination || !(item.value > 0)) continue;
+
+      const atual = maisBaratoPorDestino.get(item.destination);
+      if (atual && atual.precoBRL <= item.value) continue;
+
+      maisBaratoPorDestino.set(item.destination, {
+        destinoIata: item.destination,
+        precoBRL: item.value,
+        partidaEm: item.depart_date ?? null,
+      });
+    }
+
+    const lista = [...maisBaratoPorDestino.values()];
+    return lista.length > 0 ? lista.sort((a, b) => a.precoBRL - b.precoBRL) : null;
+  } catch {
+    return null;
+  }
 }
