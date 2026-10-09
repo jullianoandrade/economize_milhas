@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist } from "next/font/google";
 import { NavegacaoInferior } from "@/components/NavegacaoInferior";
+import { Rodape } from "@/components/Rodape";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -68,28 +68,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
 
-        {/* pb-28 reserva o espaco da nav flutuante */}
-        <footer className="mx-auto max-w-lg px-4 pb-28 pt-6">
-          <p className="border-t border-borda pt-4 text-center text-xs leading-relaxed text-tinta-fraca">
-            Valores em milhas são estimativas.{" "}
-            <Link
-              href="/boas-vindas"
-              className="underline underline-offset-2 hover:text-marca"
-            >
-              Como o app funciona
-            </Link>{" "}
-            ·{" "}
-            <Link
-              href="/como-nos-sustentamos"
-              className="underline underline-offset-2 hover:text-marca"
-            >
-              Como nos sustentamos
-            </Link>
-          </p>
-        </footer>
+        {/* usePathname e dado dinamico: sem esta fronteira, o rodape e
+            a nav impediriam qualquer pagina do app de ser
+            pre-renderizada. pb-28 no rodape reserva o espaco da nav
+            flutuante. */}
+        <Suspense fallback={null}>
+          <Rodape />
+        </Suspense>
 
-        {/* usePathname e dado dinamico: sem esta fronteira, a nav
-            impediria qualquer pagina do app de ser pre-renderizada. */}
         <Suspense fallback={null}>
           <NavegacaoInferior />
         </Suspense>
