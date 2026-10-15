@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AlternadorDeTema } from "./AlternadorDeTema";
 
 /**
  * Rodape do app.
@@ -33,6 +34,10 @@ export function Rodape() {
           Como nos sustentamos
         </Link>
       </p>
+
+      <div className="mt-4 flex justify-center">
+        <AlternadorDeTema />
+      </div>
     </footer>
   );
 }

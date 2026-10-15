@@ -20,7 +20,7 @@ export function CampoDeLugar({
   rotulo,
   valorInicial = "",
   autoFocus = false,
-  // "claro" e para quando o campo esta sobre o painel violeta da home:
+  // "claro" e para quando o campo esta sobre o painel escuro da home:
   // so o rotulo muda de cor, o campo em si continua branco para o
   // contraste do texto digitado nao depender do fundo da tela.
   tom = "padrao",
@@ -110,7 +110,7 @@ export function CampoDeLugar({
       <label
         htmlFor={id}
         className={`mb-1.5 block text-xs font-semibold uppercase tracking-wide ${
-          tom === "claro" ? "text-white/80" : "text-tinta-fraca"
+          tom === "claro" ? "text-painel-tinta-fraca" : "text-tinta-fraca"
         }`}
       >
         {rotulo}

@@ -46,17 +46,21 @@ export const viewport: Viewport = {
   viewportFit: "cover",
   // Sem variante escura enquanto a paleta clara nao estiver decidida.
   // O seletor de paleta reescreve esta meta tag ao trocar.
-  themeColor: "#f7f8fa",
+  themeColor: "#f8f5ec",
 };
 
 /**
- * Aplica a paleta guardada ANTES da primeira pintura.
+ * Aplica o tema ANTES da primeira pintura.
  *
- * Precisa ser script sincrono no inicio do body: se a troca acontecesse
- * depois da hidratacao, quem escolheu Van Gogh veria a tela piscar em
- * ardosia a cada carregamento.
+ * Precisa ser script sincrono no inicio do body: se a decisao ficasse
+ * para depois da hidratacao, quem prefere escuro veria a tela clara
+ * piscar a cada carregamento.
+ *
+ * Sem preferencia salva, segue o sistema -- e esse mesmo caminho serve
+ * ao botao manual, o que evita manter duas copias da paleta escura no
+ * CSS, uma para a media query e outra para o atributo.
  */
-const APLICAR_PALETA = `try{var p=localStorage.getItem("milhas-paleta");if(p&&p!=="ardosia")document.documentElement.setAttribute("data-paleta",p)}catch(e){}`;
+const APLICAR_TEMA = `try{var t=localStorage.getItem("milhas-tema");if(t!=="claro"&&t!=="escuro")t=matchMedia("(prefers-color-scheme: dark)").matches?"escuro":"claro";document.documentElement.setAttribute("data-tema",t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",t==="escuro"?"#0e1a2e":"#f8f5ec")}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -65,7 +69,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full">
-        <script dangerouslySetInnerHTML={{ __html: APLICAR_PALETA }} />
+        <script dangerouslySetInnerHTML={{ __html: APLICAR_TEMA }} />
 
         <a
           href="#conteudo"

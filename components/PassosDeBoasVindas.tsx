@@ -165,7 +165,7 @@ export function PassosDeBoasVindas() {
           aria-label={`Passo ${i + 1} de ${PASSOS.length}`}
           className="flex-1"
         >
-          <div className="mb-5 overflow-hidden rounded-[28px] bg-marca-forte px-6 py-5">
+          <div className="mb-5 overflow-hidden painel rounded-[28px] px-6 py-5">
             <Ilustracao cena={p.cena} tom="claro" className="w-full" />
           </div>
 

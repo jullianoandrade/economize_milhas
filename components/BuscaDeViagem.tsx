@@ -45,7 +45,7 @@ export function BuscaDeViagem() {
   }
 
   return (
-    <section className="relative mb-6 overflow-hidden rounded-[28px] bg-marca-forte px-5 pb-5 pt-5 text-white">
+    <section className="painel relative mb-6 overflow-hidden rounded-[28px] px-5 pb-5 pt-5">
       {/* Decoracao, nao conteudo: fica no canto, cortada, e some do
           leitor de tela. */}
       <Ilustracao
@@ -72,7 +72,7 @@ export function BuscaDeViagem() {
           <button
             type="button"
             onClick={() => setTrocandoOrigem(true)}
-            className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/25"
+            className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-painel-realce px-3 py-1.5 text-sm text-painel-tinta transition-colors hover:bg-painel-realce-forte"
           >
             <svg
               viewBox="0 0 24 24"
@@ -88,7 +88,7 @@ export function BuscaDeViagem() {
               <circle cx="12" cy="10" r="2.5" />
             </svg>
             Saindo de <strong className="font-semibold">{nomeDaOrigem}</strong>
-            <span className="text-white/70">· trocar</span>
+            <span className="text-painel-tinta-fraca">· trocar</span>
           </button>
         )}
 

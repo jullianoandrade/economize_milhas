@@ -26,8 +26,8 @@ export function AnelDeProgresso({
   const circunferencia = 2 * Math.PI * raio;
   const preenchido = (limitado / 100) * circunferencia;
 
-  const corTrilho = tom === "claro" ? "rgb(255 255 255 / 0.25)" : "var(--borda)";
-  const corArco = tom === "claro" ? "#ffffff" : "var(--marca)";
+  const corTrilho = tom === "claro" ? "var(--painel-realce)" : "var(--borda)";
+  const corArco = tom === "claro" ? "var(--painel-tinta)" : "var(--marca)";
 
   return (
     <div
@@ -63,7 +63,7 @@ export function AnelDeProgresso({
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span
           className={`tabular text-lg font-bold leading-none ${
-            tom === "claro" ? "text-white" : "text-tinta"
+            tom === "claro" ? "text-painel-tinta" : "text-tinta"
           }`}
         >
           {Math.round(limitado)}%
@@ -71,7 +71,7 @@ export function AnelDeProgresso({
         {rotulo ? (
           <span
             className={`mt-0.5 text-[10px] leading-none ${
-              tom === "claro" ? "text-white/75" : "text-tinta-fraca"
+              tom === "claro" ? "text-painel-tinta-fraca" : "text-tinta-fraca"
             }`}
           >
             {rotulo}

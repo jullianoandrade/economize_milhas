@@ -1,6 +1,9 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { TelaDeObjetivos } from "@/components/TelaDeObjetivos";
+import {
+  ALTURA_RESERVADA,
+  TelaDeObjetivos,
+} from "@/components/TelaDeObjetivos";
 
 export const metadata: Metadata = {
   title: "Objetivos",
@@ -25,9 +28,13 @@ export default function Objetivos() {
 
 function Esqueleto() {
   return (
-    <div className="space-y-4" aria-label="Carregando seus objetivos">
-      <div className="h-24 animate-pulse rounded-2xl bg-superficie-2" />
-      <div className="h-64 animate-pulse rounded-[28px] bg-superficie-2" />
+    <div
+      className={`${ALTURA_RESERVADA} space-y-4`}
+      aria-label="Carregando seus objetivos"
+    >
+      <div className="h-28 animate-pulse rounded-2xl bg-superficie-2" />
+      <div className="h-80 animate-pulse rounded-[28px] bg-superficie-2" />
+      <div className="h-56 animate-pulse rounded-[28px] bg-superficie-2" />
     </div>
   );
 }

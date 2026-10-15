@@ -90,6 +90,15 @@ const APARENCIA_DA_SITUACAO: Record<
   "sem-prazo": { rotulo: "Sem data", classe: "bg-superficie-2 text-tinta-media" },
 };
 
+/**
+ * A altura da tela e reservada, nao estimada.
+ *
+ * Sem ela o esqueleto media 22rem, a tela real media quase o dobro, e o
+ * rodape descia quando o conteudo chegava -- deslocamento de 0,159 no
+ * Lighthouse, que na mao se sente como a tela pulando.
+ */
+export const ALTURA_RESERVADA = "min-h-[48rem]";
+
 /** Acima disto, a estimativa do trecho mudou o bastante para avisar. */
 const DESVIO_QUE_MERECE_AVISO = 0.1;
 
@@ -261,15 +270,19 @@ export function TelaDeObjetivos() {
 
   if (!hidratado) {
     return (
-      <div className="space-y-4" aria-label="Carregando seus objetivos">
-        <div className="h-24 animate-pulse rounded-2xl bg-superficie-2" />
-        <div className="h-64 animate-pulse rounded-[28px] bg-superficie-2" />
+      <div
+        className={`${ALTURA_RESERVADA} space-y-4`}
+        aria-label="Carregando seus objetivos"
+      >
+        <div className="h-28 animate-pulse rounded-2xl bg-superficie-2" />
+        <div className="h-80 animate-pulse rounded-[28px] bg-superficie-2" />
+        <div className="h-56 animate-pulse rounded-[28px] bg-superficie-2" />
       </div>
     );
   }
 
   return (
-    <>
+    <div className={ALTURA_RESERVADA}>
       <Cabecalho
         sobrelinha={metas.length > 0 ? "Seus objetivos" : undefined}
         titulo={emCriacao ? "Um novo objetivo" : "Quanto falta"}
@@ -376,25 +389,25 @@ export function TelaDeObjetivos() {
       {/* ---------------- Criacao: previa antes de confirmar ------------- */}
 
       {emCriacao && resposta ? (
-        <section className="mb-5 rounded-[28px] bg-marca-forte p-5 text-white">
-          <p className="text-xs font-bold uppercase tracking-widest text-white/70">
+        <section className="mb-5 painel rounded-[28px] p-5">
+          <p className="text-xs font-bold uppercase tracking-widest text-painel-tinta-fraca">
             {resposta.programa.nome}
           </p>
           <h2 className="display mt-0.5 text-2xl">
             {resposta.rota.destino.cidade}
           </h2>
-          <p className="tabular mt-2 text-sm text-white/85">
+          <p className="tabular mt-2 text-sm text-painel-tinta-fraca">
             {fmtMilhas(resposta.plano.milhasNecessarias)} milhas por trecho ·
             passagem a {reais(resposta.plano.precoDaPassagemBRL)}
           </p>
-          <p className="mt-3 text-sm leading-relaxed text-white/85">
+          <p className="mt-3 text-sm leading-relaxed text-painel-tinta-fraca">
             {resposta.plano.explicacao}
           </p>
 
           <button
             type="button"
             onClick={criarObjetivo}
-            className="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-marca-forte"
+            className="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-painel-tinta px-5 text-sm font-semibold text-painel"
           >
             Criar objetivo
           </button>
@@ -406,7 +419,7 @@ export function TelaDeObjetivos() {
                 setModo("acompanhando");
                 setDestinoNovo(null);
               }}
-              className="mt-2 w-full text-center text-sm text-white/70 underline underline-offset-4"
+              className="mt-2 w-full text-center text-sm text-painel-tinta-fraca underline underline-offset-4"
             >
               cancelar
             </button>
@@ -589,7 +602,7 @@ export function TelaDeObjetivos() {
           Novo objetivo
         </button>
       ) : null}
-    </>
+    </div>
   );
 }
 
@@ -629,7 +642,7 @@ function ObjetivoAtivo({
 
   return (
     <>
-      <section className="mb-4 rounded-[28px] bg-marca-forte p-5 text-white">
+      <section className="mb-4 painel rounded-[28px] p-5">
         <div className="mb-4 flex items-center gap-4">
           <AnelDeProgresso
             percentual={progresso.percentual}
@@ -637,13 +650,13 @@ function ObjetivoAtivo({
             rotulo="pronto"
           />
           <div className="min-w-0">
-            <p className="text-xs font-bold uppercase tracking-widest text-white/70">
+            <p className="text-xs font-bold uppercase tracking-widest text-painel-tinta-fraca">
               {meta.programaNome}
             </p>
             <h2 className="display truncate text-2xl leading-tight">
               {meta.destinoCidade}
             </h2>
-            <p className="tabular mt-1 text-sm text-white/85">
+            <p className="tabular mt-1 text-sm text-painel-tinta-fraca">
               {fmtMilhas(progresso.saldoAtual)} de{" "}
               {fmtMilhas(meta.milhasNecessarias)} milhas
             </p>
@@ -656,7 +669,7 @@ function ObjetivoAtivo({
           {aparencia.rotulo}
         </span>
 
-        <p className="mt-3 text-sm leading-relaxed text-white/85">
+        <p className="mt-3 text-sm leading-relaxed text-painel-tinta-fraca">
           {progresso.resumo}
         </p>
       </section>
@@ -778,7 +791,7 @@ function ObjetivoAtivo({
                 resposta.plano.precoDaPassagemBRL,
               )
             }
-            className="mt-3 rounded-full bg-milhas px-4 py-2 text-xs font-semibold text-white"
+            className="mt-3 rounded-full bg-milhas px-4 py-2 text-xs font-semibold text-milhas-contraste"
           >
             Atualizar a meta para {fmtMilhas(estimativaAtual)}
           </button>

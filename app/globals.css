@@ -1,173 +1,150 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Tokens de design
+   Tokens de design — paleta Van Gogh
 
-   Uma regra organiza tudo aqui: AS CORES SEMANTICAS NAO MUDAM.
-   Ambar e milhas, verde e dinheiro, vermelho e alerta -- esses tres
-   carregam o veredito, foram medidos e validados para daltonismo, e
-   sao iguais em qualquer paleta. O que troca de uma paleta para outra
-   e so a marca e as superficies.
+   Nao e a paleta dele repintada na interface: isso destruiria a
+   legibilidade e brigaria com o veredito. E a ESTRUTURA da Noite
+   Estrelada -- campo azul-ultramar profundo, superficie de tela crua, e
+   o ocre como a unica coisa que brilha.
 
-   Isso nao e organizacao por organizacao: e o que garante que a cor da
-   marca nunca compita com a cor que significa alguma coisa. Marca verde
-   brigaria com "dinheiro"; marca laranja brigaria com "milhas". Por isso
-   as duas candidatas sao azuis.
+   Uma regra organiza o arquivo: AS CORES SEMANTICAS MANDAM.
+   Ambar e milhas, verde e dinheiro, vermelho e alerta. Os tres carregam
+   o veredito e foram validados para daltonismo. A marca existe para
+   NAO competir com eles -- por isso e azul: marca verde brigaria com
+   "dinheiro", marca laranja com "milhas".
 
-   Contraste de cada par verificado com script, nao estimado no olho.
+   O acaso util: o nosso ambar de milhas ja era praticamente o ocre dos
+   Girassois. A cor que significava alguma coisa no app e a mesma que
+   acende o quadro.
+
+   Todo par texto/superficie daqui foi medido por script, nao estimado.
    ============================================================ */
 
-/* ------------------------------------------------------------
-   Paleta padrao: grafite + azul-ardosia
-   Interface quase neutra, acento azul profundo de baixa croma.
-   ------------------------------------------------------------ */
-
 :root {
-  /* Superficies */
-  --fundo: #f7f8fa;
-  --superficie: #ffffff;
-  --superficie-2: #eff1f5;
-  --borda: #e2e6ee;
+  /* Superficies — tela crua */
+  --fundo: #f8f5ec;
+  --superficie: #fffdf7;
+  --superficie-2: #f1ecdd;
+  --borda: #e5decb;
 
-  /* Texto */
-  --tinta: #14181f;
-  --tinta-media: #4b5563;
-  /* 5,04:1 sobre a superficie secundaria. O tom que eu queria (#64748B)
-     dava 4,11 ali e reprovava -- medido, nao estimado. */
-  --tinta-fraca: #5a6878;
+  /* Texto — azul-cipreste, nao preto */
+  --tinta: #15233f;
+  --tinta-media: #4a5876;
+  /* 4,78:1 sobre a superficie secundaria. O tom mais claro que eu
+     queria (#6B7490) dava 3,97 ali e reprovava. */
+  --tinta-fraca: #5e677f;
 
-  /* Marca */
-  --marca: #2a4d8f;
-  --marca-forte: #1e3a6e;
-  --marca-fraca: #e8edf7;
+  /* Marca — ultramar */
+  --marca: #20406f;
+  --marca-forte: #16304f;
+  --marca-fraca: #e7edf7;
   /* So para decoracao: gradiente, ilustracao, traco de fundo.
      Nunca para texto nem para borda que carregue significado. */
-  --marca-suave: #7e9ccb;
-  --marca-contraste: #ffffff;
+  --marca-suave: #6189c0;
+  --marca-contraste: #fffdf7;
 
-  /* Veredito: milhas (ambar) x dinheiro (verde).
-     Iguais em toda paleta -- ver o cabecalho deste arquivo. */
+  /* Painel de destaque — o campo noturno do quadro.
+     Tokens proprios, e nao "a marca mais escura", porque no modo escuro
+     um painel mais escuro que a superficie nao existe: ele precisa ficar
+     MAIS claro. Sem esta separacao, o texto branco fixo que estava nos
+     componentes caia para 1,70:1 a noite. */
+  --painel: #16304f;
+  --painel-tinta: #fffdf7;
+  --painel-tinta-fraca: #bdcde6;
+  --painel-realce: #2a4a74;
+  --painel-realce-forte: #36598b;
+  --painel-borda: transparent;
+
+  /* Veredito: milhas (ocre) x dinheiro (verde) */
   --milhas: #b45309;
-  --milhas-fundo: #fef5e6;
-  --milhas-borda: #f3d9a8;
+  /* Texto sobre o proprio ambar. De dia o ambar e escuro e pede tinta
+     clara; a noite ele e o amarelo-cromio das estrelas e pede tinta
+     escura. Sem este par, o botao de atualizar meta ficava em 1,3:1
+     a noite. */
+  --milhas-contraste: #fffdf7;
+  --milhas-fundo: #fdf5e6;
+  --milhas-borda: #ecd5a6;
 
   --dinheiro: #047857;
-  --dinheiro-fundo: #e7f6ef;
-  --dinheiro-borda: #a9dcc6;
+  --dinheiro-fundo: #e6f3ec;
+  --dinheiro-borda: #a5d8c1;
 
   /* Sinais */
   --alerta: #b91c1c;
-  --alerta-fundo: #fdecec;
+  --alerta-fundo: #fbeae6;
   --atencao: #a16207;
 
   /* Graficos.
      Tons proprios, separados dos de texto: os tokens --milhas e --dinheiro
      foram escolhidos para legibilidade de TEXTO, e como preenchimento de
-     barra ficam fora da banda de luminosidade recomendada. Estes aqui
-     passaram no validador de paleta (banda, croma, contraste e separacao
-     para daltonismo) sobre a superficie de cada modo.
+     barra ficam fora da banda de luminosidade recomendada.
 
      A separacao verde/ambar fica na faixa 6-8 de delta E para protanopia,
      o que torna o rotulo em texto OBRIGATORIO: nenhuma informacao do
      grafico pode depender so da cor. */
   --grafico-milhas: #b45309;
   --grafico-dinheiro: #047857;
-  --grafico-neutro: #c7cdd8;
-
-  /* Elevacao */
-  --sombra-card: 0 1px 2px rgb(20 24 31 / 0.04), 0 4px 14px rgb(20 24 31 / 0.06);
-  /* A nav flutua sobre o conteudo: precisa de uma sombra que a separe
-     de verdade, nao do mesmo realce dos cartoes. */
-  --sombra-flutuante: 0 4px 10px rgb(20 24 31 / 0.08), 0 12px 32px rgb(20 24 31 / 0.14);
-
-  /* Superficie de destaque dos paineis de abertura e dos objetivos. */
-  --gradiente-marca: linear-gradient(140deg, #1e3a6e 0%, #2a4d8f 52%, #4a6fa8 100%);
-  --gradiente-ceu: linear-gradient(180deg, #e8edf7 0%, #f7f8fa 100%);
-
-  /* Cor da barra de status no aparelho. O seletor de paleta reescreve a
-     meta tag; este valor e o de partida. */
-  --barra-do-sistema: #f7f8fa;
-}
-
-/* ------------------------------------------------------------
-   Paleta alternativa: Van Gogh
-
-   Nao e a paleta dele repintada na interface -- isso destruiria a
-   legibilidade e brigaria com o veredito. E a ESTRUTURA dele: campo
-   azul-ultramar profundo, superficie de tela crua, e o amarelo-ocre
-   como a unica coisa que brilha.
-
-   O acaso util: o nosso ambar de "milhas" ja e praticamente o ocre dos
-   Girassois, entao a cor que ja significava alguma coisa no app e a
-   mesma que acende o quadro.
-   ------------------------------------------------------------ */
-
-:root[data-paleta="vangogh"] {
-  --fundo: #f8f5ec;
-  --superficie: #fffdf7;
-  --superficie-2: #f1ecdd;
-  --borda: #e5decb;
-
-  --tinta: #15233f;
-  --tinta-media: #4a5876;
-  --tinta-fraca: #5e677f;
-
-  --marca: #20406f;
-  --marca-forte: #16304f;
-  --marca-fraca: #e7edf7;
-  --marca-suave: #6189c0;
-  --marca-contraste: #fffdf7;
-
-  /* O ambar e o verde continuam os mesmos; so o fundo deles esquenta
-     para acompanhar a superficie. O ambar sobre creme ficou em 4,48 e
-     reprovava -- este valor devolve 4,63. */
-  --milhas-fundo: #fdf5e6;
-  --milhas-borda: #ecd5a6;
-
-  --dinheiro-fundo: #e6f3ec;
-  --dinheiro-borda: #a5d8c1;
-
-  --alerta-fundo: #fbeae6;
-
   --grafico-neutro: #cfc7b3;
 
+  /* Elevacao — sombra quente, para nao acinzentar a tela crua */
   --sombra-card: 0 1px 2px rgb(33 25 10 / 0.05), 0 4px 14px rgb(33 25 10 / 0.07);
+  /* A nav flutua sobre o conteudo: precisa de uma sombra que a separe
+     de verdade, nao do mesmo realce dos cartoes. */
   --sombra-flutuante: 0 4px 10px rgb(33 25 10 / 0.1), 0 12px 32px rgb(33 25 10 / 0.16);
 
   --gradiente-marca: linear-gradient(140deg, #16304f 0%, #20406f 45%, #3e63a0 100%);
   --gradiente-ceu: linear-gradient(180deg, #efe9d8 0%, #f8f5ec 100%);
 
+  /* Cor da barra de status no aparelho. O script de tema reescreve a
+     meta tag; este valor e o de partida. */
   --barra-do-sistema: #f8f5ec;
+
+  color-scheme: light;
 }
 
 /* ------------------------------------------------------------
-   Modo escuro -- DORMENTE por enquanto.
+   A noite
 
-   Nao esta em prefers-color-scheme de proposito: enquanto a paleta
-   clara nao estiver decidida, o aparelho no modo escuro mostraria
-   cores que ninguem escolheu. Volta a valer, derivado da paleta
-   vencedora, quando ela for definida.
+   Um bloco so, acionado por atributo -- nao por prefers-color-scheme.
+   Quem decide e o script no inicio do body: ele le a preferencia salva
+   e, se nao houver nenhuma, consulta o sistema. Assim o mesmo caminho
+   serve para o automatico e para o botao manual, e o arquivo nao fica
+   com duas copias da paleta escura que precisam ser mantidas em sincronia.
    ------------------------------------------------------------ */
 
 :root[data-tema="escuro"] {
-  --fundo: #0d0f14;
-  --superficie: #161a22;
-  --superficie-2: #1e2430;
-  --borda: #2c3442;
+  --fundo: #0e1a2e;
+  --superficie: #152339;
+  --superficie-2: #1d2e48;
+  --borda: #2b405f;
 
-  --tinta: #eef1f6;
-  --tinta-media: #aab3c2;
-  --tinta-fraca: #8c95a6;
+  --tinta: #f2ede0;
+  --tinta-media: #b6bed0;
+  --tinta-fraca: #8e99b0;
 
-  --marca: #8fb0e8;
-  --marca-forte: #abc4f0;
-  --marca-fraca: #1b2435;
+  --marca: #8fb2e8;
+  --marca-forte: #aec8f0;
+  --marca-fraca: #1a2b45;
   --marca-suave: #5a7cb5;
-  --marca-contraste: #0d0f14;
+  --marca-contraste: #0e1a2e;
 
-  --milhas: #fbbf4c;
+  /* Mais claro que a superficie, nao mais escuro: a noite inverte a
+     direcao da elevacao. A separacao fica em 1,52 -- modesta de
+     proposito, porque e a borda que carrega o recorte aqui. */
+  --painel: #26406a;
+  --painel-tinta: #f2ede0;
+  --painel-tinta-fraca: #aebcd4;
+  --painel-realce: #35538a;
+  --painel-realce-forte: #41659f;
+  --painel-borda: #3c5b8c;
+
+  /* O amarelo-cromio das estrelas. De dia o mesmo papel e do ocre, que
+     e o que sobrevive a um fundo claro. */
+  --milhas: #f2b33d;
+  --milhas-contraste: #2e2410;
   --milhas-fundo: #2e2410;
-  --milhas-borda: #57430f;
+  --milhas-borda: #56410f;
 
   --dinheiro: #4ade9f;
   --dinheiro-fundo: #0f2c22;
@@ -179,15 +156,17 @@
 
   --grafico-milhas: #c08622;
   --grafico-dinheiro: #1f9c6c;
-  --grafico-neutro: #39414f;
+  --grafico-neutro: #35445e;
 
   --sombra-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 12px rgb(0 0 0 / 0.25);
   --sombra-flutuante: 0 4px 10px rgb(0 0 0 / 0.4), 0 12px 32px rgb(0 0 0 / 0.5);
 
-  --gradiente-marca: linear-gradient(140deg, #1b2a45 0%, #27395c 48%, #3b5278 100%);
-  --gradiente-ceu: linear-gradient(180deg, #161d2b 0%, #0d0f14 100%);
+  --gradiente-marca: linear-gradient(140deg, #1b2c47 0%, #26406a 48%, #37578c 100%);
+  --gradiente-ceu: linear-gradient(180deg, #16243c 0%, #0e1a2e 100%);
 
-  --barra-do-sistema: #0d0f14;
+  --barra-do-sistema: #0e1a2e;
+
+  color-scheme: dark;
 }
 
 /* Expoe os tokens como utilitarios do Tailwind:
@@ -208,7 +187,15 @@
   --color-marca-suave: var(--marca-suave);
   --color-marca-contraste: var(--marca-contraste);
 
+  --color-painel: var(--painel);
+  --color-painel-tinta: var(--painel-tinta);
+  --color-painel-tinta-fraca: var(--painel-tinta-fraca);
+  --color-painel-realce: var(--painel-realce);
+  --color-painel-realce-forte: var(--painel-realce-forte);
+  --color-painel-borda: var(--painel-borda);
+
   --color-milhas: var(--milhas);
+  --color-milhas-contraste: var(--milhas-contraste);
   --color-milhas-fundo: var(--milhas-fundo);
   --color-milhas-borda: var(--milhas-borda);
 
@@ -285,6 +272,16 @@ body {
 
 .faixa-rolante > * {
   scroll-snap-align: start;
+}
+
+/* O painel de destaque: um bloco so, para os componentes nao repetirem
+   fundo, tinta e borda toda vez. A borda e transparente de dia e visivel
+   a noite -- e ela que recorta o painel quando a diferenca de luz
+   sozinha nao da conta. */
+.painel {
+  background: var(--painel);
+  color: var(--painel-tinta);
+  border: 1px solid var(--painel-borda);
 }
 
 .gradiente-marca {

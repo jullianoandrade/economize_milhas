@@ -99,7 +99,6 @@ export function CalendarioDePrecos({
               key={d.dia}
               href={`${rotaHref}?data=${d.dia}`}
               scroll={false}
-              aria-label={`${porExtenso(d.dia)}: ${reais(d.precoBRL ?? 0)}`}
               className={`${LARGURA_DA_COLUNA} flex shrink-0 flex-col items-center gap-1 rounded-2xl border px-1 py-2 transition-colors ${
                 escolhido
                   ? "border-marca bg-marca-fraca"
@@ -131,10 +130,17 @@ export function CalendarioDePrecos({
               <span className="tabular text-[11px] font-semibold leading-none text-tinta">
                 {diaCurto(d.dia)}
               </span>
+              {/* Sem aria-label: o nome acessivel e o proprio texto da
+                  coluna mais este complemento, entao ele contem o que
+                  esta escrito, na ordem em que esta escrito. Um
+                  aria-label que reordenasse as partes quebraria o
+                  comando de voz -- quem fala o que ve nao acharia o
+                  alvo. */}
               <span className="tabular text-[10px] leading-none text-tinta-media">
                 {(d.precoBRL ?? 0).toLocaleString("pt-BR", {
                   maximumFractionDigits: 0,
                 })}
+                <span className="sr-only"> reais</span>
               </span>
             </Link>
           );

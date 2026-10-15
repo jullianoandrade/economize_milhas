@@ -15,13 +15,13 @@ export type Cena = "viagem" | "meta" | "transparencia";
 
 /**
  * "claro" redefine os tokens de cor so dentro do desenho, para ele
- * aparecer sobre o painel violeta escuro das telas de abertura. E uma
+ * aparecer sobre o painel azul escuro das telas de abertura. E uma
  * sobrescrita local de variavel CSS, nao uma segunda copia do SVG.
  */
 const TOM_CLARO = {
-  "--marca": "#ffffff",
-  "--marca-suave": "#ffffff",
-  "--superficie": "#e6ecf6",
+  "--marca": "var(--painel-tinta)",
+  "--marca-suave": "var(--painel-tinta)",
+  "--superficie": "var(--painel-realce)",
 } as React.CSSProperties;
 
 export function Ilustracao({

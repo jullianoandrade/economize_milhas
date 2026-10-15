@@ -250,18 +250,18 @@ async function Conteudo({
         </section>
       ) : null}
 
-      <section className="mt-6 rounded-[24px] bg-marca-forte p-5 text-white">
+      <section className="mt-6 painel rounded-[24px] p-5">
         <h2 className="display mb-1.5 text-xl">
           Ainda não tem as milhas para {rota.destino.cidade}?
         </h2>
-        <p className="mb-4 text-sm leading-relaxed text-white/85">
+        <p className="mb-4 text-sm leading-relaxed text-painel-tinta-fraca">
           Transforme esta rota num objetivo. O app guarda o seu saldo de hoje
           como ponto de partida e passa a mostrar quanto você já andou, quanto
           falta e se no seu ritmo dá tempo.
         </p>
         <Link
           href={`/objetivos?destino=${rota.destino.iata}`}
-          className="inline-flex min-h-12 items-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-marca-forte"
+          className="inline-flex min-h-12 items-center gap-2 rounded-full bg-painel-tinta px-5 text-sm font-semibold text-painel"
         >
           Criar objetivo
           <svg
