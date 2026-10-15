@@ -1,13 +1,13 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { CardPrograma } from "@/components/CardPrograma";
 import { CalendarioDePrecos } from "@/components/CalendarioDePrecos";
 import { CardFlexibilidade } from "@/components/CardFlexibilidade";
 import { FaixaDaJornada } from "@/components/FaixaDaJornada";
 import { SeletorDeData } from "@/components/SeletorDeData";
 import { CardQuandoComprar } from "@/components/CardQuandoComprar";
-import { CardVeredito } from "@/components/CardVeredito";
+import { BlocoDeVeredito } from "@/components/BlocoDeVeredito";
+import { IlhaDoVeredito } from "@/components/IlhaDoVeredito";
 import { CurvaDeMeses } from "@/components/CurvaDeMeses";
 import { curvaMensal, precoDoTrecho } from "@/lib/precos";
 import {
@@ -188,11 +188,13 @@ async function Conteudo({
         </div>
       ) : null}
 
-      <CardVeredito
-        veredito={veredito}
-        fonte={preco.fonte}
-        observacaoDaFonte={preco.observacao}
-      />
+      <IlhaDoVeredito origem={rota.origem.iata} destino={rota.destino.iata}>
+        <BlocoDeVeredito
+          veredito={veredito}
+          fonte={preco.fonte}
+          observacaoDaFonte={preco.observacao}
+        />
+      </IlhaDoVeredito>
 
       <div className="mt-4">
         <CalendarioDePrecos
@@ -227,28 +229,6 @@ async function Conteudo({
           alternativas={outrasOrigens}
         />
       </div>
-
-      {veredito.opcoes.length > 0 ? (
-        <section className="mt-6">
-          <h2 className="mb-1 text-lg font-semibold tracking-tight text-tinta">
-            Por programa
-          </h2>
-          <p className="mb-3 text-sm leading-relaxed text-tinta-media">
-            Quantidades estimadas: os programas usam precificação dinâmica e
-            não publicam tabela fixa. Confirme no site antes de resgatar.
-          </p>
-
-          <div className="space-y-3">
-            {veredito.opcoes.map((opcao, indice) => (
-              <CardPrograma
-                key={opcao.programa.id}
-                opcao={opcao}
-                destaque={indice === 0}
-              />
-            ))}
-          </div>
-        </section>
-      ) : null}
 
       <section className="mt-6 painel rounded-[24px] p-5">
         <h2 className="display mb-1.5 text-xl">

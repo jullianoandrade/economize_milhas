@@ -26,9 +26,16 @@ const MAXIMO_DE_DESTINOS = 14;
 /** Desconto minimo sobre o preco tipico da regiao para contar como oferta. */
 const DESCONTO_MINIMO = 0.1;
 
+const numero = (v: string | null) => {
+  const n = v !== null ? Number(v) : NaN;
+  return Number.isFinite(n) && n >= 0 ? n : 0;
+};
+
 export async function GET(requisicao: Request) {
   const parametros = new URL(requisicao.url).searchParams;
   const origem = (parametros.get("origem") ?? "").trim().toUpperCase();
+  const gastoMensalCartaoBRL = numero(parametros.get("gasto"));
+  const cartaoId = parametros.get("cartaoId") ?? undefined;
 
   const aeroporto = aeroportoPorIata(origem);
   if (!aeroporto) {
@@ -67,7 +74,9 @@ export async function GET(requisicao: Request) {
         const desconto = referencia > 0 ? 1 - oferta.precoBRL / referencia : 0;
         if (desconto < DESCONTO_MINIMO) return [];
 
-        const veredito = calcularVeredito(rota, oferta.precoBRL);
+        const veredito = calcularVeredito(rota, oferta.precoBRL, {
+          perfil: { gastoMensalCartaoBRL, cartaoId },
+        });
         if (!veredito.melhor) return [];
 
         return [

@@ -38,16 +38,22 @@ const QUANTAS = 4;
 
 export function OportunidadesDaHome() {
   const origemIata = usarPerfil((p) => p.origemIata);
+  const gasto = usarPerfil((p) => p.gastoMensalCartaoBRL);
+  const cartaoId = usarPerfil((p) => p.cartaoId);
   const [dados, setDados] = useState<Resposta | null>(null);
   const [falhou, setFalhou] = useState(false);
 
   useEffect(() => {
     const controlador = new AbortController();
 
+    const parametros = new URLSearchParams({ origem: origemIata });
+    if (gasto !== null) parametros.set("gasto", String(gasto));
+    if (cartaoId) parametros.set("cartaoId", cartaoId);
+
     // O estado so muda na resposta, nunca no corpo do efeito: um
     // setState sincrono aqui dispararia um render a mais em toda troca
     // de origem, de graca.
-    fetch(`/api/promocoes?origem=${origemIata}`, { signal: controlador.signal })
+    fetch(`/api/promocoes?${parametros}`, { signal: controlador.signal })
       .then((r) => r.json())
       .then((corpo: Resposta) => {
         setDados(corpo);
@@ -59,7 +65,7 @@ export function OportunidadesDaHome() {
       });
 
     return () => controlador.abort();
-  }, [origemIata]);
+  }, [origemIata, gasto, cartaoId]);
 
   // Sem oportunidade de verdade, a secao inteira some. Preencher a faixa
   // com rota qualquer so para ela nao ficar vazia seria inventar oferta.
