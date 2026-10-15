@@ -4,6 +4,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usarPerfil } from "@/store/perfil";
 import { reais } from "@/lib/format";
+import {
+  COR_DO_ROTULO,
+  TEXTO_CURTO,
+  type RotuloDeVeredito,
+} from "@/lib/milhas/rotulos";
 
 /**
  * As melhores saidas da cidade da pessoa, em faixa rolante.
@@ -21,7 +26,7 @@ type Oportunidade = {
   destino: { iata: string; cidade: string; pais: string };
   precoBRL: number;
   descontoPct: number;
-  recomendacao: "milhas" | "dinheiro";
+  veredito: RotuloDeVeredito;
 };
 
 type Resposta = {
@@ -104,15 +109,9 @@ export function OportunidadesDaHome() {
                     {reais(o.precoBRL)}
                   </span>
                   <span
-                    className={`block text-[11px] font-semibold ${
-                      o.recomendacao === "milhas"
-                        ? "text-milhas"
-                        : "text-dinheiro"
-                    }`}
+                    className={`block text-[11px] font-semibold ${COR_DO_ROTULO[o.veredito]}`}
                   >
-                    {o.recomendacao === "milhas"
-                      ? "vale resgatar"
-                      : "vale pagar"}
+                    {TEXTO_CURTO[o.veredito]}
                   </span>
                 </span>
               </Link>

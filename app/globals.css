@@ -53,7 +53,11 @@
   --painel-tinta: #fffdf7;
   --painel-tinta-fraca: #bdcde6;
   --painel-realce: #2a4a74;
-  --painel-realce-forte: #36598b;
+  /* O estado de pressionado vai mais FUNDO, nao mais claro. Alem de ser
+     o que o dedo espera, e o que mantem o texto secundario legivel: a
+     versao clara deste token reprovava em 4,41 sobre o proprio rotulo
+     que ele carrega. */
+  --painel-realce-forte: #1f3a5e;
   --painel-borda: transparent;
 
   /* Veredito: milhas (ocre) x dinheiro (verde) */
@@ -135,8 +139,10 @@
   --painel: #26406a;
   --painel-tinta: #f2ede0;
   --painel-tinta-fraca: #aebcd4;
-  --painel-realce: #35538a;
-  --painel-realce-forte: #41659f;
+  /* A noite o chip e RECUADO: sobre um painel ja claro, o realce para
+     cima empurrava o texto secundario para 3,97. */
+  --painel-realce: #1c3254;
+  --painel-realce-forte: #152840;
   --painel-borda: #3c5b8c;
 
   /* O amarelo-cromio das estrelas. De dia o mesmo papel e do ocre, que

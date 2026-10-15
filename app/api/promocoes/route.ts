@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { aeroportoPorIata, classificarRota } from "@/lib/milhas/regioes";
 import { calcularVeredito } from "@/lib/milhas/veredito";
+import { rotuloDoVeredito } from "@/lib/milhas/rotulos";
 import { destinosPopulares, temToken } from "@/lib/providers/travelpayouts";
 import { precoEstimadoPorRegiao } from "@/lib/precos";
 import { transferencias } from "@/lib/dados";
@@ -81,6 +82,13 @@ export async function GET(requisicao: Request) {
             precoBRL: Math.round(oferta.precoBRL),
             rotulo: rota.rotulo,
             recomendacao: veredito.recomendacao,
+            // O motor ja sabia que alguns destes rendem pouco; a tela e
+            // que descartava a informacao e anunciava "vale resgatar".
+            veredito: rotuloDoVeredito(
+              veredito.recomendacao,
+              veredito.ressalva !== null,
+            ),
+            ressalva: veredito.ressalva,
             economiaBRL: Math.round(veredito.economiaBRL),
             programa: veredito.melhor.programa.nome,
             milhas: veredito.melhor.milhas,

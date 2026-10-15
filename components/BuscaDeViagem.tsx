@@ -72,7 +72,13 @@ export function BuscaDeViagem() {
           <button
             type="button"
             onClick={() => setTrocandoOrigem(true)}
-            className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-painel-realce px-3 py-1.5 text-sm text-painel-tinta transition-colors hover:bg-painel-realce-forte"
+            // Uma linha, sempre. O servidor renderiza "GRU" e o
+            // cliente troca por "Sao Paulo" depois do fetch; em telas
+            // estreitas o nome maior quebrava a pilula em duas linhas e
+            // empurrava a pagina inteira para baixo -- 0,10 de
+            // deslocamento, atribuido ao cartao de baixo, que so estava
+            // descendo junto.
+            className="mb-4 flex min-h-9 max-w-full items-center gap-1.5 self-start overflow-hidden whitespace-nowrap rounded-full bg-painel-realce px-3 text-sm text-painel-tinta transition-colors hover:bg-painel-realce-forte"
           >
             <svg
               viewBox="0 0 24 24"
@@ -87,8 +93,11 @@ export function BuscaDeViagem() {
               <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z" />
               <circle cx="12" cy="10" r="2.5" />
             </svg>
-            Saindo de <strong className="font-semibold">{nomeDaOrigem}</strong>
-            <span className="text-painel-tinta-fraca">· trocar</span>
+            <span className="shrink-0">Saindo de</span>
+            <strong className="min-w-0 truncate font-semibold">
+              {nomeDaOrigem}
+            </strong>
+            <span className="shrink-0 text-painel-tinta-fraca">· trocar</span>
           </button>
         )}
 

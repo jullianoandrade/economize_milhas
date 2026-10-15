@@ -5,6 +5,11 @@ import { useEffect, useState } from "react";
 import { Cabecalho } from "@/components/Cabecalho";
 import { usarPerfil } from "@/store/perfil";
 import { milhas, reais, reaisExatos } from "@/lib/format";
+import {
+  COR_DO_ROTULO,
+  TEXTO_CURTO,
+  type RotuloDeVeredito,
+} from "@/lib/milhas/rotulos";
 
 /**
  * Oportunidades saindo da cidade da pessoa.
@@ -20,11 +25,11 @@ type Oportunidade = {
   precoTipicoBRL: number;
   descontoPct: number;
   rotulo: string;
-  recomendacao: "milhas" | "dinheiro";
+  veredito: RotuloDeVeredito;
+  ressalva: string | null;
   economiaBRL: number;
   programa: string;
   milhas: number;
-  qualidade: "excelente" | "bom" | "regular" | "ruim";
   valorExtraidoPorMilheiroBRL: number;
 };
 
@@ -38,13 +43,6 @@ type Resposta = {
     bonusMedianoPct: number;
     observacao: string;
   }>;
-};
-
-const ESTILO_QUALIDADE: Record<Oportunidade["qualidade"], string> = {
-  excelente: "bg-dinheiro-fundo text-dinheiro",
-  bom: "bg-dinheiro-fundo text-dinheiro",
-  regular: "bg-superficie-2 text-tinta-media",
-  ruim: "bg-alerta-fundo text-alerta",
 };
 
 const NOME_DO_PROGRAMA: Record<string, string> = {
@@ -120,6 +118,26 @@ export default function Promocoes() {
         </section>
       ) : null}
 
+      {dados && dados.oportunidades.length > 0 ? (
+        <p className="mb-3 text-xs leading-relaxed text-tinta-fraca">
+          Toda passagem desta lista está barata. O que muda é se vale gastar
+          milhas nela:{" "}
+          <strong className={`font-semibold ${COR_DO_ROTULO.resgatar}`}>
+            {TEXTO_CURTO.resgatar}
+          </strong>{" "}
+          quando a economia é grande,{" "}
+          <strong className="font-semibold text-tinta-media">
+            {TEXTO_CURTO.guardar}
+          </strong>{" "}
+          quando compensa mas as mesmas milhas valeriam muito mais numa viagem
+          cara, e{" "}
+          <strong className={`font-semibold ${COR_DO_ROTULO.pagar}`}>
+            {TEXTO_CURTO.pagar}
+          </strong>{" "}
+          quando resgatar não compensa.
+        </p>
+      ) : null}
+
       {carregando ? <Esqueleto /> : null}
 
       {erro ? (
@@ -180,9 +198,9 @@ export default function Promocoes() {
                     {reaisExatos(o.valorExtraidoPorMilheiroBRL)}
                   </dd>
                   <dd
-                    className={`text-[10px] ${ESTILO_QUALIDADE[o.qualidade]} rounded-full px-1`}
+                    className={`text-[10px] font-semibold ${COR_DO_ROTULO[o.veredito]}`}
                   >
-                    {o.qualidade === "ruim" ? "não compensa" : o.qualidade}
+                    {TEXTO_CURTO[o.veredito]}
                   </dd>
                 </div>
               </dl>
