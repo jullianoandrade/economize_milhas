@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import type { Veredito } from "@/lib/milhas/veredito";
 import type { Fonte } from "@/lib/providers/travelpayouts";
+import type { FaseDaJornada } from "@/lib/monetizacao/jornada";
 import { usarPerfil, usePerfilHidratado } from "@/store/perfil";
 import { BlocoDeVeredito } from "./BlocoDeVeredito";
 
@@ -20,10 +21,14 @@ import { BlocoDeVeredito } from "./BlocoDeVeredito";
 export function IlhaDoVeredito({
   origem,
   destino,
+  dataEscolhida,
+  fase,
   children,
 }: {
   origem: string;
   destino: string;
+  dataEscolhida: string | null;
+  fase: FaseDaJornada;
   children: ReactNode;
 }) {
   const hidratado = usePerfilHidratado();
@@ -63,6 +68,10 @@ export function IlhaDoVeredito({
       veredito={pessoal.veredito}
       fonte={pessoal.preco.fonte}
       observacaoDaFonte={pessoal.preco.observacao}
+      origemIata={origem}
+      destinoIata={destino}
+      dataEscolhida={dataEscolhida}
+      fase={fase}
     />
   );
 }

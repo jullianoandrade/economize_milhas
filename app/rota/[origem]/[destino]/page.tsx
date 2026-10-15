@@ -140,6 +140,7 @@ async function Conteudo({
   const { referenciaBRL, datas } = datasMaisBaratas(datadas);
   const outrasOrigens = compararOrigens(rota.origem, preco.dados, alternativas);
   const calendario = montarCalendario(datadas, new Date());
+  const fase = faseDaJornada(diasAteAViagem);
 
   return (
     <>
@@ -181,18 +182,24 @@ async function Conteudo({
 
       {diasAteAViagem !== null ? (
         <div className="mb-4">
-          <FaixaDaJornada
-            fase={faseDaJornada(diasAteAViagem)}
-            diasAteAViagem={diasAteAViagem}
-          />
+          <FaixaDaJornada fase={fase} diasAteAViagem={diasAteAViagem} />
         </div>
       ) : null}
 
-      <IlhaDoVeredito origem={rota.origem.iata} destino={rota.destino.iata}>
+      <IlhaDoVeredito
+        origem={rota.origem.iata}
+        destino={rota.destino.iata}
+        dataEscolhida={dataEscolhida}
+        fase={fase}
+      >
         <BlocoDeVeredito
           veredito={veredito}
           fonte={preco.fonte}
           observacaoDaFonte={preco.observacao}
+          origemIata={rota.origem.iata}
+          destinoIata={rota.destino.iata}
+          dataEscolhida={dataEscolhida}
+          fase={fase}
         />
       </IlhaDoVeredito>
 

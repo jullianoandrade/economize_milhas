@@ -103,3 +103,87 @@ describe("dados comerciais tem um unico leitor", () => {
     expect(leitores.every((l) => l === LEITOR_AUTORIZADO)).toBe(true);
   });
 });
+
+/**
+ * As tres regras da Fase 3 (saida para a viagem).
+ *
+ * O risco da monetizacao nao e so "ranking enxergar comissao" -- e tambem
+ * um link de afiliado nascendo fora do unico lugar que sabe o rel certo,
+ * ou o formato fragil da Aviasales vazando para um arquivo que nao devia
+ * conhece-lo. As tres travas abaixo tornam esses riscos verificaveis.
+ */
+
+function todosOsFontesDoProjeto(dir: string): string[] {
+  let entradas;
+  try {
+    entradas = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
+  return entradas.flatMap((entrada) => {
+    if (["node_modules", ".next", ".git", "tests"].includes(entrada.name)) {
+      return [];
+    }
+    const completo = path.join(dir, entrada.name);
+    if (entrada.isDirectory()) return todosOsFontesDoProjeto(completo);
+    return /[.](ts|tsx)$/.test(entrada.name) ? [completo] : [];
+  });
+}
+
+const RELATIVO = (arquivo: string) =>
+  path.relative(raiz, arquivo).split(path.sep).join("/");
+
+describe("so LinkExterno emite ancora externa", () => {
+  const EMISSOR_AUTORIZADO = "components/LinkExterno.tsx";
+
+  it('nenhum outro arquivo usa target="_blank" ou rel com "sponsored"', () => {
+    const culpados = todosOsFontesDoProjeto(raiz)
+      .filter((arquivo) => RELATIVO(arquivo) !== EMISSOR_AUTORIZADO)
+      .filter((arquivo) => {
+        const codigo = readFileSync(arquivo, "utf8");
+        return /target=["']_blank["']/.test(codigo) || /\bsponsored\b/.test(codigo);
+      })
+      .map(RELATIVO);
+
+    expect(culpados).toEqual([]);
+  });
+});
+
+describe("todo link de busca de voo vem acompanhado da divulgacao", () => {
+  /**
+   * So conta IMPORTAR a funcao, nao mencionar o nome dela em prosa --
+   * o proprio modulo que a define e o comentario que explica a
+   * degradacao em lib/monetizacao/formatos/aviasales.ts citam o nome
+   * sem importa-lo de lugar nenhum.
+   */
+  function importaLinkDeBuscaDeVoo(codigo: string): boolean {
+    return /import\s*\{[^}]*\blinkDeBuscaDeVoo\b[^}]*\}\s*from/.test(codigo);
+  }
+
+  it("quem importa linkDeBuscaDeVoo tambem importa NotaDeTransparencia", () => {
+    const semDivulgacao = todosOsFontesDoProjeto(raiz)
+      .filter((arquivo) => importaLinkDeBuscaDeVoo(readFileSync(arquivo, "utf8")))
+      .filter(
+        (arquivo) => !readFileSync(arquivo, "utf8").includes("NotaDeTransparencia"),
+      )
+      .map(RELATIVO);
+
+    expect(semDivulgacao).toEqual([]);
+  });
+});
+
+describe("o formato fragil da Aviasales fica num unico arquivo", () => {
+  const PASTA_AUTORIZADA = "lib/monetizacao/formatos/";
+
+  it('nenhum arquivo fora de lib/monetizacao/formatos/ menciona "/search/" ou "aviasales.com"', () => {
+    const culpados = todosOsFontesDoProjeto(raiz)
+      .filter((arquivo) => !RELATIVO(arquivo).startsWith(PASTA_AUTORIZADA))
+      .filter((arquivo) => {
+        const codigo = readFileSync(arquivo, "utf8");
+        return codigo.includes("/search/") || codigo.includes("aviasales.com");
+      })
+      .map(RELATIVO);
+
+    expect(culpados).toEqual([]);
+  });
+});

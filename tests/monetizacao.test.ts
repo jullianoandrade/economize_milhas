@@ -4,9 +4,18 @@ import {
   faseDaJornada,
   tiposUteisNaFase,
 } from "@/lib/monetizacao/jornada";
-import { monetizacaoAtiva, montarLink } from "@/lib/monetizacao/links";
+import {
+  linkDeBuscaDeVoo,
+  monetizacaoAtiva,
+  montarLink,
+} from "@/lib/monetizacao/links";
 import { parceiroPorTipo, parceiros } from "@/lib/monetizacao/parceiros";
 import { ofertasRelevantes } from "@/lib/monetizacao/ofertas";
+import { normalizarBusca } from "@/lib/monetizacao/busca";
+import {
+  caminhoDeBusca,
+  EXEMPLOS_CANONICOS,
+} from "@/lib/monetizacao/formatos/aviasales";
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -131,6 +140,114 @@ describe("ofertas", () => {
     const seguro = ofertas.find((o) => o.tipo === "seguro")!;
     expect(seguro.disponivel).toBe(false);
     expect(seguro.url).toBeNull();
+  });
+});
+
+describe("normalizarBusca", () => {
+  it("aceita IATA minusculo e com espaco, normaliza para maiusculo", () => {
+    const r = normalizarBusca({ origemIata: " gru ", destinoIata: "lis" });
+    expect(r).toEqual({ origemIata: "GRU", destinoIata: "LIS", data: null });
+  });
+
+  it("rejeita IATA que nao tem 3 letras", () => {
+    expect(normalizarBusca({ origemIata: "GR", destinoIata: "LIS" })).toBeNull();
+    expect(
+      normalizarBusca({ origemIata: "GRU1", destinoIata: "LIS" }),
+    ).toBeNull();
+  });
+
+  it("origem igual a destino nao e busca valida", () => {
+    expect(normalizarBusca({ origemIata: "GRU", destinoIata: "GRU" })).toBeNull();
+  });
+
+  it("data valida e futura passa intacta", () => {
+    const r = normalizarBusca({
+      origemIata: "GRU",
+      destinoIata: "LIS",
+      data: "2030-06-15",
+    });
+    expect(r?.data).toBe("2030-06-15");
+  });
+
+  it("data no passado nao invalida a busca, so some a data", () => {
+    // A busca continua valida -- so degrada para a versao sem data, que
+    // e exatamente o comportamento de hoje. Nunca null por causa da data.
+    const r = normalizarBusca({
+      origemIata: "GRU",
+      destinoIata: "LIS",
+      data: "2020-01-01",
+    });
+    expect(r).toEqual({ origemIata: "GRU", destinoIata: "LIS", data: null });
+  });
+
+  it("data em formato invalido tambem so some a data", () => {
+    const r = normalizarBusca({
+      origemIata: "GRU",
+      destinoIata: "LIS",
+      data: "15/06/2030",
+    });
+    expect(r?.data).toBeNull();
+  });
+});
+
+describe("formato de busca compacta da Aviasales", () => {
+  it("reproduz exatamente os exemplos canonicos documentados", () => {
+    // Estes exemplos sao o que docs/verificacao-de-links.md manda abrir
+    // no celular e conferir a mao -- se a funcao nao bater com eles, o
+    // verificador estaria testando um formato que o codigo nao produz.
+    for (const { entrada, caminho } of EXEMPLOS_CANONICOS) {
+      expect(caminhoDeBusca(entrada)).toBe(caminho);
+    }
+  });
+});
+
+describe("linkDeBuscaDeVoo", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("busca invalida nao gera link", () => {
+    expect(
+      linkDeBuscaDeVoo({ origemIata: "GRU", destinoIata: "GRU" }),
+    ).toBeNull();
+  });
+
+  it("sem data, cai direto na busca parcial", () => {
+    const r = linkDeBuscaDeVoo({ origemIata: "GRU", destinoIata: "LIS" })!;
+    expect(r.precisao).toBe("parcial");
+    expect(r.url).toContain("origin_iata=GRU");
+    expect(r.url).toContain("destination_iata=LIS");
+  });
+
+  it("com data futura, usa o caminho completo", () => {
+    const r = linkDeBuscaDeVoo({
+      origemIata: "GRU",
+      destinoIata: "LIS",
+      data: "2030-06-15",
+    })!;
+    expect(r.precisao).toBe("completo");
+    expect(r.url).toContain("/search/GRU1506LIS1");
+  });
+
+  it("com data no passado, degrada para parcial -- nunca null", () => {
+    const r = linkDeBuscaDeVoo({
+      origemIata: "GRU",
+      destinoIata: "LIS",
+      data: "2020-01-01",
+    })!;
+    expect(r.precisao).toBe("parcial");
+  });
+
+  it("o marker so entra com a flag ligada", () => {
+    vi.stubEnv("NEXT_PUBLIC_MONETIZACAO_ATIVA", "true");
+    vi.stubEnv("NEXT_PUBLIC_TRAVELPAYOUTS_MARKER", "123456");
+
+    const r = linkDeBuscaDeVoo({
+      origemIata: "GRU",
+      destinoIata: "LIS",
+      data: "2030-06-15",
+    })!;
+    expect(r.url).toContain("marker=123456");
   });
 });
 
