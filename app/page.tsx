@@ -1,9 +1,8 @@
-import Link from "next/link";
 import { BuscaDeViagem } from "@/components/BuscaDeViagem";
 import { ObjetivoEmAndamento } from "@/components/ObjetivoEmAndamento";
 import { OportunidadesDaHome } from "@/components/OportunidadesDaHome";
 import { PrimeiraVisita } from "@/components/PrimeiraVisita";
-import { glossario } from "@/lib/dados";
+import { SeuCusto } from "@/components/SeuCusto";
 
 /**
  * A home.
@@ -13,17 +12,18 @@ import { glossario } from "@/lib/dados";
  *
  *   1. busca        -- "quanto custa ir para X?"       (quem chega com destino)
  *   2. objetivo     -- "como esta a minha meta?"       (quem volta)
- *   3. oportunidade -- "tem alguma coisa boa agora?"   (quem nao tem destino)
- *   4. conceito     -- "como isso funciona?"           (quem nunca usou milhas)
+ *   3. seu custo    -- "eu tenho alguma coisa aqui?"   (quem nunca usou milhas)
+ *   4. oportunidade -- "tem alguma coisa boa agora?"   (quem nao tem destino)
+ *
+ * O custo proprio vem ANTES das oportunidades porque e ele que decide se
+ * cada oportunidade vale: a mesma passagem e um bom resgate para quem
+ * tem cartao isento e um mau negocio para quem compra milhas.
  *
  * A lista estatica de "rotas para experimentar" que ficava aqui saiu: ela
  * ocupava o lugar nobre com rota fixa enquanto as oportunidades reais,
  * calculadas a partir da cidade da pessoa, respondem a mesma pergunta
  * com dado de verdade.
  */
-
-/** O conceito que o app inteiro gira em torno: sem ele nada aqui faz sentido. */
-const CONCEITO = glossario.termos.find((t) => t.id === "cpm");
 
 export default function Home() {
   return (
@@ -34,26 +34,9 @@ export default function Home() {
 
       <ObjetivoEmAndamento />
 
-      <OportunidadesDaHome />
+      <SeuCusto />
 
-      {CONCEITO ? (
-        <section className="mb-6 rounded-[24px] border border-marca-fraca bg-marca-fraca p-4">
-          <p className="mb-1 text-xs font-bold uppercase tracking-widest text-marca">
-            Entenda em um minuto
-          </p>
-          <h2 className="mb-1.5 font-semibold text-tinta">{CONCEITO.termo}</h2>
-          <p className="text-sm leading-relaxed text-tinta-media">
-            {CONCEITO.resumo} É o número que separa um bom resgate de um
-            prejuízo disfarçado — e quase ninguém calcula.
-          </p>
-          <Link
-            href="/aprender"
-            className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-marca underline underline-offset-4"
-          >
-            Aprender o básico de milhas
-          </Link>
-        </section>
-      ) : null}
+      <OportunidadesDaHome />
 
       <p className="text-xs leading-relaxed text-tinta-fraca">
         Os valores em milhas são estimativas: nenhum programa brasileiro

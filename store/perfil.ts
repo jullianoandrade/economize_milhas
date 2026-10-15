@@ -14,7 +14,24 @@ import type { Meta, Registro } from "@/lib/metas/progresso";
  * enquanto nao houver conta.
  */
 
-export type Perfil = {
+/**
+ * Como a pessoa acumula milhas hoje.
+ *
+ * Existe porque o app passou tempo demais cotando o custo de milhas de
+ * um estranho: sem estes campos, o motor cai em "comprar pontos Livelo
+ * e transferir", a R$ 16,67 o milheiro, e decide "milhas ou dinheiro"
+ * com um numero que nao e de ninguem. Quem tem cartao sem anuidade tem
+ * CPM perto de zero -- a resposta muda, as vezes de lado.
+ */
+export type SituacaoDeAcumulo = {
+  /** null = a pessoa ainda nao respondeu. Zero e uma resposta. */
+  gastoMensalCartaoBRL: number | null;
+  cartaoId: string | null;
+  saldoPontosCoalizao: number;
+  aceitaClube: boolean;
+};
+
+export type Perfil = SituacaoDeAcumulo & {
   /** Aeroporto de partida padrao. */
   origemIata: string;
   /** Ja passou pela tela de boas-vindas alguma vez. */
@@ -22,6 +39,7 @@ export type Perfil = {
   metas: Meta[];
 
   definirOrigem: (iata: string) => void;
+  definirAcumulo: (dados: Partial<SituacaoDeAcumulo>) => void;
   marcarVisita: () => void;
   salvarMeta: (meta: Meta) => void;
   registrarSaldo: (metaId: string, registro: Registro) => void;
@@ -35,6 +53,45 @@ export type Perfil = {
   removerMeta: (metaId: string) => void;
 };
 
+export const VERSAO_DO_PERFIL = 3;
+
+/**
+ * Migrar e ACRESCENTAR, nunca substituir.
+ *
+ * Ha gente com meta salva em producao, e meta guarda um ponto de
+ * partida que nao da para recuperar depois -- e o unico dado
+ * insubstituivel do app. Por isso cada passo espalha o estado anterior e
+ * so completa o que falta.
+ *
+ * Exportada para ter teste proprio: um `migrate` errado so apareceria no
+ * aparelho de quem ja usa o app, que e exatamente onde nao da para
+ * descobrir.
+ */
+export function migrarPerfil(estado: unknown, versao: number): Perfil {
+  let atual = (estado ?? {}) as Partial<Perfil>;
+
+  // v1 so guardava a origem. Quem ja usava o app nao pode cair numa
+  // tela de boas-vindas que nao pediu.
+  if (versao < 2) {
+    atual = { ...atual, visitou: true, metas: atual.metas ?? [] };
+  }
+
+  // v3 acrescenta a situacao de acumulo. Fica em null de proposito:
+  // "ainda nao respondeu" precisa ser distinguivel de "respondeu zero",
+  // senao a tela nunca sabe se deve perguntar.
+  if (versao < 3) {
+    atual = {
+      ...atual,
+      gastoMensalCartaoBRL: atual.gastoMensalCartaoBRL ?? null,
+      cartaoId: atual.cartaoId ?? null,
+      saldoPontosCoalizao: atual.saldoPontosCoalizao ?? 0,
+      aceitaClube: atual.aceitaClube ?? false,
+    };
+  }
+
+  return atual as Perfil;
+}
+
 export const usarPerfil = create<Perfil>()(
   persist(
     (set) => ({
@@ -42,7 +99,14 @@ export const usarPerfil = create<Perfil>()(
       visitou: false,
       metas: [],
 
+      gastoMensalCartaoBRL: null,
+      cartaoId: null,
+      saldoPontosCoalizao: 0,
+      aceitaClube: false,
+
       definirOrigem: (iata) => set({ origemIata: iata.toUpperCase() }),
+
+      definirAcumulo: (dados) => set(dados),
 
       marcarVisita: () => set({ visitou: true }),
 
@@ -115,20 +179,8 @@ export const usarPerfil = create<Perfil>()(
     }),
     {
       name: "milhas-perfil",
-      version: 2,
-      // A versao 1 so guardava a origem. Quem ja usava o app nao pode
-      // perde-la nem cair numa tela de boas-vindas que nao pediu.
-      migrate: (estado, versao) => {
-        const anterior = estado as Partial<Perfil> | undefined;
-        if (versao < 2) {
-          return {
-            ...(anterior ?? {}),
-            visitou: true,
-            metas: [],
-          } as Perfil;
-        }
-        return estado as Perfil;
-      },
+      version: VERSAO_DO_PERFIL,
+      migrate: (estado, versao) => migrarPerfil(estado, versao),
     },
   ),
 );

@@ -121,6 +121,11 @@ export function TelaDeObjetivos() {
   const atualizarRitmo = usarPerfil((p) => p.atualizarRitmo);
   const atualizarEstimativa = usarPerfil((p) => p.atualizarEstimativa);
   const removerMeta = usarPerfil((p) => p.removerMeta);
+  const definirAcumulo = usarPerfil((p) => p.definirAcumulo);
+  const perfilGasto = usarPerfil((p) => p.gastoMensalCartaoBRL);
+  const perfilCartao = usarPerfil((p) => p.cartaoId);
+  const perfilPontos = usarPerfil((p) => p.saldoPontosCoalizao);
+  const perfilClube = usarPerfil((p) => p.aceitaClube);
 
   // Tudo aqui depende do localStorage, que so existe depois da
   // hidratacao. Renderizar antes disso mostraria "nenhum objetivo" para
@@ -142,10 +147,35 @@ export function TelaDeObjetivos() {
   const [saldoDigitado, setSaldoDigitado] = useState("");
   const [dataAlvoDigitada, setDataAlvoDigitada] = useState("");
 
-  const [saldoPontos, setSaldoPontos] = useState(0);
-  const [gasto, setGasto] = useState(3000);
-  const [cartaoId, setCartaoId] = useState("");
-  const [aceitaClube, setAceitaClube] = useState(false);
+  /**
+   * Os quatro controles de acumulo nascem do PERFIL.
+   *
+   * Eram `useState` solto: a pessoa respondia aqui, recarregava a
+   * pagina e perdia tudo -- e a tela de rota nunca ficava sabendo. Como
+   * e exatamente esse dado que decide "milhas ou dinheiro", perde-lo
+   * fazia o app voltar a cotar o custo de um estranho.
+   *
+   * O estado local continua existindo para o controle responder ao
+   * arrasto; o perfil e gravado ao SOLTAR (ver `gravarAcumulo`).
+   */
+  const [saldoPontos, setSaldoPontos] = useState(perfilPontos);
+  const [gasto, setGasto] = useState(perfilGasto ?? 3000);
+  const [cartaoId, setCartaoId] = useState(perfilCartao ?? "");
+  const [aceitaClube, setAceitaClube] = useState(perfilClube);
+
+  function gravarAcumulo(dados: {
+    gasto?: number;
+    cartao?: string;
+    pontos?: number;
+    clube?: boolean;
+  }) {
+    definirAcumulo({
+      gastoMensalCartaoBRL: dados.gasto ?? gasto,
+      cartaoId: (dados.cartao ?? cartaoId) || null,
+      saldoPontosCoalizao: dados.pontos ?? saldoPontos,
+      aceitaClube: dados.clube ?? aceitaClube,
+    });
+  }
 
   const [catalogo, setCatalogo] = useState<Catalogo | null>(null);
   const [resposta, setResposta] = useState<Resposta | null>(null);
@@ -467,6 +497,7 @@ export function TelaDeObjetivos() {
               passo={500}
               formatar={reais}
               aoMudar={setGasto}
+              aoSoltar={(v) => gravarAcumulo({ gasto: v })}
             />
 
             <div>
@@ -479,7 +510,10 @@ export function TelaDeObjetivos() {
               <select
                 id="cartao"
                 value={cartaoId}
-                onChange={(e) => setCartaoId(e.target.value)}
+                onChange={(e) => {
+                  setCartaoId(e.target.value);
+                  gravarAcumulo({ cartao: e.target.value });
+                }}
                 className="w-full rounded-xl border border-borda bg-superficie px-3 py-3 text-base text-tinta outline-none focus:border-marca"
               >
                 <option value="">Não tenho / não sei</option>
@@ -499,13 +533,17 @@ export function TelaDeObjetivos() {
               passo={1000}
               formatar={fmtMilhas}
               aoMudar={setSaldoPontos}
+              aoSoltar={(v) => gravarAcumulo({ pontos: v })}
             />
 
             <label className="flex items-center gap-3 text-sm text-tinta">
               <input
                 type="checkbox"
                 checked={aceitaClube}
-                onChange={(e) => setAceitaClube(e.target.checked)}
+                onChange={(e) => {
+                  setAceitaClube(e.target.checked);
+                  gravarAcumulo({ clube: e.target.checked });
+                }}
                 className="size-5 rounded border-borda accent-[var(--marca)]"
               />
               Toparia assinar um clube de milhas
@@ -819,6 +857,7 @@ function Deslizante({
   passo,
   formatar,
   aoMudar,
+  aoSoltar,
 }: {
   rotulo: string;
   valor: number;
@@ -827,6 +866,8 @@ function Deslizante({
   passo: number;
   formatar: (n: number) => string;
   aoMudar: (n: number) => void;
+  /** Chamado uma vez por gesto, nao a cada passo do arrasto. */
+  aoSoltar?: (n: number) => void;
 }) {
   return (
     <div>
@@ -845,6 +886,9 @@ function Deslizante({
         step={passo}
         value={valor}
         onChange={(e) => aoMudar(Number(e.target.value))}
+        onPointerUp={() => aoSoltar?.(valor)}
+        onKeyUp={() => aoSoltar?.(valor)}
+        onBlur={() => aoSoltar?.(valor)}
         className="h-6 w-full accent-[var(--marca)]"
         aria-label={rotulo}
       />

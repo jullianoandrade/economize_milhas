@@ -9,6 +9,7 @@ import {
   type Confianca,
   type Programa,
 } from "@/lib/dados";
+import { rendimentoDoCartao } from "./calculo-cartao";
 import type { RotaClassificada } from "./regioes";
 
 /**
@@ -119,19 +120,17 @@ export function cpmDoCartao(
   cartao: Cartao,
   gastoMensalBRL: number,
 ): { cpmBRL: number; pontosPorMes: number } | null {
-  if (gastoMensalBRL <= 0) return null;
+  // A conta vive em ./calculo-cartao, que nao importa nada e por isso
+  // tambem roda no navegador. Aqui so entramos com os dados da base.
+  const r = rendimentoDoCartao({
+    gastoMensalBRL,
+    pontosPorDolarNacional: cartao.pontosPorDolarNacional,
+    cotacaoDolarBRL: cartoes.cotacaoDolarReferenciaBRL,
+    anuidadeBRL: cartao.anuidadeBRL,
+    isencaoGastoMensalBRL: cartao.isencaoGastoMensalBRL,
+  });
 
-  const dolares = gastoMensalBRL / cartoes.cotacaoDolarReferenciaBRL;
-  const pontosPorMes = dolares * cartao.pontosPorDolarNacional;
-  const pontosPorAno = pontosPorMes * 12;
-  if (pontosPorAno <= 0) return null;
-
-  const isento =
-    cartao.isencaoGastoMensalBRL != null &&
-    gastoMensalBRL >= cartao.isencaoGastoMensalBRL;
-  const anuidade = isento ? 0 : (cartao.anuidadeBRL ?? 0);
-
-  return { cpmBRL: (anuidade / pontosPorAno) * 1000, pontosPorMes };
+  return r ? { cpmBRL: r.cpmBRL, pontosPorMes: r.pontosPorMes } : null;
 }
 
 /** O melhor plano de clube de um programa, do ponto de vista de custo. */

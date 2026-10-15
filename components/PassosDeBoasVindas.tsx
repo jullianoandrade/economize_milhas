@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Ilustracao, type Cena } from "./Ilustracao";
+import { PerguntaDoCartao } from "./PerguntaDoCartao";
 import { usarPerfil } from "@/store/perfil";
 
 /**
@@ -27,6 +28,7 @@ type Passo = {
   titulo: string;
   texto: string;
   itens?: Array<{ titulo: string; texto: string }>;
+  conteudo?: React.ReactNode;
   rodape?: React.ReactNode;
 };
 
@@ -36,14 +38,7 @@ const PASSOS: Passo[] = [
     sobrelinha: "O que é isto",
     titulo: "Viajar não precisa ser caro. Precisa ser calculado.",
     texto:
-      "Você diz para onde quer ir. A gente mostra quanto a viagem custa em dinheiro, quanto custa em milhas e qual das duas vale mais — com o número na mão, não no achismo.",
-  },
-  {
-    cena: "meta",
-    sobrelinha: "O que dá para fazer",
-    titulo: "Três perguntas respondidas",
-    texto:
-      "É o que o app faz de ponta a ponta, sem cadastro e sem custo.",
+      "Você diz para onde quer ir. A gente mostra quanto a viagem custa em dinheiro, quanto custa em milhas e qual das duas vale mais — com o número na mão, não no achismo. Sem cadastro e sem custo.",
     itens: [
       {
         titulo: "Vale mais em milhas ou em dinheiro?",
@@ -61,6 +56,19 @@ const PASSOS: Passo[] = [
           "Você marca um objetivo, o app guarda seu ponto de partida e acompanha o quanto você andou — e se nesse passo dá tempo.",
       },
     ],
+  },
+  {
+    cena: "meta",
+    sobrelinha: "Comece por você",
+    titulo: "Você provavelmente já acumula milhas.",
+    texto:
+      "E talvez não saiba quantas. Sem isto, o app calcula com o custo de quem COMPRA milhas — um número que quase nunca é o seu, e que joga contra as milhas.",
+    conteudo: <PerguntaDoCartao comBotao={false} />,
+    rodape: (
+      <span className="text-tinta-fraca">
+        Fica só no seu aparelho. Não há cadastro, e você pode mudar depois.
+      </span>
+    ),
   },
   {
     cena: "transparencia",
@@ -216,6 +224,8 @@ export function PassosDeBoasVindas() {
               ))}
             </ul>
           ) : null}
+
+          {p.conteudo ? <div className="mt-5">{p.conteudo}</div> : null}
 
           {p.rodape ? (
             <p className="mt-5 text-sm leading-relaxed">{p.rodape}</p>
