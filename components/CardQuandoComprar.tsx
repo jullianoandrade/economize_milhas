@@ -1,5 +1,6 @@
 import type { JanelaDeCompra } from "@/lib/tempo/antecedencia";
 import { porcentagem } from "@/lib/format";
+import { Termo } from "./Termo";
 
 /**
  * Compro agora ou espero?
@@ -95,7 +96,9 @@ export function CardQuandoComprar({ janela }: { janela: JanelaDeCompra }) {
 
       <dl className="tabular mb-3 grid grid-cols-3 gap-2 border-y border-borda py-3 text-center">
         <div>
-          <dt className="text-[11px] text-tinta-fraca">Janela</dt>
+          <dt className="text-[11px] text-tinta-fraca">
+            <Termo id="antecedencia">Janela</Termo>
+          </dt>
           <dd className="text-sm font-semibold text-tinta">
             {janela.diasMin}–{janela.diasMax}d
           </dd>

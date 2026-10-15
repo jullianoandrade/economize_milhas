@@ -1,4 +1,5 @@
 import { milhas as fmtMilhas } from "@/lib/format";
+import { Termo } from "./Termo";
 
 /**
  * O piso, o teto, e onde esta data cai entre os dois.
@@ -22,11 +23,14 @@ export function FaixaDeMilhas({
   max,
   atual,
   unidade,
+  chave,
 }: {
   min: number;
   max: number;
   atual: number;
   unidade: string;
+  /** Desambigua o popover quando ha mais de uma faixa na mesma pagina. */
+  chave?: string;
 }) {
   if (!(max > min) || (max - min) / max < AMPLITUDE_MINIMA) return null;
 
@@ -37,6 +41,13 @@ export function FaixaDeMilhas({
 
   return (
     <div>
+      {/* div, nao p: o painel do Termo e um bloco, e um <p> fecharia
+          sozinho ao encontra-lo, descasando a hidratacao. */}
+      <div className="mb-1 text-[11px] font-medium text-tinta-fraca">
+        <Termo id="precificacao-dinamica" chave={chave}>
+          Faixa de preço desta tabela
+        </Termo>
+      </div>
       <div
         role="img"
         aria-label={`Nesta data, ${fmtMilhas(atual)} ${unidade}. Ao longo do ano esta rota varia de ${fmtMilhas(min)} a ${fmtMilhas(max)}.`}

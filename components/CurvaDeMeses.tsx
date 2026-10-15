@@ -2,6 +2,7 @@ import type { Sazonalidade } from "@/lib/tempo/sazonalidade";
 import { nomeDoMes } from "@/lib/tempo/sazonalidade";
 import { mesCurto, reais, reaisExatos } from "@/lib/format";
 import { SeloDeFonte } from "./SeloDeFonte";
+import { Termo } from "./Termo";
 import type { Fonte } from "@/lib/providers/travelpayouts";
 
 /**
@@ -67,9 +68,10 @@ export function CurvaDeMeses({
         <h2 className="display text-xl leading-tight text-tinta">{titulo}</h2>
         <SeloDeFonte fonte={fonte} observacao={observacaoDaFonte} />
       </header>
-      <p className="mb-3 text-sm leading-relaxed text-tinta-media">
-        {subtitulo}
-      </p>
+      {/* div, nao p: ver o mesmo comentario em CardPrograma.tsx. */}
+      <div className="mb-3 text-sm leading-relaxed text-tinta-media">
+        {subtitulo} <Termo id="alta-temporada">Por quê?</Termo>
+      </div>
 
       <svg
         viewBox={`0 0 ${LARGURA} ${ALTURA}`}

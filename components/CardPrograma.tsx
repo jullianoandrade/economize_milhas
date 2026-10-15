@@ -3,6 +3,7 @@ import { milhas, reais, reaisExatos } from "@/lib/format";
 import { FaixaDeMilhas } from "./FaixaDeMilhas";
 import { ReguaDoResgate } from "./ReguaDoResgate";
 import { SeloDeConfianca } from "./SeloDeFonte";
+import { Termo } from "./Termo";
 
 /**
  * Como fica o resgate em um programa especifico.
@@ -51,12 +52,18 @@ export function CardPrograma({
         </span>
       </header>
 
-      <p className="tabular text-lg font-semibold text-tinta">
+      {/* div, nao p: o painel do Termo e um <div popover> e um <p> fecha
+          sozinho ao encontrar uma tag de bloco dentro dele, descasando a
+          arvore que o React hidrata da que o navegador realmente monta. */}
+      <div className="tabular text-lg font-semibold text-tinta">
         {milhas(opcao.milhas)}{" "}
         <span className="text-sm font-normal text-tinta-media">
-          {opcao.programa.unidade} + {reais(opcao.taxasBRL)} de taxas
+          {opcao.programa.unidade} + {reais(opcao.taxasBRL)} de{" "}
+          <Termo id="taxa-embarque" chave={opcao.programa.id}>
+            taxas
+          </Termo>
         </span>
-      </p>
+      </div>
 
       <div className="mb-3 mt-1.5">
         <FaixaDeMilhas
@@ -64,6 +71,7 @@ export function CardPrograma({
           max={opcao.milhasFaixa.max}
           atual={opcao.milhas}
           unidade={opcao.programa.unidade}
+          chave={opcao.programa.id}
         />
       </div>
 
@@ -75,13 +83,21 @@ export function CardPrograma({
           </dd>
         </div>
         <div className="flex items-baseline justify-between gap-3">
-          <dt className="text-tinta-media">Você extrai por milheiro</dt>
+          <dt className="text-tinta-media">
+            <Termo id="valor-extraido" chave={opcao.programa.id}>
+              Você extrai por milheiro
+            </Termo>
+          </dt>
           <dd className="tabular font-semibold text-dinheiro">
             {reaisExatos(opcao.valorExtraidoPorMilheiroBRL)}
           </dd>
         </div>
         <div className="flex items-baseline justify-between gap-3">
-          <dt className="text-tinta-media">Sua milha custa</dt>
+          <dt className="text-tinta-media">
+            <Termo id="cpm" chave={opcao.programa.id}>
+              Sua milha custa
+            </Termo>
+          </dt>
           <dd className="tabular font-semibold text-tinta">
             {reaisExatos(opcao.caminho.cpmBRL)}
           </dd>
@@ -98,16 +114,36 @@ export function CardPrograma({
       </div>
 
       <footer className="mt-3 border-t border-borda pt-3">
-        <p className="text-xs leading-relaxed text-tinta-media">
+        <div className="text-xs leading-relaxed text-tinta-media">
           <span className="font-medium text-tinta">
-            {opcao.caminho.rotulo}.
+            {opcao.caminho.id === "transferencia" ? (
+              <Termo id="transferencia-bonificada" chave={opcao.programa.id}>
+                {opcao.caminho.rotulo}
+              </Termo>
+            ) : opcao.caminho.id === "clube" ? (
+              <Termo id="clube" chave={opcao.programa.id}>
+                {opcao.caminho.rotulo}
+              </Termo>
+            ) : (
+              opcao.caminho.rotulo
+            )}
+            .
           </span>{" "}
           {opcao.caminho.explicacao}
-        </p>
+        </div>
         {opcao.caminho.detalhe ? (
           <p className="tabular mt-1 text-xs text-tinta-fraca">
             {opcao.caminho.detalhe}
           </p>
+        ) : null}
+        {opcao.caminho.id === "transferencia" ? (
+          <div className="mt-1 text-xs text-tinta-fraca">
+            Via{" "}
+            <Termo id="coalizao" chave={opcao.programa.id}>
+              programa de coalizão
+            </Termo>
+            .
+          </div>
         ) : null}
         <div className="mt-2 flex flex-wrap gap-1.5">
           <SeloDeConfianca confianca={opcao.confianca} />
