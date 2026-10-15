@@ -328,4 +328,42 @@ describe("veredito", () => {
     expect(v.explicacao).toContain("por milheiro");
     expect(v.explicacao.length).toBeGreaterThan(80);
   });
+
+  /**
+   * A faixa min-max vinha sendo calculada e descartada: so o tipico
+   * chegava a tela, e um numero unico esconde que a mesma rota custa
+   * quase metade em promocao e quase o dobro na alta.
+   *
+   * O invariante importa porque a tela desenha o tipico DENTRO da
+   * faixa: se ele escapar, o marcador sai da barra.
+   */
+  it("a faixa de milhas sempre contem o valor tipico", () => {
+    for (const preco of [800, 2500, 6500, 20000]) {
+      const v = calcularVeredito(rota("GRU", "LIS"), preco);
+      for (const o of v.opcoes) {
+        expect(o.milhasFaixa.min).toBeLessThanOrEqual(o.milhas);
+        expect(o.milhas).toBeLessThanOrEqual(o.milhasFaixa.max);
+      }
+    }
+  });
+
+  it("a faixa nao se move com o preco; so o tipico se move dentro dela", () => {
+    // E o que separa precificacao dinamica de tabela nova: o piso e o
+    // teto sao da ROTA, nao da data.
+    //
+    // A comparacao tem de fixar o programa: `melhor` e ordenado por
+    // economia, e o vencedor troca conforme o preco -- comparar os dois
+    // `melhor` compararia programas diferentes, que naturalmente tem
+    // faixas diferentes.
+    const de = (preco: number) =>
+      calcularVeredito(rota("GRU", "LIS"), preco).opcoes.find(
+        (o) => o.programa.id === "smiles",
+      )!;
+
+    const barata = de(2500);
+    const cara = de(9000);
+
+    expect(cara.milhasFaixa).toEqual(barata.milhasFaixa);
+    expect(cara.milhas).toBeGreaterThan(barata.milhas);
+  });
 });

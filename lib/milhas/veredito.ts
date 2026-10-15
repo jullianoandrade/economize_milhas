@@ -37,6 +37,15 @@ export type OpcaoDeResgate = {
   valorExtraidoPorMilheiroBRL: number;
   /** Valor extraido dividido pelo CPM. Acima de 1 o resgate compensa. */
   razao: number;
+  /**
+   * Piso e teto da tabela para este trecho.
+   *
+   * Vinha sendo calculado e descartado: so o tipico chegava a tela. Mas
+   * e a FAIXA que explica a precificacao dinamica -- um numero unico
+   * mente por omissao, porque esconde que a mesma rota custa metade em
+   * promocao e o dobro na alta.
+   */
+  milhasFaixa: { min: number; max: number };
   qualidade: Qualidade;
   economiaBRL: number;
 };
@@ -134,6 +143,10 @@ export function calcularVeredito(
         programa: estimativa.programa,
         disponivel: estimativa.disponivel,
         milhas,
+        milhasFaixa: {
+          min: estimativa.milhas.min,
+          max: estimativa.milhas.max,
+        },
         taxasBRL: estimativa.taxasBRL,
         confianca: estimativa.confianca,
         caminho,

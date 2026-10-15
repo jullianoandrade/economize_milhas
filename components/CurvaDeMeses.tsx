@@ -34,7 +34,20 @@ export function CurvaDeMeses({
   fonte: Fonte;
   observacaoDaFonte: string;
 }) {
-  const { meses, mesMaisBaratoEmDinheiro, mesComMelhorResgate } = sazonalidade;
+  const { meses, mesMaisBaratoEmDinheiro, mesComMelhorResgate, mesesCoincidem } =
+    sazonalidade;
+
+  // O insight mais contraintuitivo do app -- o mes mais barato em
+  // dinheiro NAO ser o mes em que a milha rende mais -- estava enterrado
+  // no ultimo paragrafo. O booleano ja existia no motor; so faltava
+  // deixar ele mandar no titulo, que e a unica linha que todo mundo le.
+  const titulo = mesesCoincidem
+    ? `${nomeDoMes(mesMaisBaratoEmDinheiro.mes)} é o melhor mês dos dois jeitos`
+    : "Os dois melhores meses não são o mesmo";
+
+  const subtitulo = mesesCoincidem
+    ? "Passagem mais barata e milha rendendo mais caem no mesmo mês — é raro, e é a melhor hora de ir."
+    : "A passagem fica mais barata num mês; a milha rende mais em outro. Qual vale depende de como você vai pagar.";
 
   const maior = Math.max(...meses.map((m) => m.precoBRL));
   const alturaUtil = BASE - TOPO;
@@ -51,13 +64,11 @@ export function CurvaDeMeses({
   return (
     <section className="rounded-2xl border border-borda bg-superficie p-4 shadow-card">
       <header className="mb-1 flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-lg font-semibold tracking-tight text-tinta">
-          Quando ir
-        </h2>
+        <h2 className="display text-xl leading-tight text-tinta">{titulo}</h2>
         <SeloDeFonte fonte={fonte} observacao={observacaoDaFonte} />
       </header>
-      <p className="mb-3 text-sm text-tinta-media">
-        Preço da passagem mês a mês, e em qual deles a milha rende mais.
+      <p className="mb-3 text-sm leading-relaxed text-tinta-media">
+        {subtitulo}
       </p>
 
       <svg

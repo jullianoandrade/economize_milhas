@@ -1,5 +1,7 @@
 import type { OpcaoDeResgate, Qualidade } from "@/lib/milhas/veredito";
 import { milhas, reais, reaisExatos } from "@/lib/format";
+import { FaixaDeMilhas } from "./FaixaDeMilhas";
+import { ReguaDoResgate } from "./ReguaDoResgate";
 import { SeloDeConfianca } from "./SeloDeFonte";
 
 /**
@@ -49,12 +51,21 @@ export function CardPrograma({
         </span>
       </header>
 
-      <p className="tabular mb-3 text-lg font-semibold text-tinta">
+      <p className="tabular text-lg font-semibold text-tinta">
         {milhas(opcao.milhas)}{" "}
         <span className="text-sm font-normal text-tinta-media">
           {opcao.programa.unidade} + {reais(opcao.taxasBRL)} de taxas
         </span>
       </p>
+
+      <div className="mb-3 mt-1.5">
+        <FaixaDeMilhas
+          min={opcao.milhasFaixa.min}
+          max={opcao.milhasFaixa.max}
+          atual={opcao.milhas}
+          unidade={opcao.programa.unidade}
+        />
+      </div>
 
       <dl className="space-y-1.5 border-t border-borda pt-3 text-sm">
         <div className="flex items-baseline justify-between gap-3">
@@ -77,6 +88,15 @@ export function CardPrograma({
         </div>
       </dl>
 
+      <div className="mt-3">
+        <ReguaDoResgate
+          razao={opcao.razao}
+          qualidade={opcao.qualidade}
+          cpmBRL={opcao.caminho.cpmBRL}
+          valorExtraidoPorMilheiroBRL={opcao.valorExtraidoPorMilheiroBRL}
+        />
+      </div>
+
       <footer className="mt-3 border-t border-borda pt-3">
         <p className="text-xs leading-relaxed text-tinta-media">
           <span className="font-medium text-tinta">
@@ -84,6 +104,11 @@ export function CardPrograma({
           </span>{" "}
           {opcao.caminho.explicacao}
         </p>
+        {opcao.caminho.detalhe ? (
+          <p className="tabular mt-1 text-xs text-tinta-fraca">
+            {opcao.caminho.detalhe}
+          </p>
+        ) : null}
         <div className="mt-2 flex flex-wrap gap-1.5">
           <SeloDeConfianca confianca={opcao.confianca} />
         </div>
