@@ -3,6 +3,7 @@ import {
   bonusMedianoDeTransferencia,
   cpmDoCartao,
   melhorPlanoDeClube,
+  paridadeDeTransferencia,
 } from "./motor";
 import { reais } from "@/lib/format";
 
@@ -65,6 +66,12 @@ export type PlanoDeAcumulo = {
   cartoesSugeridos: OpcaoDeCartao[];
   explicacao: string;
   alerta: string | null;
+  /**
+   * Minimo de pontos Livelo, de uma vez, para transferir a este
+   * programa. Null quando a paridade nao exige minimo (ou nao e
+   * conhecida) -- nesse caso nao ha nada a avisar.
+   */
+  minimoDeTransferencia: number | null;
 };
 
 /** Teto de meses que faz sentido planejar: alem disso, o plano e ficcao. */
@@ -182,6 +189,7 @@ export function montarPlano(
       precoDaPassagemBRL,
     }),
     alerta: alertar({ mesesNecessarios, custoTotalBRL, precoDaPassagemBRL }),
+    minimoDeTransferencia: paridadeDeTransferencia(programaId)?.minimoPontos || null,
   };
 }
 

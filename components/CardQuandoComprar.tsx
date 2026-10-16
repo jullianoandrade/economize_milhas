@@ -1,6 +1,7 @@
 import type { JanelaDeCompra } from "@/lib/tempo/antecedencia";
 import { porcentagem } from "@/lib/format";
 import { Termo } from "./Termo";
+import { LembreteDeCompra } from "./LembreteDeCompra";
 
 /**
  * Compro agora ou espero?
@@ -30,7 +31,13 @@ const APARENCIA = {
   },
 } as const;
 
-export function CardQuandoComprar({ janela }: { janela: JanelaDeCompra }) {
+export function CardQuandoComprar({
+  janela,
+  rotaId,
+}: {
+  janela: JanelaDeCompra;
+  rotaId: string;
+}) {
   const aparencia = APARENCIA[janela.veredito];
   const temData = janela.diasAteOVoo !== null;
 
@@ -126,6 +133,8 @@ export function CardQuandoComprar({ janela }: { janela: JanelaDeCompra }) {
           ? `Curva própria desta rota, de ${janela.observacoes.toLocaleString("pt-BR")} observações de preço.`
           : "Estimativa de mercado. Esta previsão melhora sozinha conforme coletamos preços desta rota todos os dias."}
       </p>
+
+      <LembreteDeCompra rotaId={rotaId} esperarDias={janela.esperarDias} />
     </section>
   );
 }

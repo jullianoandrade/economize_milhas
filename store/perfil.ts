@@ -52,9 +52,17 @@ export type Perfil = SituacaoDeAcumulo & {
   ) => void;
   removerMeta: (metaId: string) => void;
   celebrarMarco: (metaId: string, marco: number) => void;
+  /**
+   * Lembretes de compra por rota (chave "ORIGEM-DESTINO"), vindos de
+   * JanelaDeCompra.esperarDias. Guarda so a DATA para lembrar -- ainda
+   * nao ha notificacao de verdade (o app ja e instalavel, entao o
+   * proximo passo natural e Push API quando houver service worker).
+   */
+  lembretesDeCompra: Record<string, string>;
+  definirLembrete: (rotaId: string, lembrarEm: string | null) => void;
 };
 
-export const VERSAO_DO_PERFIL = 4;
+export const VERSAO_DO_PERFIL = 5;
 
 /**
  * Migrar e ACRESCENTAR, nunca substituir.
@@ -104,6 +112,11 @@ export function migrarPerfil(estado: unknown, versao: number): Perfil {
     };
   }
 
+  // v5 acrescenta os lembretes de compra, por rota.
+  if (versao < 5) {
+    atual = { ...atual, lembretesDeCompra: atual.lembretesDeCompra ?? {} };
+  }
+
   return atual as Perfil;
 }
 
@@ -118,6 +131,7 @@ export const usarPerfil = create<Perfil>()(
       cartaoId: null,
       saldoPontosCoalizao: 0,
       aceitaClube: false,
+      lembretesDeCompra: {},
 
       definirOrigem: (iata) => set({ origemIata: iata.toUpperCase() }),
 
@@ -200,6 +214,14 @@ export const usarPerfil = create<Perfil>()(
               : m,
           ),
         })),
+
+      definirLembrete: (rotaId, lembrarEm) =>
+        set((estado) => {
+          const lembretes = { ...estado.lembretesDeCompra };
+          if (lembrarEm) lembretes[rotaId] = lembrarEm;
+          else delete lembretes[rotaId];
+          return { lembretesDeCompra: lembretes };
+        }),
     }),
     {
       name: "milhas-perfil",

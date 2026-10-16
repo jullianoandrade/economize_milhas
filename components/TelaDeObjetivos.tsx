@@ -7,6 +7,7 @@ import { Cabecalho } from "./Cabecalho";
 import { CampoDeLugar, type Lugar } from "./CampoDeLugar";
 import { Ilustracao } from "./Ilustracao";
 import { LinhaDoObjetivo } from "./LinhaDoObjetivo";
+import { Termo } from "./Termo";
 import { usarPerfil, usePerfilHidratado } from "@/store/perfil";
 import {
   calcularProgresso,
@@ -60,6 +61,7 @@ type Resposta = {
     economiaBRL: number;
     explicacao: string;
     alerta: string | null;
+    minimoDeTransferencia: number | null;
     fontes: Array<{
       id: string;
       rotulo: string;
@@ -527,16 +529,30 @@ export function TelaDeObjetivos() {
               </select>
             </div>
 
-            <Deslizante
-              rotulo="Pontos parados na Livelo ou Esfera"
-              valor={saldoPontos}
-              minimo={0}
-              maximo={200000}
-              passo={1000}
-              formatar={fmtMilhas}
-              aoMudar={setSaldoPontos}
-              aoSoltar={(v) => gravarAcumulo({ pontos: v })}
-            />
+            <div>
+              <Deslizante
+                rotulo="Pontos parados na Livelo ou Esfera"
+                valor={saldoPontos}
+                minimo={0}
+                maximo={200000}
+                passo={1000}
+                formatar={fmtMilhas}
+                aoMudar={setSaldoPontos}
+                aoSoltar={(v) => gravarAcumulo({ pontos: v })}
+              />
+              {resposta?.plano.minimoDeTransferencia ? (
+                // div, nao p: o painel do Termo e um <div popover>, e um
+                // <p> fecharia sozinho ao encontra-lo (ver CardPrograma.tsx).
+                <div className="mt-1.5 text-xs leading-relaxed text-tinta-fraca">
+                  A Livelo exige{" "}
+                  <Termo id="paridade">
+                    mínimo de{" "}
+                    {fmtMilhas(resposta.plano.minimoDeTransferencia)} pontos
+                  </Termo>{" "}
+                  de uma vez para transferir ao {resposta.programa.nome}.
+                </div>
+              ) : null}
+            </div>
 
             <label className="flex items-center gap-3 text-sm text-tinta">
               <input

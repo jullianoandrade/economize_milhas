@@ -156,6 +156,25 @@ export function bonusMedianoDeTransferencia(programaId: string): number {
 }
 
 /**
+ * A paridade Livelo -> programa de destino.
+ *
+ * Livelo e o hub que o resto do app ja assume como base (e o preco de
+ * compra de pontos Livelo que vira "o custo de quem compra" em
+ * PerguntaDoCartao e em SeuCusto). O numero que importa aqui nao e a
+ * razao -- quase sempre 1:1 -- e o MINIMO por transferencia: a Esfera
+ * exige 30.000 pontos de uma vez para qualquer destino, e a Livelo varia
+ * de 0 a 12.000 dependendo do programa. E o bloqueio pratico que pega o
+ * iniciante de surpresa, e nenhuma tela do app mencionava isso ate aqui.
+ */
+export function paridadeDeTransferencia(programaId: string) {
+  return (
+    transferencias.paridades.find(
+      (p) => p.origem === "livelo" && p.destino === programaId,
+    ) ?? null
+  );
+}
+
+/**
  * Todos os caminhos de aquisicao de um programa, do mais barato ao mais
  * caro. A ordem e por CPM: so o que e melhor para o usuario, nada mais.
  */

@@ -279,6 +279,7 @@ async function Conteudo({
         }
         calendario={calendario}
         rotaHref={`/rota/${rota.origem.iata}/${rota.destino.iata}`}
+        rotaId={`${rota.origem.iata}-${rota.destino.iata}`}
         dataEscolhida={dataEscolhida}
         melhoresDatas={datas}
         medianaHistoricaBRL={referenciaBRL}

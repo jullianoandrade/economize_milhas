@@ -10,6 +10,7 @@ import {
   cpmDoCartao,
   estimarMilhas,
   melhorPlanoDeClube,
+  paridadeDeTransferencia,
 } from "@/lib/milhas/motor";
 import {
   avaliarResgate,
@@ -365,5 +366,27 @@ describe("veredito", () => {
 
     expect(cara.milhasFaixa).toEqual(barata.milhasFaixa);
     expect(cara.milhas).toBeGreaterThan(barata.milhas);
+  });
+});
+
+describe("paridade de transferencia", () => {
+  it("devolve o minimo de pontos Livelo para o programa", () => {
+    // Confere contra o dado curado: Livelo -> LATAM Pass exige 12.000
+    // pontos de uma vez, o bloqueio pratico que pega o iniciante de
+    // surpresa.
+    const paridade = paridadeDeTransferencia("latampass");
+    expect(paridade?.minimoPontos).toBe(12000);
+  });
+
+  it("programa sem paridade cadastrada devolve null", () => {
+    expect(paridadeDeTransferencia("programa-que-nao-existe")).toBeNull();
+  });
+
+  it("so olha a paridade da Livelo, nunca a da Esfera", () => {
+    // Livelo -> Smiles exige 10.000; Esfera -> Smiles exige 30.000. Usar
+    // a paridade errada mostraria um minimo tres vezes maior do que o
+    // caminho que o resto do app ja assume como base.
+    const paridade = paridadeDeTransferencia("smiles");
+    expect(paridade?.minimoPontos).toBe(10000);
   });
 });

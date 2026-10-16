@@ -49,11 +49,13 @@ function idsReferenciados(): Set<string> {
   return ids;
 }
 
-/** Termos que o roteiro adia para fases futuras, com o motivo. */
-const AINDA_NAO_REFERENCIADOS: Record<string, string> = {
-  paridade:
-    "entra junto do minimo de transferencia no plano de acumulo -- Fase 6.",
-};
+/**
+ * Termos que o roteiro adia para fases futuras, com o motivo.
+ *
+ * Vazio agora: "paridade" era o unico, e ganhou gatilho na Fase 6
+ * (TelaDeObjetivos.tsx, junto do minimo de transferencia).
+ */
+const AINDA_NAO_REFERENCIADOS: Record<string, string> = {};
 
 describe("glossario", () => {
   const referenciados = idsReferenciados();

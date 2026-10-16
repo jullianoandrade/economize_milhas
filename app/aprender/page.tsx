@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cabecalho } from "@/components/Cabecalho";
+import { CalculadoraDeCpm } from "@/components/CalculadoraDeCpm";
 import { glossario } from "@/lib/dados";
 
 export const metadata: Metadata = {
@@ -23,6 +24,10 @@ export default function Aprender() {
         titulo="Aprender"
         subtitulo="O vocabulário de milhas sem enrolação — e os erros que fazem você perder dinheiro."
       />
+
+      <div className="mb-7">
+        <CalculadoraDeCpm />
+      </div>
 
       <section className="mb-7">
         <h2 className="mb-1 text-lg font-semibold tracking-tight text-tinta">

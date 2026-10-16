@@ -117,10 +117,7 @@ const VERIFICACOES: Verificacao[] = [
       "observacoes",
       "explicacao",
     ],
-    gaps: {
-      esperarDias:
-        "reservado para o lembrete \"me avise em N dias\" da Fase 6 -- o botao que o usaria ainda nao existe.",
-    },
+    gaps: {},
   },
   {
     tipo: "Progresso",
@@ -165,6 +162,7 @@ const VERIFICACOES: Verificacao[] = [
       "cartoesSugeridos",
       "explicacao",
       "alerta",
+      "minimoDeTransferencia",
     ],
     gaps: {
       milhasFaltando:

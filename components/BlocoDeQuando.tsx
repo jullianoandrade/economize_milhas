@@ -27,6 +27,7 @@ export function BlocoDeQuando({
   observacaoDaCurva,
   calendario,
   rotaHref,
+  rotaId,
   dataEscolhida,
   melhoresDatas,
   medianaHistoricaBRL,
@@ -37,6 +38,8 @@ export function BlocoDeQuando({
   observacaoDaCurva: string;
   calendario: Calendario;
   rotaHref: string;
+  /** "ORIGEM-DESTINO", para o lembrete de compra identificar a rota. */
+  rotaId: string;
   dataEscolhida: string | null;
   melhoresDatas: DataMaisBarata[];
   medianaHistoricaBRL: number;
@@ -85,7 +88,7 @@ export function BlocoDeQuando({
         subtitulo="A janela em que a passagem costuma ficar mais barata"
         aberto={!abrirMes && !abrirDia}
       >
-        <CardQuandoComprar janela={janela} />
+        <CardQuandoComprar janela={janela} rotaId={rotaId} />
       </ItemDoAcordeao>
     </section>
   );

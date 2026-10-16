@@ -104,6 +104,21 @@ describe("migrarPerfil", () => {
     expect(depois.metas[0].marcosCelebrados).toEqual([25, 50]);
   });
 
+  it("lembretes de compra nascem vazios para perfil de antes da v5", () => {
+    const depois = migrarPerfil({ origemIata: "GRU", metas: [] }, 4);
+    expect(depois.lembretesDeCompra).toEqual({});
+  });
+
+  it("nao mexe em lembrete ja guardado", () => {
+    const antes = {
+      origemIata: "GRU",
+      metas: [],
+      lembretesDeCompra: { "GRU-LIS": "2026-11-20" },
+    };
+    const depois = migrarPerfil(antes, 4);
+    expect(depois.lembretesDeCompra).toEqual({ "GRU-LIS": "2026-11-20" });
+  });
+
   it("migrar da versao corrente nao muda nada", () => {
     const atual = {
       origemIata: "GRU",
@@ -113,6 +128,7 @@ describe("migrarPerfil", () => {
       cartaoId: null,
       saldoPontosCoalizao: 12000,
       aceitaClube: true,
+      lembretesDeCompra: {},
     };
 
     expect(migrarPerfil(atual, VERSAO_DO_PERFIL)).toEqual(atual);
@@ -146,5 +162,29 @@ describe("celebrarMarco", () => {
     const [m1, m2] = usarPerfil.getState().metas;
     expect(m1.marcosCelebrados).toEqual([50]);
     expect(m2.marcosCelebrados).toEqual([]);
+  });
+});
+
+describe("definirLembrete", () => {
+  afterEach(() => {
+    usarPerfil.setState({ lembretesDeCompra: {} });
+  });
+
+  it("grava a data sob a chave da rota", () => {
+    usarPerfil.getState().definirLembrete("GRU-LIS", "2026-11-20");
+    expect(usarPerfil.getState().lembretesDeCompra).toEqual({
+      "GRU-LIS": "2026-11-20",
+    });
+  });
+
+  it("null remove o lembrete, sem afetar outras rotas", () => {
+    usarPerfil.setState({
+      lembretesDeCompra: { "GRU-LIS": "2026-11-20", "GRU-REC": "2026-12-01" },
+    });
+    usarPerfil.getState().definirLembrete("GRU-LIS", null);
+
+    expect(usarPerfil.getState().lembretesDeCompra).toEqual({
+      "GRU-REC": "2026-12-01",
+    });
   });
 });
