@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { CalendarioDePrecos as Calendario } from "@/lib/tempo/calendario";
 import { DIAS_MINIMOS_PARA_MOSTRAR } from "@/lib/tempo/calendario";
-import { reais } from "@/lib/format";
+import type { DataMaisBarata } from "@/lib/tempo/flexibilidade";
+import { porcentagem, reais } from "@/lib/format";
 
 /**
  * Preco por dia de partida, em faixa rolante.
@@ -43,11 +44,16 @@ export function CalendarioDePrecos({
   calendario,
   rotaHref,
   dataEscolhida,
+  melhoresDatas = [],
+  medianaHistoricaBRL = 0,
 }: {
   calendario: Calendario;
   /** Caminho da rota, para cada dia virar um link que marca a data. */
   rotaHref: string;
   dataEscolhida: string | null;
+  /** Melhores dias do histórico INTEIRO, não só da janela de 45 dias acima. */
+  melhoresDatas?: DataMaisBarata[];
+  medianaHistoricaBRL?: number;
 }) {
   // Poucos dias com preco nao formam curva. Melhor nao desenhar do que
   // desenhar quatro barras soltas e deixar a pessoa concluir qualquer
@@ -152,6 +158,39 @@ export function CalendarioDePrecos({
         Mediana da janela: {reais(calendario.medianaBRL)}. Dias sem observação
         não aparecem.
       </p>
+
+      {melhoresDatas.length > 0 ? (
+        <div className="mt-4 border-t border-borda pt-3">
+          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-tinta-fraca">
+            Os dias mais baratos do nosso histórico
+          </h3>
+          <ul className="space-y-2">
+            {melhoresDatas.map((d) => (
+              <li
+                key={d.partidaEm}
+                className="flex items-baseline justify-between gap-3 border-t border-borda pt-2 first:border-0 first:pt-0"
+              >
+                <span className="text-sm text-tinta">
+                  {porExtenso(d.partidaEm)}
+                </span>
+                <span className="tabular shrink-0 text-right">
+                  <span className="block text-sm font-semibold text-tinta">
+                    {reais(d.precoBRL)}
+                  </span>
+                  <span className="block text-[11px] text-dinheiro">
+                    −{reais(d.economiaBRL)} ({porcentagem(d.economiaPct)})
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-tinta-fraca">
+            Comparado com {reais(medianaHistoricaBRL)}, o preço mediano desta
+            rota no nosso histórico inteiro -- a janela acima cobre só os
+            próximos 45 dias.
+          </p>
+        </div>
+      ) : null}
     </section>
   );
 }

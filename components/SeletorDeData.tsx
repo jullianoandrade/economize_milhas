@@ -43,6 +43,11 @@ export function SeletorDeData({ valor }: { valor: string | null }) {
         min={hoje}
         value={valor ?? ""}
         onChange={(e) => definir(e.target.value)}
+        // color-scheme: dark pede ao navegador o icone de calendario claro
+        // do seletor nativo. So faz sentido porque este campo vive
+        // exclusivamente dentro do painel escuro do heroi da rota -- um
+        // icone escuro sumiria contra o proprio fundo escuro do campo.
+        style={{ colorScheme: "dark" }}
         className="rounded-xl border border-borda bg-superficie px-3 py-2 text-sm text-tinta outline-none focus:border-marca"
       />
       {valor ? (

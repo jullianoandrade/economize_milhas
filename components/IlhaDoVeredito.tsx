@@ -1,22 +1,30 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
-import type { Veredito } from "@/lib/milhas/veredito";
-import type { Fonte } from "@/lib/providers/travelpayouts";
-import type { FaseDaJornada } from "@/lib/monetizacao/jornada";
+import type { ReactNode } from "react";
 import { usarPerfil, usePerfilHidratado } from "@/store/perfil";
-import { BlocoDeVeredito } from "./BlocoDeVeredito";
+import { useVereditoPersonalizado } from "@/lib/cliente/veredito";
+import { HeroiDaRota } from "./HeroiDaRota";
+import type { FaseDaJornada } from "@/lib/monetizacao/jornada";
 
 /**
- * Troca o veredito de mercado pelo da pessoa, depois da hidratacao.
+ * Troca o veredito de mercado pelo da pessoa, depois da hidratação.
  *
- * `children` e o mesmo BlocoDeVeredito ja renderizado no servidor com o
- * CPM de quem compra milhas -- aparece primeiro, sem atraso, e continua
- * sendo o que builder sem JavaScript ou sem perfil respondido ve.
+ * `children` é o mesmo HeroiDaRota já renderizado no servidor com o CPM
+ * de mercado -- aparece primeiro, sem atraso, e continua sendo o que
+ * quem não tem JavaScript ou não respondeu o perfil vê.
  *
- * Se a pessoa ja respondeu a pergunta do cartao, buscamos o veredito de
- * novo com o perfil dela e substituimos. Nunca por cookie: isso tornaria
- * a rota inteira dinamica e mataria a pre-renderizacao parcial.
+ * IMPORTANTE: esta ilha chama HeroiDaRota diretamente, em vez de receber
+ * "o que desenhar" como função via prop. Uma funcao nao atravessa a
+ * fronteira servidor->cliente -- o protocolo RSC so serializa dado,
+ * nunca closures. Uma versao anterior passava um `renderizar` assim
+ * daqui, e o build compilava limpo mas a pagina quebrava na hidratacao
+ * (erros React #419/#441, so visiveis em producao). ComoPagar tem a sua
+ * propria ilha irma, IlhaDeComoPagar, pela mesma razao -- nao porque
+ * precisasse de logica diferente, mas porque "qual componente chamar"
+ * so pode ser uma escolha de QUAL ARQUIVO, nunca um prop.
+ *
+ * Nunca por cookie: isso tornaria a rota inteira dinâmica e mataria a
+ * pré-renderização parcial.
  */
 export function IlhaDoVeredito({
   origem,
@@ -35,39 +43,21 @@ export function IlhaDoVeredito({
   const gasto = usarPerfil((p) => p.gastoMensalCartaoBRL);
   const cartaoId = usarPerfil((p) => p.cartaoId);
 
-  const [pessoal, setPessoal] = useState<{
-    veredito: Veredito;
-    preco: { valorBRL: number; fonte: Fonte; observacao: string };
-  } | null>(null);
-
-  useEffect(() => {
-    if (!hidratado || gasto === null) return;
-
-    const controlador = new AbortController();
-    const parametros = new URLSearchParams({
-      origem,
-      destino,
-      gasto: String(gasto),
-    });
-    if (cartaoId) parametros.set("cartaoId", cartaoId);
-
-    fetch(`/api/veredito?${parametros}`, { signal: controlador.signal })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("falhou"))))
-      .then(setPessoal)
-      .catch((e) => {
-        if (e.name !== "AbortError") setPessoal(null);
-      });
-
-    return () => controlador.abort();
-  }, [hidratado, gasto, cartaoId, origem, destino]);
+  const pessoal = useVereditoPersonalizado(
+    hidratado,
+    gasto,
+    cartaoId,
+    origem,
+    destino,
+  );
 
   if (!pessoal) return <>{children}</>;
 
   return (
-    <BlocoDeVeredito
+    <HeroiDaRota
       veredito={pessoal.veredito}
-      fonte={pessoal.preco.fonte}
-      observacaoDaFonte={pessoal.preco.observacao}
+      fonte={pessoal.fonte}
+      observacaoDaFonte={pessoal.observacaoDaFonte}
       origemIata={origem}
       destinoIata={destino}
       dataEscolhida={dataEscolhida}

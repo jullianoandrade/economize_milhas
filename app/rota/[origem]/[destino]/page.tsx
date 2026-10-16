@@ -1,14 +1,15 @@
-import { Suspense } from "react";
+import { Suspense, type CSSProperties } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { CalendarioDePrecos } from "@/components/CalendarioDePrecos";
-import { CardFlexibilidade } from "@/components/CardFlexibilidade";
 import { FaixaDaJornada } from "@/components/FaixaDaJornada";
 import { SeletorDeData } from "@/components/SeletorDeData";
-import { CardQuandoComprar } from "@/components/CardQuandoComprar";
-import { BlocoDeVeredito } from "@/components/BlocoDeVeredito";
+import { ArcoDaRota } from "@/components/ArcoDaRota";
+import { CeuDoDestino } from "@/components/CeuDoDestino";
+import { HeroiDaRota } from "@/components/HeroiDaRota";
+import { ComoPagar } from "@/components/ComoPagar";
 import { IlhaDoVeredito } from "@/components/IlhaDoVeredito";
-import { CurvaDeMeses } from "@/components/CurvaDeMeses";
+import { IlhaDeComoPagar } from "@/components/IlhaDeComoPagar";
+import { BlocoDeQuando } from "@/components/BlocoDeQuando";
 import { curvaMensal, precoDoTrecho } from "@/lib/precos";
 import {
   observacoesDaRota,
@@ -17,6 +18,7 @@ import {
 } from "@/lib/historico";
 import { precosDasAlternativas } from "@/lib/alternativas";
 import { heuristicasTempo } from "@/lib/dados";
+import { reais } from "@/lib/format";
 import {
   AeroportoDesconhecidoError,
   aeroportoPorIata,
@@ -61,6 +63,39 @@ export async function generateMetadata({
     description: `Quanto custa ${trecho} em dinheiro e em milhas, em que mês ir, quando comprar e quanto você economiza.`,
   };
 }
+
+/**
+ * O acabamento escuro do heroi, fixo -- independente do tema claro/escuro
+ * que a pessoa escolheu no resto do site.
+ *
+ * O heroi e um painel de marca, sempre escuro. Os mesmos componentes que
+ * o resto da pagina usa no modo claro (CardVeredito, ReguaDoResgate,
+ * FaixaDeMilhas, SeloDeFonte, FaixaDaJornada, SeletorDeData) so precisam
+ * ler, aqui dentro, os valores que o MODO ESCURO do site ja define para
+ * estas variaveis -- mesmo precedente de TOM_CLARO em Ilustracao.tsx, so
+ * que invertido.
+ */
+const TEMA_DO_HEROI = {
+  "--tinta": "#f2ede0",
+  "--tinta-media": "#b6bed0",
+  "--tinta-fraca": "#8e99b0",
+  "--superficie": "#152339",
+  "--superficie-2": "#1d2e48",
+  "--borda": "#2b405f",
+  "--marca": "#8fb2e8",
+  "--marca-contraste": "#0e1a2e",
+  "--marca-fraca": "#1a2b45",
+  "--milhas": "#f2b33d",
+  "--milhas-fundo": "#2e2410",
+  "--milhas-borda": "#56410f",
+  "--dinheiro": "#4ade9f",
+  "--dinheiro-fundo": "#0f2c22",
+  "--dinheiro-borda": "#1f5c44",
+  "--atencao": "#fbbf24",
+  "--alerta": "#f87171",
+  "--alerta-fundo": "#2d1414",
+  "--grafico-dinheiro": "#1f9c6c",
+} as CSSProperties;
 
 export default function PaginaDaRota({
   params,
@@ -141,102 +176,121 @@ async function Conteudo({
   const outrasOrigens = compararOrigens(rota.origem, preco.dados, alternativas);
   const calendario = montarCalendario(datadas, new Date());
   const fase = faseDaJornada(diasAteAViagem);
+  const melhorOrigemAlternativa = outrasOrigens[0] ?? null;
 
   return (
     <>
-      <header className="mb-5">
-        <Link
-          href="/"
-          className="mb-3 inline-flex items-center gap-1 text-sm text-tinta-media transition-colors hover:text-marca"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            className="size-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.8}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M15 5l-7 7 7 7" />
-          </svg>
-          Nova busca
-        </Link>
-
-        <h1 className="text-2xl font-semibold tracking-tight text-tinta">
-          {rota.origem.cidade} → {rota.destino.cidade}
-        </h1>
-        <p className="tabular mt-1 text-sm text-tinta-media">
-          {rota.origem.iata} · {rota.destino.iata} ·{" "}
-          {rota.distanciaKm.toLocaleString("pt-BR")} km · {rota.rotulo}
-        </p>
-        <p className="mt-1 text-xs text-tinta-fraca">
-          Valores por trecho, só ida, em classe econômica.
-        </p>
-      </header>
-
-      <div className="mb-4">
-        <SeletorDeData valor={dataEscolhida} />
-      </div>
-
-      {diasAteAViagem !== null ? (
-        <div className="mb-4">
-          <FaixaDaJornada fase={fase} diasAteAViagem={diasAteAViagem} />
-        </div>
-      ) : null}
-
-      <IlhaDoVeredito
-        origem={rota.origem.iata}
-        destino={rota.destino.iata}
-        dataEscolhida={dataEscolhida}
-        fase={fase}
+      {/* 1. O heroi -- "a resposta". Um unico painel escuro: o veredito,
+          a regua, a faixa de precificacao dinamica, o arco da rota, o
+          ceu do destino e o que fazer a respeito. */}
+      <section
+        className="gradiente-marca relative overflow-hidden rounded-[28px] p-5"
+        style={TEMA_DO_HEROI}
       >
-        <BlocoDeVeredito
-          veredito={veredito}
-          fonte={preco.fonte}
-          observacaoDaFonte={preco.observacao}
-          origemIata={rota.origem.iata}
-          destinoIata={rota.destino.iata}
-          dataEscolhida={dataEscolhida}
-          fase={fase}
-        />
-      </IlhaDoVeredito>
-
-      <div className="mt-4">
-        <CalendarioDePrecos
-          calendario={calendario}
-          rotaHref={`/rota/${rota.origem.iata}/${rota.destino.iata}`}
-          dataEscolhida={dataEscolhida}
-        />
-      </div>
-
-      {sazonalidade ? (
-        <div className="mt-4">
-          <CurvaDeMeses
-            sazonalidade={sazonalidade}
-            fonte={usaProprio ? "travelpayouts" : curvaDaApi.fonte}
-            observacaoDaFonte={
-              usaProprio
-                ? "Montada a partir do nosso histórico próprio de preços desta rota."
-                : curvaDaApi.observacao
-            }
-          />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-28 opacity-90">
+          <CeuDoDestino destino={rota.destino} />
         </div>
+
+        <div className="relative">
+          <Link
+            href="/"
+            className="mb-3 inline-flex items-center gap-1 text-sm text-tinta-media transition-colors hover:text-tinta"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className="size-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.8}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M15 5l-7 7 7 7" />
+            </svg>
+            Nova busca
+          </Link>
+
+          <h1 className="display text-2xl text-tinta">
+            {rota.origem.cidade} → {rota.destino.cidade}
+          </h1>
+          <p className="tabular mt-1 text-sm text-tinta-media">
+            {rota.origem.iata} · {rota.destino.iata} ·{" "}
+            {rota.distanciaKm.toLocaleString("pt-BR")} km · {rota.rotulo}
+          </p>
+          <p className="mt-1 text-sm text-tinta-media">
+            Valores por trecho, só ida, em classe econômica.
+          </p>
+
+          <div className="my-4">
+            <ArcoDaRota origem={rota.origem} destino={rota.destino} />
+          </div>
+
+          <div className="mb-4">
+            <SeletorDeData valor={dataEscolhida} />
+          </div>
+
+          <IlhaDoVeredito
+            origem={rota.origem.iata}
+            destino={rota.destino.iata}
+            dataEscolhida={dataEscolhida}
+            fase={fase}
+          >
+            <HeroiDaRota
+              veredito={veredito}
+              fonte={preco.fonte}
+              observacaoDaFonte={preco.observacao}
+              origemIata={rota.origem.iata}
+              destinoIata={rota.destino.iata}
+              dataEscolhida={dataEscolhida}
+              fase={fase}
+            />
+          </IlhaDoVeredito>
+
+          {diasAteAViagem !== null ? (
+            <div className="mt-4">
+              <FaixaDaJornada fase={fase} diasAteAViagem={diasAteAViagem} />
+            </div>
+          ) : null}
+        </div>
+      </section>
+
+      {melhorOrigemAlternativa ? (
+        <p className="mt-3 text-sm leading-relaxed text-tinta-media">
+          Saindo de{" "}
+          <strong className="font-semibold text-tinta">
+            {melhorOrigemAlternativa.aeroporto.cidade} (
+            {melhorOrigemAlternativa.aeroporto.iata})
+          </strong>{" "}
+          em vez de {rota.origem.cidade}, a passagem sai por{" "}
+          {reais(melhorOrigemAlternativa.precoBRL)} --{" "}
+          {reais(melhorOrigemAlternativa.economiaBRL)} a menos.
+        </p>
       ) : null}
 
-      <div className="mt-4">
-        <CardQuandoComprar janela={janela} />
-      </div>
+      {/* 2. Quando ir, em que dia partir, com quanta antecedencia. */}
+      <BlocoDeQuando
+        sazonalidade={sazonalidade}
+        fonteDaCurva={usaProprio ? "travelpayouts" : curvaDaApi.fonte}
+        observacaoDaCurva={
+          usaProprio
+            ? "Montada a partir do nosso histórico próprio de preços desta rota."
+            : curvaDaApi.observacao
+        }
+        calendario={calendario}
+        rotaHref={`/rota/${rota.origem.iata}/${rota.destino.iata}`}
+        dataEscolhida={dataEscolhida}
+        melhoresDatas={datas}
+        medianaHistoricaBRL={referenciaBRL}
+        janela={janela}
+      />
 
-      <div className="mt-4">
-        <CardFlexibilidade
-          datas={datas}
-          referenciaBRL={referenciaBRL}
-          alternativas={outrasOrigens}
-        />
-      </div>
+      {/* 3. Como pagar: o vencedor expandido, os outros atras de details. */}
+      <IlhaDeComoPagar origem={rota.origem.iata} destino={rota.destino.iata}>
+        <ComoPagar veredito={veredito} />
+      </IlhaDeComoPagar>
 
+      {/* 4. CTA do objetivo. */}
       <section className="mt-6 painel rounded-[24px] p-5">
         <h2 className="display mb-1.5 text-xl">
           Ainda não tem as milhas para {rota.destino.cidade}?
@@ -299,13 +353,8 @@ function RotaNaoEncontrada({ iata }: { iata: string }) {
 function Esqueleto() {
   return (
     <div className="animate-pulse space-y-4" aria-label="Calculando">
-      <div className="space-y-2">
-        <div className="h-4 w-24 rounded bg-superficie-2" />
-        <div className="h-8 w-2/3 rounded-lg bg-superficie-2" />
-        <div className="h-4 w-1/2 rounded bg-superficie-2" />
-      </div>
-      <div className="h-64 rounded-2xl bg-superficie-2" />
-      <div className="h-96 rounded-2xl bg-superficie-2" />
+      <div className="h-[30rem] rounded-[28px] bg-superficie-2" />
+      <div className="h-48 rounded-2xl bg-superficie-2" />
       <div className="h-80 rounded-2xl bg-superficie-2" />
     </div>
   );
