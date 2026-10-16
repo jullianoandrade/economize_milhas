@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist } from "next/font/google";
-import { NavegacaoInferior } from "@/components/NavegacaoInferior";
-import { Rodape } from "@/components/Rodape";
+import { NavegacaoInferior } from "@/components/casca/NavegacaoInferior";
+import { Rodape } from "@/components/casca/Rodape";
 import "./globals.css";
 
 const geistSans = Geist({

@@ -134,7 +134,7 @@ const RELATIVO = (arquivo: string) =>
   path.relative(raiz, arquivo).split(path.sep).join("/");
 
 describe("so LinkExterno emite ancora externa", () => {
-  const EMISSOR_AUTORIZADO = "components/LinkExterno.tsx";
+  const EMISSOR_AUTORIZADO = "components/dominio/LinkExterno.tsx";
 
   it('nenhum outro arquivo usa target="_blank" ou rel com "sponsored"', () => {
     const culpados = todosOsFontesDoProjeto(raiz)
