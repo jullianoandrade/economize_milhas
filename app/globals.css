@@ -298,6 +298,42 @@ body {
   background: var(--gradiente-ceu);
 }
 
+/* Os primeiros @keyframes do projeto (Fase 5 -- movimento). Regra:
+   anima RELACOES, nao numeros; anima MUDANCAS, nao chegadas. */
+
+/* AnelDeProgresso pulsa uma vez em --milhas ao cruzar 25/50/75/100%.
+   Omitir "stroke" em 0%/100% deixa o navegador usar a cor normal do
+   arco como ponto de partida e de chegada -- nao precisa repetir o
+   valor aqui, que muda com o tema (marca) ou o modo (claro). */
+@keyframes brilho-do-marco {
+  50% {
+    stroke: var(--milhas);
+    filter: drop-shadow(0 0 3px var(--milhas));
+  }
+}
+
+.brilho-do-marco {
+  animation: brilho-do-marco 900ms ease-in-out;
+}
+
+/* O marcador da regua e da faixa de milhas entra deslizando. Toca uma
+   vez por montagem -- inclusive quando a ilha de personalizacao troca o
+   veredito de mercado pelo da pessoa, porque a troca remonta o card
+   inteiro. E assim que a animacao vira a evidencia de que o calculo
+   mudou. Anima margin-left, nao transform, porque o marcador ja usa
+   transform para se centralizar (-translate-x-1/2) -- animar a mesma
+   propriedade sobrescreveria essa centralizacao. */
+@keyframes entrada-do-marcador {
+  from {
+    opacity: 0;
+    margin-left: -10px;
+  }
+}
+
+.entrada-do-marcador {
+  animation: entrada-do-marcador 400ms ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -106,7 +106,7 @@ export function ReguaDoResgate({
 
         <span
           aria-hidden="true"
-          className="absolute top-[0.6875rem] size-[0.875rem] -translate-x-1/2 rounded-full border-2 border-superficie"
+          className="entrada-do-marcador absolute top-[0.6875rem] size-[0.875rem] -translate-x-1/2 rounded-full border-2 border-superficie"
           style={{
             left: esquerdaDoMarcador(milhaDeGraca ? 1 : posicaoPct(razao) / 100),
             background: COR_POR_QUALIDADE[qualidade],

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { AnelDeProgresso } from "./AnelDeProgresso";
+import { MarcoDoObjetivo } from "./MarcoDoObjetivo";
 import { Cabecalho } from "./Cabecalho";
 import { CampoDeLugar, type Lugar } from "./CampoDeLugar";
 import { Ilustracao } from "./Ilustracao";
@@ -10,6 +10,7 @@ import { LinhaDoObjetivo } from "./LinhaDoObjetivo";
 import { usarPerfil, usePerfilHidratado } from "@/store/perfil";
 import {
   calcularProgresso,
+  mesAno,
   paraIso,
   type Meta,
   type Situacao,
@@ -288,6 +289,7 @@ export function TelaDeObjetivos() {
       dataAlvo: dataAlvoDigitada || null,
       ritmoMensalEstimado: resposta.plano.milhasPorMes,
       registros: [{ em: hoje, saldo: partida }],
+      marcosCelebrados: [],
     };
 
     salvarMeta(meta);
@@ -682,8 +684,10 @@ function ObjetivoAtivo({
     <>
       <section className="mb-4 painel rounded-[28px] p-5">
         <div className="mb-4 flex items-center gap-4">
-          <AnelDeProgresso
+          <MarcoDoObjetivo
+            metaId={meta.id}
             percentual={progresso.percentual}
+            marcosCelebrados={meta.marcosCelebrados}
             tom="claro"
             rotulo="pronto"
           />
@@ -710,6 +714,15 @@ function ObjetivoAtivo({
         <p className="mt-3 text-sm leading-relaxed text-painel-tinta-fraca">
           {progresso.resumo}
         </p>
+
+        {progresso.chegadaPrevistaEm ? (
+          <p className="tabular mt-3 flex items-baseline gap-2 border-t border-painel-realce pt-3 text-sm">
+            <span className="text-painel-tinta-fraca">Chegada prevista</span>
+            <span className="font-semibold text-painel-tinta">
+              {mesAno(progresso.chegadaPrevistaEm)}
+            </span>
+          </p>
+        ) : null}
       </section>
 
       <section className="mb-4 rounded-[28px] border border-borda bg-superficie p-4 shadow-card">

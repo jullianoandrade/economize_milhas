@@ -51,9 +51,10 @@ export type Perfil = SituacaoDeAcumulo & {
     precoDaPassagemBRL: number,
   ) => void;
   removerMeta: (metaId: string) => void;
+  celebrarMarco: (metaId: string, marco: number) => void;
 };
 
-export const VERSAO_DO_PERFIL = 3;
+export const VERSAO_DO_PERFIL = 4;
 
 /**
  * Migrar e ACRESCENTAR, nunca substituir.
@@ -86,6 +87,20 @@ export function migrarPerfil(estado: unknown, versao: number): Perfil {
       cartaoId: atual.cartaoId ?? null,
       saldoPontosCoalizao: atual.saldoPontosCoalizao ?? 0,
       aceitaClube: atual.aceitaClube ?? false,
+    };
+  }
+
+  // v4 acrescenta os marcos ja celebrados, por meta. Metas existentes
+  // ganham a lista vazia: se ja passaram de 25/50/75%, o anel pulsa uma
+  // vez na proxima visita, retroativo -- aceitavel, porque o disparo
+  // unico so pode comecar a contar a partir de quando o campo existe.
+  if (versao < 4) {
+    atual = {
+      ...atual,
+      metas: (atual.metas ?? []).map((m) => ({
+        ...m,
+        marcosCelebrados: m.marcosCelebrados ?? [],
+      })),
     };
   }
 
@@ -175,6 +190,15 @@ export const usarPerfil = create<Perfil>()(
       removerMeta: (metaId) =>
         set((estado) => ({
           metas: estado.metas.filter((m) => m.id !== metaId),
+        })),
+
+      celebrarMarco: (metaId, marco) =>
+        set((estado) => ({
+          metas: estado.metas.map((m) =>
+            m.id === metaId && !m.marcosCelebrados.includes(marco)
+              ? { ...m, marcosCelebrados: [...m.marcosCelebrados, marco] }
+              : m,
+          ),
         })),
     }),
     {

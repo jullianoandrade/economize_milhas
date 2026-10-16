@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { AnelDeProgresso } from "./AnelDeProgresso";
+import { MarcoDoObjetivo } from "./MarcoDoObjetivo";
 import { usarPerfil, usePerfilHidratado } from "@/store/perfil";
 import { calcularProgresso } from "@/lib/metas/progresso";
 import { milhas as fmtMilhas } from "@/lib/format";
@@ -170,7 +170,12 @@ export function ObjetivoEmAndamento() {
         href="/objetivos"
         className="flex size-full items-center gap-4 rounded-[24px] border border-borda bg-superficie p-4 shadow-card transition-colors hover:border-marca"
       >
-        <AnelDeProgresso percentual={progresso.percentual} rotulo="pronto" />
+        <MarcoDoObjetivo
+          metaId={meta.id}
+          percentual={progresso.percentual}
+          marcosCelebrados={meta.marcosCelebrados}
+          rotulo="pronto"
+        />
 
         <span className="min-w-0 flex-1">
           <span className="block text-xs font-bold uppercase tracking-widest text-marca">

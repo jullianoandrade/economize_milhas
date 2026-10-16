@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { VERSAO_DO_PERFIL, migrarPerfil } from "@/store/perfil";
+import { afterEach, describe, expect, it } from "vitest";
+import { VERSAO_DO_PERFIL, migrarPerfil, usarPerfil } from "@/store/perfil";
 import type { Meta } from "@/lib/metas/progresso";
 
 /**
@@ -28,6 +28,7 @@ const META: Meta = {
     { em: "2026-01-10", saldo: 10000 },
     { em: "2026-06-10", saldo: 34000 },
   ],
+  marcosCelebrados: [],
 };
 
 describe("migrarPerfil", () => {
@@ -83,6 +84,26 @@ describe("migrarPerfil", () => {
     }
   });
 
+  it("marcos celebrados nascem vazios para meta de antes da v4", () => {
+    // Dado real de producao, de antes deste campo existir, nao tem
+    // marcosCelebrados nenhum -- e por isso o teste usa um objeto cru,
+    // nao a constante META tipada.
+    const metaSemMarcos: Partial<Meta> = { ...META };
+    delete metaSemMarcos.marcosCelebrados;
+    const antes = { origemIata: "REC", visitou: true, metas: [metaSemMarcos] };
+
+    const depois = migrarPerfil(antes, 3);
+    expect(depois.metas[0].marcosCelebrados).toEqual([]);
+  });
+
+  it("nao mexe em marcos ja celebrados", () => {
+    const comMarco = { ...META, marcosCelebrados: [25, 50] };
+    const antes = { origemIata: "REC", visitou: true, metas: [comMarco] };
+
+    const depois = migrarPerfil(antes, 3);
+    expect(depois.metas[0].marcosCelebrados).toEqual([25, 50]);
+  });
+
   it("migrar da versao corrente nao muda nada", () => {
     const atual = {
       origemIata: "GRU",
@@ -95,5 +116,35 @@ describe("migrarPerfil", () => {
     };
 
     expect(migrarPerfil(atual, VERSAO_DO_PERFIL)).toEqual(atual);
+  });
+});
+
+describe("celebrarMarco", () => {
+  afterEach(() => {
+    usarPerfil.setState({ metas: [] });
+  });
+
+  it("acrescenta o marco a meta certa", () => {
+    usarPerfil.setState({ metas: [{ ...META, marcosCelebrados: [] }] });
+    usarPerfil.getState().celebrarMarco("m1", 25);
+
+    expect(usarPerfil.getState().metas[0].marcosCelebrados).toEqual([25]);
+  });
+
+  it("nao duplica o mesmo marco", () => {
+    usarPerfil.setState({ metas: [{ ...META, marcosCelebrados: [25] }] });
+    usarPerfil.getState().celebrarMarco("m1", 25);
+
+    expect(usarPerfil.getState().metas[0].marcosCelebrados).toEqual([25]);
+  });
+
+  it("nao mexe em meta de outro id", () => {
+    const outra = { ...META, id: "m2", marcosCelebrados: [] };
+    usarPerfil.setState({ metas: [{ ...META, marcosCelebrados: [] }, outra] });
+    usarPerfil.getState().celebrarMarco("m1", 50);
+
+    const [m1, m2] = usarPerfil.getState().metas;
+    expect(m1.marcosCelebrados).toEqual([50]);
+    expect(m2.marcosCelebrados).toEqual([]);
   });
 });

@@ -27,6 +27,7 @@ function metaBase(parcial: Partial<Meta> = {}): Meta {
     dataAlvo: null,
     ritmoMensalEstimado: 5000,
     registros: [{ em: "2026-01-10", saldo: 10000 }],
+    marcosCelebrados: [],
     ...parcial,
   };
 }

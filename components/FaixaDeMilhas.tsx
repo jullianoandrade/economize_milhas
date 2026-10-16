@@ -56,7 +56,7 @@ export function FaixaDeMilhas({
         <div className="absolute inset-x-0 top-2.5 h-1.5 rounded-full bg-gradient-to-r from-dinheiro-fundo via-superficie-2 to-milhas-fundo" />
         <span
           aria-hidden="true"
-          className="absolute top-1.5 size-3.5 -translate-x-1/2 rounded-full border-2 border-superficie bg-marca"
+          className="entrada-do-marcador absolute top-1.5 size-3.5 -translate-x-1/2 rounded-full border-2 border-superficie bg-marca"
           style={{
             left: `calc(0.4375rem + ${posicao} * (100% - 0.875rem))`,
           }}

@@ -14,12 +14,15 @@ export function AnelDeProgresso({
   espessura = 8,
   rotulo,
   tom = "marca",
+  brilhando = false,
 }: {
   percentual: number;
   tamanho?: number;
   espessura?: number;
   rotulo?: string;
   tom?: "marca" | "claro";
+  /** Pulsa uma vez para a cor de milhas -- ver MarcoDoObjetivo.tsx. */
+  brilhando?: boolean;
 }) {
   const limitado = Math.max(0, Math.min(100, percentual));
   const raio = (tamanho - espessura) / 2;
@@ -57,6 +60,13 @@ export function AnelDeProgresso({
           strokeWidth={espessura}
           strokeLinecap="round"
           strokeDasharray={`${preenchido} ${circunferencia}`}
+          // A transicao so anima MUDANCA de valor com o componente ja
+          // montado (um novo saldo registrado na sessao) -- no primeiro
+          // render nao ha "de onde vir", entao o navegador nunca anima a
+          // montagem inicial sozinho.
+          className={`transition-[stroke-dasharray] duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
+            brilhando ? "brilho-do-marco" : ""
+          }`}
         />
       </svg>
 

@@ -37,6 +37,13 @@ export type Meta = {
   ritmoMensalEstimado: number;
   /** Historico de saldo. O primeiro item e o ponto de partida. */
   registros: Registro[];
+  /**
+   * Em quais marcos (25/50/75/100) o anel ja pulsou para esta meta.
+   *
+   * Disparo unico: sem isto, o pulso em --milhas tocaria de novo toda
+   * vez que a pessoa reabrisse a tela depois de ja ter passado de 50%.
+   */
+  marcosCelebrados: number[];
 };
 
 export type Situacao =
@@ -216,7 +223,7 @@ function classificar(d: {
 
 const mil = (n: number) => Math.round(n).toLocaleString("pt-BR");
 
-function mesAno(iso: string): string {
+export function mesAno(iso: string): string {
   return emData(iso).toLocaleDateString("pt-BR", {
     month: "long",
     year: "numeric",
