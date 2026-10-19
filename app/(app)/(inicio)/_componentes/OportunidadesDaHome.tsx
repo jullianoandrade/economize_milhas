@@ -88,15 +88,17 @@ export function OportunidadesDaHome() {
         </Link>
       </div>
 
-      {/* -mx-4 px-4 faz a faixa sangrar ate a borda da tela sem furar o
-          respiro do resto do conteudo. */}
-      <div className="faixa-rolante -mx-4 gap-3 px-4 pb-1">
+      {/* No celular, faixa que sangra ate a borda (o -mx-4 px-4) e rola
+          com o dedo. A partir de `sm` os cards cabem lado a lado, entao
+          a faixa vira grade: rolagem horizontal onde nao precisa rolar
+          so esconde conteudo. */}
+      <div className="faixa-ate-sm -mx-4 gap-3 px-4 pb-1 sm:mx-0 sm:grid sm:grid-cols-2 sm:px-0 lg:grid-cols-4">
         {dados
           ? lista.map((o) => (
               <Link
                 key={o.destino.iata}
                 href={`/rota/${dados.origem.iata}/${o.destino.iata}`}
-                className="flex h-[9.5rem] w-40 shrink-0 flex-col justify-between overflow-hidden rounded-3xl border border-borda bg-superficie p-3.5 shadow-card transition-colors hover:border-marca"
+                className="flex h-[9.5rem] w-40 shrink-0 flex-col justify-between overflow-hidden rounded-3xl border border-borda bg-superficie p-3.5 shadow-card transition-colors hover:border-marca sm:w-auto"
               >
                 <span>
                   <span className="tabular inline-block rounded-full bg-dinheiro-fundo px-2 py-0.5 text-[11px] font-bold text-dinheiro">
@@ -125,7 +127,7 @@ export function OportunidadesDaHome() {
           : Array.from({ length: QUANTAS }, (_, i) => (
               <div
                 key={i}
-                className="h-[9.5rem] w-40 shrink-0 animate-pulse rounded-3xl bg-superficie-2"
+                className="h-[9.5rem] w-40 shrink-0 animate-pulse rounded-3xl bg-superficie-2 sm:w-auto"
               />
             ))}
       </div>

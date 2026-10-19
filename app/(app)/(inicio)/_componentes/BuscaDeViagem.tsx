@@ -101,17 +101,18 @@ export function BuscaDeViagem() {
           </button>
         )}
 
-        <h1 className="display mb-4 text-[28px] leading-[1.12]">
+        <h1 className="display mb-4 text-[28px] leading-[1.12] md:text-4xl">
           Para onde
           <br />
           você quer ir?
         </h1>
 
-        <CampoDeLugar
-          rotulo="Destino"
-          tom="claro"
-          aoSelecionar={irParaRota}
-        />
+        {/* O painel cresce com a tela, mas o campo nao: uma caixa de
+            texto de mil pixels nao fica mais facil de usar, so mais
+            larga -- e o alvo do clique continua sendo o mesmo. */}
+        <div className="max-w-xl">
+          <CampoDeLugar rotulo="Destino" tom="claro" aoSelecionar={irParaRota} />
+        </div>
       </div>
     </section>
   );

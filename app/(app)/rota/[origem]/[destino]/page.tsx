@@ -56,7 +56,10 @@ export async function generateMetadata({
   const { origem, destino } = await params;
   const o = aeroportoPorIata(origem);
   const d = aeroportoPorIata(destino);
-  const trecho = o && d ? `${o.cidade} para ${d.cidade}` : `${origem.toUpperCase()} para ${destino.toUpperCase()}`;
+  const trecho =
+    o && d
+      ? `${o.cidade} para ${d.cidade}`
+      : `${origem.toUpperCase()} para ${destino.toUpperCase()}`;
 
   return {
     title: trecho,
@@ -123,7 +126,8 @@ async function Conteudo({
   const { origem, destino } = await params;
   const consulta = await searchParams;
   const dataEscolhida =
-    typeof consulta.data === "string" && /^\d{4}-\d{2}-\d{2}$/.test(consulta.data)
+    typeof consulta.data === "string" &&
+    /^\d{4}-\d{2}-\d{2}$/.test(consulta.data)
       ? consulta.data
       : null;
 
@@ -179,12 +183,17 @@ async function Conteudo({
   const melhorOrigemAlternativa = outrasOrigens[0] ?? null;
 
   return (
-    <>
+    /* Em telas grandes a tela vira duas colunas: a RESPOSTA fica à
+       esquerda, grudada, enquanto os detalhes rolam à direita. É a tese
+       do app sempre à vista -- em vez de o veredito sumir no topo assim
+       que a pessoa desce para conferir o calendário. Abaixo de `lg`
+       nada disso existe e a ordem empilhada continua igual. */
+    <div className="lg:grid lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:items-start lg:gap-6">
       {/* 1. O heroi -- "a resposta". Um unico painel escuro: o veredito,
           a regua, a faixa de precificacao dinamica, o arco da rota, o
           ceu do destino e o que fazer a respeito. */}
       <section
-        className="gradiente-marca relative overflow-hidden rounded-[28px] p-5"
+        className="gradiente-marca relative overflow-hidden rounded-[28px] p-5 lg:sticky lg:top-24 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto"
         style={TEMA_DO_HEROI}
       >
         <div className="pointer-events-none absolute inset-x-0 top-0 h-28 opacity-90">
@@ -255,73 +264,76 @@ async function Conteudo({
         </div>
       </section>
 
-      {melhorOrigemAlternativa ? (
-        <p className="mt-3 text-sm leading-relaxed text-tinta-media">
-          Saindo de{" "}
-          <strong className="font-semibold text-tinta">
-            {melhorOrigemAlternativa.aeroporto.cidade} (
-            {melhorOrigemAlternativa.aeroporto.iata})
-          </strong>{" "}
-          em vez de {rota.origem.cidade}, a passagem sai por{" "}
-          {reais(melhorOrigemAlternativa.precoBRL)} --{" "}
-          {reais(melhorOrigemAlternativa.economiaBRL)} a menos.
-        </p>
-      ) : null}
+      {/* A coluna que rola: tudo que detalha a resposta ao lado. */}
+      <div className="min-w-0">
+        {melhorOrigemAlternativa ? (
+          <p className="mt-3 text-sm leading-relaxed text-tinta-media lg:mt-0">
+            Saindo de{" "}
+            <strong className="font-semibold text-tinta">
+              {melhorOrigemAlternativa.aeroporto.cidade} (
+              {melhorOrigemAlternativa.aeroporto.iata})
+            </strong>{" "}
+            em vez de {rota.origem.cidade}, a passagem sai por{" "}
+            {reais(melhorOrigemAlternativa.precoBRL)} --{" "}
+            {reais(melhorOrigemAlternativa.economiaBRL)} a menos.
+          </p>
+        ) : null}
 
-      {/* 2. Quando ir, em que dia partir, com quanta antecedencia. */}
-      <BlocoDeQuando
-        sazonalidade={sazonalidade}
-        fonteDaCurva={usaProprio ? "travelpayouts" : curvaDaApi.fonte}
-        observacaoDaCurva={
-          usaProprio
-            ? "Montada a partir do nosso histórico próprio de preços desta rota."
-            : curvaDaApi.observacao
-        }
-        calendario={calendario}
-        rotaHref={`/rota/${rota.origem.iata}/${rota.destino.iata}`}
-        rotaId={`${rota.origem.iata}-${rota.destino.iata}`}
-        dataEscolhida={dataEscolhida}
-        melhoresDatas={datas}
-        medianaHistoricaBRL={referenciaBRL}
-        janela={janela}
-      />
+        {/* 2. Quando ir, em que dia partir, com quanta antecedencia. */}
+        <BlocoDeQuando
+          sazonalidade={sazonalidade}
+          fonteDaCurva={usaProprio ? "travelpayouts" : curvaDaApi.fonte}
+          observacaoDaCurva={
+            usaProprio
+              ? "Montada a partir do nosso histórico próprio de preços desta rota."
+              : curvaDaApi.observacao
+          }
+          calendario={calendario}
+          rotaHref={`/rota/${rota.origem.iata}/${rota.destino.iata}`}
+          rotaId={`${rota.origem.iata}-${rota.destino.iata}`}
+          dataEscolhida={dataEscolhida}
+          melhoresDatas={datas}
+          medianaHistoricaBRL={referenciaBRL}
+          janela={janela}
+        />
 
-      {/* 3. Como pagar: o vencedor expandido, os outros atras de details. */}
-      <IlhaDeComoPagar origem={rota.origem.iata} destino={rota.destino.iata}>
-        <ComoPagar veredito={veredito} />
-      </IlhaDeComoPagar>
+        {/* 3. Como pagar: o vencedor expandido, os outros atras de details. */}
+        <IlhaDeComoPagar origem={rota.origem.iata} destino={rota.destino.iata}>
+          <ComoPagar veredito={veredito} />
+        </IlhaDeComoPagar>
 
-      {/* 4. CTA do objetivo. */}
-      <section className="mt-6 painel rounded-[24px] p-5">
-        <h2 className="display mb-1.5 text-xl">
-          Ainda não tem as milhas para {rota.destino.cidade}?
-        </h2>
-        <p className="mb-4 text-sm leading-relaxed text-painel-tinta-fraca">
-          Transforme esta rota num objetivo. O app guarda o seu saldo de hoje
-          como ponto de partida e passa a mostrar quanto você já andou, quanto
-          falta e se no seu ritmo dá tempo.
-        </p>
-        <Link
-          href={`/objetivos?destino=${rota.destino.iata}`}
-          className="inline-flex min-h-12 items-center gap-2 rounded-full bg-painel-tinta px-5 text-sm font-semibold text-painel"
-        >
-          Criar objetivo
-          <svg
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            className="size-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        {/* 4. CTA do objetivo. */}
+        <section className="mt-6 painel rounded-[24px] p-5">
+          <h2 className="display mb-1.5 text-xl">
+            Ainda não tem as milhas para {rota.destino.cidade}?
+          </h2>
+          <p className="mb-4 text-sm leading-relaxed text-painel-tinta-fraca">
+            Transforme esta rota num objetivo. O app guarda o seu saldo de hoje
+            como ponto de partida e passa a mostrar quanto você já andou, quanto
+            falta e se no seu ritmo dá tempo.
+          </p>
+          <Link
+            href={`/objetivos?destino=${rota.destino.iata}`}
+            className="inline-flex min-h-12 items-center gap-2 rounded-full bg-painel-tinta px-5 text-sm font-semibold text-painel"
           >
-            <path d="M5 12h13" />
-            <path d="m12 5 7 7-7 7" />
-          </svg>
-        </Link>
-      </section>
-    </>
+            Criar objetivo
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className="size-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 12h13" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </Link>
+        </section>
+      </div>
+    </div>
   );
 }
 

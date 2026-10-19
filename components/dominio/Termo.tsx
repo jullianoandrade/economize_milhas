@@ -43,7 +43,10 @@ export function Termo({
       <div
         popover="auto"
         id={alvo}
-        className="fixed inset-x-0 top-auto bottom-0 m-0 w-full max-h-[70vh] overflow-y-auto rounded-t-[24px] border-x-0 border-b-0 border-t border-borda bg-superficie p-5 text-left shadow-card"
+        /* Folha inferior no celular; no desktop, cartao centrado. Uma
+           folha de ponta a ponta num monitor de 27" para explicar uma
+           palavra seria desproporcional ao que ela diz. */
+        className="fixed inset-x-0 top-auto bottom-0 m-0 max-h-[70vh] w-full overflow-y-auto rounded-t-[24px] border-x-0 border-b-0 border-t border-borda bg-superficie p-5 text-left shadow-card md:inset-0 md:m-auto md:h-fit md:max-w-lg md:rounded-[24px] md:border md:shadow-flutuante"
       >
         <h3 className="display mb-1 text-lg text-tinta">{termo.termo}</h3>
         <p className="mb-2 text-sm font-medium text-tinta-media">

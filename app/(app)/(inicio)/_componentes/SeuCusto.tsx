@@ -20,7 +20,13 @@ import { milhas as fmtMilhas, reaisExatos } from "@/lib/format";
  * isso em voz alta vale mais do que esconder a suposicao.
  */
 
-const ALTURA = "min-h-[8.5rem]";
+/**
+ * A reserva maior a partir de `md` acompanha a de ObjetivoEmAndamento:
+ * ali os dois dividem uma linha de grade, e a linha assume a altura do
+ * mais alto. Os dois numeros precisam andar juntos -- ver o comentario
+ * em ObjetivoEmAndamento.tsx, onde a medicao esta registrada.
+ */
+const ALTURA = "min-h-[8.5rem] md:min-h-[10.5rem]";
 
 export function SeuCusto() {
   const hidratado = usePerfilHidratado();

@@ -20,9 +20,17 @@ export const metadata: Metadata = {
  */
 export default function Objetivos() {
   return (
-    <Suspense fallback={<Esqueleto />}>
-      <TelaDeObjetivos />
-    </Suspense>
+    /* Coluna contida: esta tela e uma sequencia de formulario e leitura
+       (registrar saldo, ler o progresso, ajustar o acumulo), e nada nela
+       melhora esticando ate 1152px. O arranjo interno em desktop fica
+       para quando TelaDeObjetivos.tsx for quebrada em partes -- hoje sao
+       926 linhas num arquivo so, e mexer no layout dela junto com a
+       virada para web misturaria dois riscos diferentes. */
+    <div className="mx-auto max-w-3xl">
+      <Suspense fallback={<Esqueleto />}>
+        <TelaDeObjetivos />
+      </Suspense>
+    </div>
   );
 }
 

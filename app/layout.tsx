@@ -1,8 +1,5 @@
-import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist } from "next/font/google";
-import { NavegacaoInferior } from "@/components/casca/NavegacaoInferior";
-import { Rodape } from "@/components/casca/Rodape";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -78,21 +75,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Pular para o conteúdo
         </a>
 
-        <main id="conteudo" className="mx-auto max-w-lg px-4 pb-4 pt-5">
-          {children}
-        </main>
-
-        {/* usePathname e dado dinamico: sem esta fronteira, o rodape e
-            a nav impediriam qualquer pagina do app de ser
-            pre-renderizada. pb-28 no rodape reserva o espaco da nav
-            flutuante. */}
-        <Suspense fallback={null}>
-          <Rodape />
-        </Suspense>
-
-        <Suspense fallback={null}>
-          <NavegacaoInferior />
-        </Suspense>
+        {/* A casca (barra, nav, rodape, largura) e de cada route group:
+            as telas do app tem navegacao, a porta de entrada nao. Aqui
+            fica so o que e verdade em toda a arvore -- idioma, fontes e
+            o tema aplicado antes da primeira pintura. */}
+        {children}
       </body>
     </html>
   );

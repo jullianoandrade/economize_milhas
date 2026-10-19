@@ -23,6 +23,16 @@ import { SeuCusto } from "./_componentes/SeuCusto";
  * ocupava o lugar nobre com rota fixa enquanto as oportunidades reais,
  * calculadas a partir da cidade da pessoa, respondem a mesma pergunta
  * com dado de verdade.
+ *
+ * Em telas grandes a ordem nao muda -- so o arranjo. A busca continua no
+ * topo, em destaque, e os dois blocos de "como voce esta" (objetivo em
+ * andamento e custo das suas milhas) passam a dividir uma linha, em vez
+ * de empurrarem as oportunidades para fora da primeira tela.
+ *
+ * Os dois ficam lado a lado por reposicionamento, nunca por duplicacao:
+ * renderizar o mesmo componente duas vezes com `hidden` em cada um
+ * criaria dois estados independentes -- ajustar o gasto num nao mexeria
+ * no outro -- alem de dobrar efeitos e montagens.
  */
 
 export default function Home() {
@@ -32,9 +42,10 @@ export default function Home() {
 
       <BuscaDeViagem />
 
-      <ObjetivoEmAndamento />
-
-      <SeuCusto />
+      <div className="md:grid md:grid-cols-2 md:gap-4">
+        <ObjetivoEmAndamento />
+        <SeuCusto />
+      </div>
 
       <OportunidadesDaHome />
 

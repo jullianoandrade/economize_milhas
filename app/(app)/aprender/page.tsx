@@ -19,7 +19,10 @@ export const metadata: Metadata = {
  */
 export default function Aprender() {
   return (
-    <>
+    /* Pagina de leitura: a largura para de crescer onde a linha ainda
+       cabe no olho. O que ganha espaco aqui sao as LISTAS, que viram
+       colunas, nao os paragrafos. */
+    <div className="mx-auto max-w-4xl">
       <Cabecalho
         titulo="Aprender"
         subtitulo="O vocabulário de milhas sem enrolação — e os erros que fazem você perder dinheiro."
@@ -38,7 +41,7 @@ export default function Aprender() {
           do que custou é prejuízo, mesmo parecendo economia.
         </p>
 
-        <ul className="space-y-3">
+        <ul className="grid gap-3 md:grid-cols-2">
           {glossario.quandoNaoUsarMilhas.map((item) => (
             <li
               key={item.titulo}
@@ -118,6 +121,6 @@ export default function Aprender() {
         )}
         .
       </p>
-    </>
+    </div>
   );
 }

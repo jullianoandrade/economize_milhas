@@ -33,8 +33,16 @@ import { milhas as fmtMilhas } from "@/lib/format";
  * tela larga vira seis aqui, e foi assim que o convite estourou a
  * reserva e empurrou a pagina: deslocamento de 0,25. Por isso os textos
  * abaixo sao curtos, e nao por economia de palavras.
+ *
+ * A reserva maior a partir de `md` existe porque ali este cartao divide
+ * uma linha de grade com SeuCusto: a linha toda assume a altura do mais
+ * alto, entao quem cresce ao hidratar empurra as oportunidades abaixo.
+ * 10,5rem foi medido, nao estimado -- levou o deslocamento da home em
+ * desktop de 0,134 para 0,042. Aumentar mais nao melhora (12rem deu
+ * 0,049): o que resta vem da troca do esqueleto pelo conteudo, nao de
+ * falta de espaco.
  */
-const ALTURA = "min-h-[8rem]";
+const ALTURA = "min-h-[8rem] md:min-h-[10.5rem]";
 
 /**
  * A casca da vaga, sempre o mesmo elemento.

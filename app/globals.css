@@ -280,6 +280,35 @@ body {
   scroll-snap-align: start;
 }
 
+/* Faixa que SO rola no celular.
+
+   Para listas curtas -- as quatro oportunidades da home -- que cabem
+   inteiras numa tela grande: ali a rolagem horizontal esconderia
+   conteudo sem motivo, entao a faixa solta o `display: flex` e deixa a
+   grade do Tailwind assumir. Nao da para fazer isso com `sm:grid` em
+   cima de .faixa-rolante: esta regra mora fora de @layer e por isso
+   ganha de qualquer utilitario.
+
+   O calendario de precos continua na .faixa-rolante normal -- 45 dias
+   nao cabem em tela nenhuma, e ali rolar e a unica saida. */
+@media (width < 40rem) {
+  .faixa-ate-sm {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x proximal;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .faixa-ate-sm::-webkit-scrollbar {
+    display: none;
+  }
+
+  .faixa-ate-sm > * {
+    scroll-snap-align: start;
+  }
+}
+
 /* O painel de destaque: um bloco so, para os componentes nao repetirem
    fundo, tinta e borda toda vez. A borda e transparente de dia e visivel
    a noite -- e ela que recorta o painel quando a diferenca de luz
