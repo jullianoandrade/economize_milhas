@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Milhas
 
-## Getting Started
+Responde uma pergunta: **esta passagem vale mais em milhas ou em dinheiro?**
 
-First, run the development server:
+A resposta depende de quem pergunta. Quem tem cartão sem anuidade acumula
+milhas a custo quase zero; quem compra pontos paga caro por elas. O mesmo
+voo, pelo mesmo preço, muda de recomendação conforme o custo por milheiro
+de cada pessoa — e é isso que o app calcula.
+
+Produção: [economizemilhas.vercel.app](https://economizemilhas.vercel.app)
+
+## Rodando
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm test        # 328 testes
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+O app sobe e funciona com `.env.local` inteiro em branco: nesse caso usa a
+base curada em `data/`. Nenhuma credencial é bloqueante. Copie
+`.env.example` para `.env.local` quando quiser preços reais da
+Travelpayouts ou histórico no Supabase.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Estrutura
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+app/
+  (app)/          telas do produto, com barra de navegação
+    (inicio)/     a home            — route group, URL continua "/"
+    rota/         a tela principal  — veredito, quando ir, como pagar
+    objetivos/    metas de viagem e acompanhamento
+    aprender/     glossário e calculadora de CPM
+    promocoes/
+  (entrada)/      boas-vindas e transparência, sem navegação
+  api/            cálculo pesado fica no servidor: a base de aeroportos
+                  tem 268 entradas e não precisa ir ao navegador
+components/
+  casca/          navegação, rodapé, cabeçalho
+  dominio/        Termo, ReguaDoResgate, LinkExterno, PerguntaDoCartao…
+  ui/             CampoDeLugar, Ilustracao
+lib/              o motor: milhas, tempo, metas, monetização, glossário
+data/             base curada e versionada (programas, cartões, clubes…)
+tests/            328 testes, incluindo travas de arquitetura
+```
 
-## Learn More
+Componente usado por **uma** tela mora com a tela, em `_componentes/`
+(pasta privada: o Next não a transforma em rota). Usado por **duas ou
+mais**, vai para `components/`. Os route groups `(app)` e `(entrada)` não
+aparecem na URL — existem para dar uma casca a cada um.
 
-To learn more about Next.js, take a look at the following resources:
+## O motor não sabe o que é tela
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Tudo em `lib/` é função pura, sem rede e sem relógio implícito: a data de
+hoje entra por parâmetro. É o que torna os testes possíveis e o que impede
+a resposta de mudar conforme o fuso do aparelho.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`lib/milhas/rotulos.ts` e `lib/glossario/termos.ts` não importam nada do
+barril `lib/dados` de propósito — eles rodam no navegador, e aquele barril
+arrasta a base inteira de aeroportos junto.
 
-## Deploy on Vercel
+## Travas que quebram o build
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Não são convenções: são testes que falham.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **O ranking é cego a comissão.** `lib/milhas` e `lib/tempo` não podem
+  importar `lib/monetizacao` nem `data/parceiros-comercial.json`. Esse
+  arquivo tem **um** leitor autorizado no projeto inteiro. É o que torna a
+  promessa de `/como-nos-sustentamos` verificável por máquina, e não algo
+  em que o usuário precisa acreditar.
+- **Só `LinkExterno` emite âncora externa** — `target="_blank"` ou `rel`
+  com `sponsored` em qualquer outro arquivo quebra o build.
+- **O formato frágil da Aviasales** vive num arquivo só; uma falha nele
+  degrada para a busca parcial, nunca some com o botão.
+- **Todo `<Termo id>` existe no glossário**, e todo termo do glossário tem
+  pelo menos um gatilho em tela.
+- **Nenhuma capacidade do motor sai de vista sem decisão**
+  (`tests/superficie.test.ts`): cada campo público aparece numa tela ou
+  está numa lista de lacunas com o motivo escrito.
+- **A paleta é medida, não declarada**: contraste WCAG AA lido do próprio
+  `globals.css`.
+
+## Web e celular, mesma base
+
+Desktop ganha barra superior e layouts de duas colunas a partir de `lg`;
+celular mantém a pílula flutuante de navegação e segue instalável como
+PWA. Quem decide é o CSS — não há JavaScript medindo tela, nem duas
+versões para manter.
