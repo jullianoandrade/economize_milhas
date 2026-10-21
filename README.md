@@ -88,3 +88,7 @@ Desktop ganha barra superior e layouts de duas colunas a partir de `lg`;
 celular mantém a pílula flutuante de navegação e segue instalável como
 PWA. Quem decide é o CSS — não há JavaScript medindo tela, nem duas
 versões para manter.
+
+## Licença
+
+MIT — veja [LICENSE](LICENSE).
