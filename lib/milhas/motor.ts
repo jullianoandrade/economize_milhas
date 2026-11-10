@@ -44,14 +44,25 @@ export function estimarMilhas(
   classe: ClasseDeVoo = "economica",
   precoDinheiroBRL?: number,
 ): EstimativaDeMilhas[] {
-  const taxa = tabelasResgate.taxasEmbarqueBRL[rota.faixa];
+  // Sem ponta brasileira nao ha tabela que precifique o trecho: nenhum
+  // programa da base cobre o voo, e inventar faixa produziria numero
+  // falso com cara de certo. Ver lib/milhas/regioes.ts e
+  // docs/fronteira-do-motor.md.
+  if (rota.faixa === null) return [];
+
+  // Em constante local porque o estreitamento de `rota.faixa` nao
+  // atravessa a fronteira do callback abaixo: para o compilador, a
+  // propriedade poderia ter mudado ate a chamada.
+  const faixaDaRota = rota.faixa;
+
+  const taxa = tabelasResgate.taxasEmbarqueBRL[faixaDaRota];
   const taxasBRL = typeof taxa === "number" ? taxa : 0;
 
   return programas.programas.flatMap((programa) => {
     const tabela = tabelasResgate.tabelas[programa.id];
     if (!tabela) return [];
 
-    const faixa = tabela.economica[rota.faixa];
+    const faixa = tabela.economica[faixaDaRota];
     if (!faixa) return [];
 
     const fator = classe === "executiva" ? tabela.multiplicadorExecutiva : 1;

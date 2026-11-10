@@ -55,9 +55,22 @@ export type RotaClassificada = {
   origem: Aeroporto;
   destino: Aeroporto;
   distanciaKm: number;
-  faixa: FaixaDeRegiao;
+  /**
+   * `null` quando o voo nao toca o Brasil -- ver `classificarRota`.
+   *
+   * O tipo e anulavel de proposito: faz o compilador cobrar de todo
+   * consumidor uma decisao sobre o trecho estrangeiro, em vez de deixar
+   * cada um indexar a tabela e receber `undefined` em silencio. E a
+   * trava mais barata que existe para esta fronteira.
+   */
+  faixa: FaixaDeRegiao | null;
   internacional: boolean;
   rotulo: string;
+  /**
+   * O voo tem ponta brasileira? Sinonimo de `faixa !== null`, com nome.
+   * Existe para o codigo de tela dizer o que quer dizer.
+   */
+  tocaOBrasil: boolean;
 };
 
 export class AeroportoDesconhecidoError extends Error {
@@ -79,11 +92,39 @@ export function classificarRota(
 
   const km = Math.round(distanciaKm(origem, destino));
   const internacional = origem.pais !== destino.pais;
+  const tocaOBrasil = origem.regiao === "brasil" || destino.regiao === "brasil";
+
+  // FRONTEIRA DO MOTOR: sem ponta brasileira nao existe faixa.
+  //
+  // As sete regioes de tabelas-resgate.json significam, todas,
+  // "saindo do Brasil" -- a tabela nao tem eixo de origem. A regra
+  // abaixo ("pegue o lado que nao e o Brasil") e correta enquanto um
+  // dos lados E o Brasil, e e ela que garante a simetria desejada:
+  // LIS-GRU custa o mesmo que GRU-LIS.
+  //
+  // Quando nenhum lado e brasileiro, ela cairia na ORIGEM por acidente,
+  // e o resultado era numero falso dito com confianca: Londres-Toquio
+  // precificada como Brasil-Europa (42.000 Smiles, "vale resgatar"),
+  // Nova York-Los Angeles como Brasil-America do Norte. Nao ha conserto
+  // de parametro -- a pergunta nao se aplica, e o certo e dizer isso.
+  //
+  // Ver docs/fronteira-do-motor.md para a decisao e o caminho de
+  // expansao (alianca exige matriz origem x destino, nao mais dado).
+  if (!tocaOBrasil) {
+    return {
+      origem,
+      destino,
+      distanciaKm: km,
+      faixa: null,
+      internacional,
+      rotulo: "Trecho fora do Brasil",
+      tocaOBrasil: false,
+    };
+  }
 
   // Trecho domestico: a faixa vem da distancia.
   // Trecho internacional: vem da regiao do ponto que NAO e brasileiro,
-  // porque e esse lado da rota que a tabela de resgate precifica. Vale
-  // nos dois sentidos: LIS-GRU custa o mesmo que GRU-LIS.
+  // porque e esse lado da rota que a tabela de resgate precifica.
   const estrangeiro = origem.regiao === "brasil" ? destino : origem;
   const faixa: FaixaDeRegiao =
     estrangeiro.regiao === "brasil"
@@ -93,5 +134,13 @@ export function classificarRota(
   const rotulo =
     tabelasResgate.regioes.find((r) => r.id === faixa)?.rotulo ?? faixa;
 
-  return { origem, destino, distanciaKm: km, faixa, internacional, rotulo };
+  return {
+    origem,
+    destino,
+    distanciaKm: km,
+    faixa,
+    internacional,
+    rotulo,
+    tocaOBrasil: true,
+  };
 }

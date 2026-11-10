@@ -21,10 +21,33 @@ export function CardVeredito({
 }) {
   const usaMilhas = veredito.recomendacao === "milhas";
 
-  const tema = usaMilhas
-    ? "border-milhas-borda bg-milhas-fundo"
-    : "border-dinheiro-borda bg-dinheiro-fundo";
-  const corDoTexto = usaMilhas ? "text-milhas" : "text-dinheiro";
+  // Fora do modelo nao e veredito, e ausencia declarada de veredito --
+  // por isso tema neutro, e nao o verde de "pague em dinheiro". Pintar
+  // de verde faria a tela afirmar uma conclusao que o motor nao tem:
+  // aqui ele nao comparou nada, so reconhece que a pergunta nao se
+  // aplica. Ver docs/fronteira-do-motor.md.
+  const tema = veredito.foraDoModelo
+    ? "border-borda bg-superficie"
+    : usaMilhas
+      ? "border-milhas-borda bg-milhas-fundo"
+      : "border-dinheiro-borda bg-dinheiro-fundo";
+  const corDoTexto = veredito.foraDoModelo
+    ? "text-tinta-media"
+    : usaMilhas
+      ? "text-milhas"
+      : "text-dinheiro";
+
+  const rotulo = veredito.foraDoModelo
+    ? "Trecho fora dos programas brasileiros"
+    : usaMilhas
+      ? "Use milhas"
+      : "Pague em dinheiro";
+
+  // Preco zero significa "nao sabemos": rota fora do modelo e sem busca
+  // recente na fonte. Mostrar "R$ 0" seria pior do que nao mostrar nada
+  // -- o numero parece informacao. Ver SEM_REFERENCIA em lib/precos.ts.
+  const precoDesconhecido = veredito.precoDinheiroBRL <= 0;
+  const mostraEconomia = usaMilhas && veredito.economiaBRL > 0;
 
   return (
     <section className={`rounded-2xl border p-5 ${tema}`}>
@@ -32,12 +55,12 @@ export function CardVeredito({
         <span
           className={`text-xs font-bold uppercase tracking-widest ${corDoTexto}`}
         >
-          {usaMilhas ? "Use milhas" : "Pague em dinheiro"}
+          {rotulo}
         </span>
         <SeloDeFonte fonte={fonte} observacao={observacaoDaFonte} />
       </div>
 
-      {usaMilhas && veredito.economiaBRL > 0 ? (
+      {precoDesconhecido ? null : mostraEconomia ? (
         <p className="mb-3">
           <span className="block text-sm text-tinta-media">Você economiza</span>
           <span

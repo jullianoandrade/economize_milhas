@@ -46,6 +46,12 @@ export function calcularSazonalidade(
   precosPorMes: Array<{ mes: number; precoBRL: number }>,
   programaId: string,
 ): Sazonalidade | null {
+  // Trecho fora do modelo nao tem curva de rendimento de milhas: a
+  // pergunta "em que mes a milha rende mais?" pressupoe uma tabela que
+  // precifique a rota, e nao existe. O preco por mes continua valendo e
+  // e mostrado por outro caminho.
+  if (rota.faixa === null) return null;
+
   const tabela = tabelasResgate.tabelas[programaId];
   const faixa = tabela?.economica[rota.faixa];
   if (!tabela || !faixa || faixa.confianca === "indisponivel") return null;

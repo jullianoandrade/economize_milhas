@@ -52,6 +52,15 @@ export type OpcaoDeResgate = {
 
 export type Veredito = {
   recomendacao: "milhas" | "dinheiro";
+  /**
+   * O voo nao toca o Brasil, entao nenhuma tabela da base o precifica.
+   *
+   * Nao e o mesmo que `melhor === null`: ali a pergunta foi feita e
+   * nenhum programa respondeu; aqui a pergunta nao se aplica. A tela
+   * precisa distinguir, porque "pague em dinheiro" soa como veredito e
+   * este caso nao e um -- e ausencia declarada de veredito.
+   */
+  foraDoModelo: boolean;
   precoDinheiroBRL: number;
   opcoes: OpcaoDeResgate[];
   melhor: OpcaoDeResgate | null;
@@ -161,6 +170,7 @@ export function calcularVeredito(
 
   return {
     recomendacao,
+    foraDoModelo: rota.faixa === null,
     precoDinheiroBRL,
     opcoes: avaliadas,
     melhor,
@@ -206,6 +216,19 @@ function explicar(
   recomendacao: "milhas" | "dinheiro",
 ): string {
   const trecho = `${rota.origem.cidade} para ${rota.destino.cidade}`;
+
+  // Fora do modelo vem ANTES de "nenhum programa cobre": os dois acabam
+  // sem opcao, mas por motivos diferentes, e a pessoa merece saber qual.
+  // Aqui a conta em milhas nao existe -- as tabelas da nossa base saem
+  // todas do Brasil. Ver docs/fronteira-do-motor.md.
+  if (rota.faixa === null) {
+    return (
+      `${trecho} não passa pelo Brasil, e as tabelas de resgate que usamos ` +
+      `saem todas daqui. Por isso não damos veredito de milhas neste ` +
+      `trecho: qualquer número seria chute. A sugestão é guardar as milhas ` +
+      `para o trecho longo da viagem e pagar este em dinheiro.`
+    );
+  }
 
   if (!melhor) {
     return `Nenhum dos programas da nossa base cobre ${trecho}. Compare direto no site das companhias.`;

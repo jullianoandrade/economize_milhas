@@ -70,8 +70,14 @@ export async function GET(requisicao: Request) {
         const rota = classificarRota(origem, destino.iata);
         if (!(oferta.precoBRL > 0)) return [];
 
+        // Sem referencia a rota esta fora do modelo (nenhuma ponta
+        // brasileira): nao da para dizer que o preco esta abaixo do
+        // tipico, porque nao sabemos qual e o tipico. Fica de fora da
+        // lista de oportunidades em vez de entrar com desconto fingido.
         const referencia = precoEstimadoPorRegiao(rota);
-        const desconto = referencia > 0 ? 1 - oferta.precoBRL / referencia : 0;
+        if (referencia === null || referencia <= 0) return [];
+
+        const desconto = 1 - oferta.precoBRL / referencia;
         if (desconto < DESCONTO_MINIMO) return [];
 
         const veredito = calcularVeredito(rota, oferta.precoBRL, {

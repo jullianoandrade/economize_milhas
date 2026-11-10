@@ -81,6 +81,11 @@ Não são convenções: são testes que falham.
   está numa lista de lacunas com o motivo escrito.
 - **A paleta é medida, não declarada**: contraste WCAG AA lido do próprio
   `globals.css`.
+- **Só damos veredito de milhas em voo que toca o Brasil.** As tabelas de
+  resgate significam todas "saindo do Brasil" — sem ponta brasileira,
+  `classificarRota` devolve `faixa: null` e o motor cala em vez de chutar.
+  A trava é exaustiva: vale para todos os pares da base, nos dois
+  sentidos. Ver [docs/fronteira-do-motor.md](docs/fronteira-do-motor.md).
 
 ## Web e celular, mesma base
 
