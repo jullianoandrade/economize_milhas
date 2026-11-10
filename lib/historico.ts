@@ -1,7 +1,11 @@
 import "server-only";
 
 import { leitor } from "@/lib/supabase";
-import type { Observacao } from "@/lib/tempo/antecedencia";
+import {
+  curvaDeAntecedencia,
+  type FaixaDaCurva,
+  type Observacao,
+} from "@/lib/tempo/antecedencia";
 
 /**
  * Leitura do historico proprio de precos.
@@ -13,8 +17,91 @@ import type { Observacao } from "@/lib/tempo/antecedencia";
  * avisa que a fonte mudou.
  */
 
-/** Teto por consulta: o suficiente para a curva, sem pesar a pagina. */
+/**
+ * Teto por consulta nas leituras de linha crua.
+ *
+ * ATENCAO: este numero e menos efetivo do que parece. O PostgREST corta
+ * a resposta em 1.000 linhas independentemente do que se peca aqui, e
+ * sem ORDER BY quais 1.000 chegam e arbitrario. Foi o que manteve 15 das
+ * 20 rotas monitoradas na heuristica de mercado mesmo com 74.778
+ * observacoes no banco.
+ *
+ * Por isso a leitura boa e por agregado (curvaDeAntecedenciaDaRota e
+ * precosMensaisDaRota, abaixo). O caminho de linha crua permanece como
+ * degradacao: banco sem a migration de agregados aplicada responde 404
+ * no RPC, e o app continua funcionando como antes em vez de ficar sem
+ * historico nenhum.
+ */
 const LIMITE = 2000;
+
+/** Largura da faixa de antecedencia, em dias. Casa com o default do SQL. */
+const LARGURA_DA_FAIXA_DIAS = 15;
+
+export type CurvaDaRota = {
+  curva: FaixaDaCurva[];
+  /** Soma das amostras de todas as faixas -- o historico inteiro. */
+  observacoes: number;
+};
+
+/**
+ * A curva de antecedencia agregada NO BANCO.
+ *
+ * Devolve ~25 linhas por rota em vez das 5.500 que a tabela guarda, e
+ * sem o vies da fatia arbitraria: a mediana de cada faixa e calculada
+ * sobre todas as observacoes daquela faixa, nao sobre as que couberam
+ * na resposta.
+ *
+ * A degradacao fica AQUI DENTRO, e nao no chamador, por um motivo
+ * pratico: so se paga a leitura de linha crua quando o agregado falhou.
+ * Encapsulado, o caminho feliz custa uma consulta; exposto, custaria
+ * duas em toda renderizacao.
+ *
+ * Banco sem a migration de agregados responde 404 no RPC -- e a pagina
+ * continua funcionando exatamente como antes, nunca vazia.
+ */
+export async function curvaDeAntecedenciaDaRota(
+  origem: string,
+  destino: string,
+): Promise<CurvaDaRota> {
+  const vazia: CurvaDaRota = { curva: [], observacoes: 0 };
+
+  const banco = leitor();
+  if (!banco) return vazia;
+
+  const { data, error } = await banco.rpc("curva_antecedencia", {
+    p_origem: origem,
+    p_destino: destino,
+    p_largura_dias: LARGURA_DA_FAIXA_DIAS,
+  });
+
+  if (!error && Array.isArray(data) && data.length > 0) {
+    const curva: FaixaDaCurva[] = data
+      .map((linha) => ({
+        dias: Number(linha.dias),
+        precoMedianoBRL: Number(linha.preco_mediano),
+        amostras: Number(linha.amostras),
+      }))
+      .filter(
+        (f) =>
+          Number.isFinite(f.dias) &&
+          Number.isFinite(f.precoMedianoBRL) &&
+          f.precoMedianoBRL > 0,
+      );
+
+    if (curva.length > 0) {
+      return {
+        curva,
+        observacoes: curva.reduce((soma, faixa) => soma + faixa.amostras, 0),
+      };
+    }
+  }
+
+  const brutas = await observacoesDaRota(origem, destino);
+  return {
+    curva: curvaDeAntecedencia(brutas, LARGURA_DA_FAIXA_DIAS),
+    observacoes: brutas.length,
+  };
+}
 
 export async function observacoesDaRota(
   origem: string,
@@ -72,6 +159,25 @@ export async function precosMensaisDaRota(
 ): Promise<Array<{ mes: number; precoBRL: number }>> {
   const banco = leitor();
   if (!banco) return [];
+
+  // Caminho bom: o minimo por mes sai pronto do banco, sobre o historico
+  // inteiro. O reduce abaixo faz a mesma conta, mas so sobre as linhas
+  // que couberam na resposta -- o que subestima o minimo justamente nas
+  // rotas com mais dado.
+  const agregado = await banco.rpc("precos_min_por_mes", {
+    p_origem: origem,
+    p_destino: destino,
+  });
+
+  if (!agregado.error && Array.isArray(agregado.data) && agregado.data.length > 0) {
+    return agregado.data
+      .map((linha) => ({
+        mes: Number(linha.mes),
+        precoBRL: Number(linha.preco_min),
+      }))
+      .filter((m) => m.mes >= 1 && m.mes <= 12 && Number.isFinite(m.precoBRL))
+      .sort((a, b) => a.mes - b.mes);
+  }
 
   const { data, error } = await banco
     .from("precos_snapshot")

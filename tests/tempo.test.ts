@@ -7,6 +7,7 @@ import {
 import {
   curvaDeAntecedencia,
   janelaDeCompra,
+  janelaDeCompraDaCurva,
   type Observacao,
 } from "@/lib/tempo/antecedencia";
 
@@ -173,5 +174,71 @@ describe("janela de compra", () => {
     // Economia entre o pior momento (3000) e o melhor (1200) = 60%.
     expect(j.economiaEstimadaPct).toBeCloseTo(60, 0);
     expect(j.explicacao).toContain("observações");
+  });
+});
+
+/**
+ * A curva passou a ser agrupada no banco (ver a migration de agregados
+ * e lib/historico.ts). O agrupamento mudou de lugar; a regra de produto
+ * -- amostras minimas, faixas minimas, onde fica o fundo do poco -- nao
+ * podia mudar junto.
+ */
+describe("janela de compra a partir de curva ja agrupada", () => {
+  const PRECO_POR_FAIXA: Record<number, number> = {
+    0: 3000, 15: 2500, 30: 2000, 45: 1600, 60: 1200, 75: 1500, 90: 1900,
+  };
+
+  const brutas: Observacao[] = Object.entries(PRECO_POR_FAIXA).flatMap(
+    ([dias, preco]) =>
+      Array.from({ length: 10 }, (_, i) => ({
+        antecedenciaDias: Number(dias) + (i % 15),
+        precoBRL: preco,
+      })),
+  );
+
+  it("dá o mesmo resultado que agrupar em JavaScript", () => {
+    const pelaCurva = janelaDeCompraDaCurva(
+      true,
+      null,
+      curvaDeAntecedencia(brutas),
+      brutas.length,
+    );
+    const pelasObservacoes = janelaDeCompra(true, null, brutas);
+
+    expect(pelaCurva).toEqual(pelasObservacoes);
+  });
+
+  it("conta as observações que a curva representa, não as faixas", () => {
+    // O numero vai para a tela ("Baseado em N observações desta rota").
+    // Somar faixas em vez de amostras diria "7 observações" para um
+    // historico de 70 -- e procedencia e exatamente o que nao pode
+    // sair errado.
+    const curva = curvaDeAntecedencia(brutas);
+    const j = janelaDeCompraDaCurva(true, null, curva, brutas.length);
+
+    expect(curva.length).toBe(7);
+    expect(j.observacoes).toBe(70);
+  });
+
+  it("curva vazia cai na heurística de mercado", () => {
+    const j = janelaDeCompraDaCurva(true, null, [], 0);
+    expect(j.fonte).toBe("heuristica");
+  });
+
+  it("faixa com amostra rala não conta para o mínimo de faixas", () => {
+    // Quatro faixas, mas tres delas com uma amostra so: abaixo do corte
+    // de oito, sobra uma faixa valida e a curva nao se forma.
+    const j = janelaDeCompraDaCurva(
+      true,
+      null,
+      [
+        { dias: 0, precoMedianoBRL: 3000, amostras: 1 },
+        { dias: 15, precoMedianoBRL: 2000, amostras: 1 },
+        { dias: 30, precoMedianoBRL: 1000, amostras: 1 },
+        { dias: 45, precoMedianoBRL: 1500, amostras: 40 },
+      ],
+      43,
+    );
+    expect(j.fonte).toBe("heuristica");
   });
 });

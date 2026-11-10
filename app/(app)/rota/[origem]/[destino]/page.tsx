@@ -12,7 +12,7 @@ import { IlhaDeComoPagar } from "./_componentes/IlhaDeComoPagar";
 import { BlocoDeQuando } from "./_componentes/BlocoDeQuando";
 import { curvaMensal, precoDoTrecho } from "@/lib/precos";
 import {
-  observacoesDaRota,
+  curvaDeAntecedenciaDaRota,
   observacoesDatadasDaRota,
   precosMensaisDaRota,
 } from "@/lib/historico";
@@ -26,7 +26,7 @@ import {
 } from "@/lib/milhas/regioes";
 import { calcularVeredito } from "@/lib/milhas/veredito";
 import rotasDestaque from "@/data/rotas-destaque.json";
-import { janelaDeCompra } from "@/lib/tempo/antecedencia";
+import { janelaDeCompraDaCurva } from "@/lib/tempo/antecedencia";
 import { calcularSazonalidade } from "@/lib/tempo/sazonalidade";
 import { compararOrigens, datasMaisBaratas } from "@/lib/tempo/flexibilidade";
 import { montarCalendario } from "@/lib/tempo/calendario";
@@ -146,11 +146,11 @@ async function Conteudo({
 
   // As tres consultas sao independentes: em serie, a pagina esperaria a
   // soma delas em vez do maior tempo entre elas.
-  const [curvaDaApi, mensaisProprios, observacoes, datadas, alternativas] =
+  const [curvaDaApi, mensaisProprios, curvaPropria, datadas, alternativas] =
     await Promise.all([
       curvaMensal(rota, heuristicasTempo.sazonalidadeBrasil.indicePorMes),
       precosMensaisDaRota(rota.origem.iata, rota.destino.iata),
-      observacoesDaRota(rota.origem.iata, rota.destino.iata),
+      curvaDeAntecedenciaDaRota(rota.origem.iata, rota.destino.iata),
       observacoesDatadasDaRota(rota.origem.iata, rota.destino.iata),
       precosDasAlternativas(rota.origem, rota.destino.iata),
     ]);
@@ -170,10 +170,21 @@ async function Conteudo({
     ? diasAte(new Date(`${dataEscolhida}T12:00:00`), new Date())
     : null;
 
-  const janela = janelaDeCompra(
+  // A curva agregada no banco cobre o historico INTEIRO da rota; a
+  // leitura de linha crua cobre as 1.000 linhas que o PostgREST deixa
+  // passar, numa fatia que nao preserva a distribuicao por faixa. Com
+  // 74.778 observacoes acumuladas, a diferenca entre as duas decidia se
+  // a pagina mostrava a nossa curva ou a heuristica de mercado -- em 15
+  // das 20 rotas monitoradas, mostrava a heuristica.
+  //
+  // A degradacao para linha crua mora dentro de
+  // curvaDeAntecedenciaDaRota: banco sem a migration de agregados
+  // responde 404 no RPC e a pagina se comporta como antes.
+  const janela = janelaDeCompraDaCurva(
     rota.internacional,
     diasAteAViagem,
-    observacoes,
+    curvaPropria.curva,
+    curvaPropria.observacoes,
   );
 
   const { referenciaBRL, datas } = datasMaisBaratas(datadas);
@@ -302,7 +313,11 @@ async function Conteudo({
           <ComoPagar veredito={veredito} />
         </IlhaDeComoPagar>
 
-        {/* 4. CTA do objetivo. */}
+        {/* 4. CTA do objetivo -- so onde existe meta de milhas a bater.
+            Num trecho sem ponta brasileira o motor nao sabe quantas
+            milhas a passagem custa, entao "criar objetivo" convidaria a
+            perseguir um numero que nao existe. */}
+        {rota.tocaOBrasil ? (
         <section className="mt-6 painel rounded-[24px] p-5">
           <h2 className="display mb-1.5 text-xl">
             Ainda não tem as milhas para {rota.destino.cidade}?
@@ -332,6 +347,7 @@ async function Conteudo({
             </svg>
           </Link>
         </section>
+        ) : null}
       </div>
     </div>
   );

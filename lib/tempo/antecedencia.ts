@@ -76,19 +76,38 @@ const AMOSTRAS_MINIMAS = 8;
 /** Faixas uteis minimas: sem variacao de antecedencia nao ha curva. */
 const FAIXAS_MINIMAS = 4;
 
-export function janelaDeCompra(
+/** Uma faixa de antecedencia ja agrupada, venha de onde vier. */
+export type FaixaDaCurva = {
+  dias: number;
+  precoMedianoBRL: number;
+  amostras: number;
+};
+
+/**
+ * A janela de compra a partir de uma curva JA AGRUPADA.
+ *
+ * Existe separada de `janelaDeCompra` porque o agrupamento passou a
+ * acontecer no banco (ver supabase/migrations/..._agregados_de_historico
+ * e lib/historico.ts): agregar 5.500 linhas no Postgres e devolver 25 e
+ * o que torna a curva propria viavel numa pagina. Os cortes de amostras
+ * minimas e de faixas minimas continuam AQUI, porque sao regra de
+ * produto -- tem teste e mudam sem migration.
+ *
+ * `janelaDeCompra` continua sendo a porta para quem tem as observacoes
+ * cruas em maos, e e por onde os testes entram.
+ */
+export function janelaDeCompraDaCurva(
   internacional: boolean,
   diasAteOVoo: number | null,
-  observacoes: Observacao[] = [],
+  curvaCompleta: FaixaDaCurva[],
+  totalDeObservacoes: number,
 ): JanelaDeCompra {
   const tipo = internacional ? "internacional" : "domestico";
   const heuristica =
     heuristicasTempo.janelaDeCompra.find((j) => j.tipo === tipo) ??
     heuristicasTempo.janelaDeCompra[0];
 
-  const curva = curvaDeAntecedencia(observacoes).filter(
-    (f) => f.amostras >= AMOSTRAS_MINIMAS,
-  );
+  const curva = curvaCompleta.filter((f) => f.amostras >= AMOSTRAS_MINIMAS);
   const temCurvaPropria = curva.length >= FAIXAS_MINIMAS;
 
   let diasMin = heuristica.diasMin;
@@ -125,7 +144,7 @@ export function janelaDeCompra(
     }
   }
 
-  const amostras = observacoes.length;
+  const amostras = totalDeObservacoes;
 
   return {
     diasMin,
@@ -149,6 +168,26 @@ export function janelaDeCompra(
       amostras,
     }),
   };
+}
+
+/**
+ * A janela de compra a partir das observacoes cruas.
+ *
+ * Agrupa e delega. Continua sendo a assinatura que os testes usam e a
+ * que serve a quem ja tem a lista em maos -- nenhum chamador precisou
+ * mudar quando o agrupamento foi para o banco.
+ */
+export function janelaDeCompra(
+  internacional: boolean,
+  diasAteOVoo: number | null,
+  observacoes: Observacao[] = [],
+): JanelaDeCompra {
+  return janelaDeCompraDaCurva(
+    internacional,
+    diasAteOVoo,
+    curvaDeAntecedencia(observacoes),
+    observacoes.length,
+  );
 }
 
 function explicar(d: {
