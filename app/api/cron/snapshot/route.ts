@@ -18,8 +18,31 @@ import { precosObservados, temToken } from "@/lib/providers/travelpayouts";
 // dinamica, e declarar isso explicitamente conflita com cacheComponents.
 export const maxDuration = 60;
 
-/** Teto por execucao, para nao estourar o rate limit da Travelpayouts. */
-const MAXIMO_DE_ROTAS = 25;
+/**
+ * Teto por execucao.
+ *
+ * Era 25, por receio do rate limit da Travelpayouts. Medido: a consulta
+ * leva ~360 ms por rota, entao 25 rotas gastavam ~9 s de uma janela de
+ * 60 s -- o orcamento estava limitado por um palpite, nao pelo limite.
+ *
+ * O que protege de verdade e o PRAZO abaixo, que mede o relogio em vez
+ * de supor: se a fonte ficar lenta ou a lista crescer, a execucao para
+ * sozinha e relata ate onde foi, em vez de ser morta no meio de uma
+ * gravacao.
+ */
+const MAXIMO_DE_ROTAS = 60;
+
+/**
+ * Quando parar de coletar, em ms desde o inicio. Folga de 15 s sobre o
+ * maxDuration para a ultima gravacao terminar e a resposta sair.
+ */
+const PRAZO_MS = 45_000;
+
+/** Quantas visitas uma rota precisa somar para entrar na coleta. */
+const LIMIAR_DE_PROMOCAO = 5;
+
+/** Teto de rotas promovidas por execucao, para a lista crescer devagar. */
+const PROMOCOES_POR_EXECUCAO = 10;
 
 function autorizado(requisicao: Request): boolean {
   const segredo = process.env.CRON_SECRET?.trim();
@@ -52,6 +75,23 @@ export async function GET(requisicao: Request) {
     );
   }
 
+  const comecou = Date.now();
+
+  // Promover ANTES de ler a lista: uma rota que acabou de passar do
+  // limiar ja e coletada nesta mesma execucao, em vez de esperar mais
+  // um dia. Falha aqui nao interrompe a coleta -- promover e melhoria,
+  // coletar e a obrigacao.
+  const promocao = await banco.rpc("promover_rotas_procuradas", {
+    p_limiar: LIMIAR_DE_PROMOCAO,
+    p_maximo: PROMOCOES_POR_EXECUCAO,
+  });
+
+  const promovidas: string[] = Array.isArray(promocao.data)
+    ? promocao.data.map(
+        (r: { origem: string; destino: string }) => `${r.origem}-${r.destino}`,
+      )
+    : [];
+
   const { data: rotas, error: erroDeLeitura } = await banco
     .from("rotas_monitoradas")
     .select("origem, destino")
@@ -68,14 +108,33 @@ export async function GET(requisicao: Request) {
 
   const relatorio = {
     rotas: rotas?.length ?? 0,
+    promovidas,
+    coletadas: 0,
     observacoes: 0,
     gravadas: 0,
     semDados: [] as string[],
     falhas: [] as string[],
+    /** Rotas que ficaram de fora porque o prazo acabou. */
+    adiadas: [] as string[],
+    duracaoMs: 0,
   };
+
+  if (promocao.error) {
+    relatorio.falhas.push(`promocao: ${promocao.error.message}`);
+  }
 
   for (const rota of rotas ?? []) {
     const trecho = `${rota.origem}-${rota.destino}`;
+
+    // O prazo vale por rota, nao por execucao inteira: parar antes de
+    // comecar a proxima deixa o relatorio honesto sobre o que faltou,
+    // em vez de a funcao ser morta no meio de uma gravacao.
+    if (Date.now() - comecou > PRAZO_MS) {
+      relatorio.adiadas.push(trecho);
+      continue;
+    }
+
+    relatorio.coletadas++;
 
     const observacoes = await precosObservados(rota.origem, rota.destino);
     if (!observacoes || observacoes.length === 0) {
@@ -110,6 +169,8 @@ export async function GET(requisicao: Request) {
     if (error) relatorio.falhas.push(`${trecho}: ${error.message}`);
     else relatorio.gravadas += count ?? 0;
   }
+
+  relatorio.duracaoMs = Date.now() - comecou;
 
   return NextResponse.json({
     ok: relatorio.falhas.length === 0,

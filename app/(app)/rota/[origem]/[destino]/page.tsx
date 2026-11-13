@@ -2,6 +2,7 @@ import { Suspense, type CSSProperties } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { FaixaDaJornada } from "./_componentes/FaixaDaJornada";
+import { RegistrarInteresse } from "./_componentes/RegistrarInteresse";
 import { SeletorDeData } from "./_componentes/SeletorDeData";
 import { ArcoDaRota } from "./_componentes/ArcoDaRota";
 import { CeuDoDestino } from "./_componentes/CeuDoDestino";
@@ -200,6 +201,12 @@ async function Conteudo({
        que a pessoa desce para conferir o calendário. Abaixo de `lg`
        nada disso existe e a ordem empilhada continua igual. */
     <div className="lg:grid lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:items-start lg:gap-6">
+      {/* Nao desenha nada: avisa o servidor que esta rota foi olhada,
+          para que o uso real decida o que entra na coleta diaria. */}
+      <RegistrarInteresse
+        origem={rota.origem.iata}
+        destino={rota.destino.iata}
+      />
       {/* 1. O heroi -- "a resposta". Um unico painel escuro: o veredito,
           a regua, a faixa de precificacao dinamica, o arco da rota, o
           ceu do destino e o que fazer a respeito. */}
