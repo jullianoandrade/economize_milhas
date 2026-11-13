@@ -67,31 +67,77 @@ describe("fronteira do motor", () => {
     },
   );
 
-  it("a fronteira vale para TODOS os pares da base, nos dois sentidos", () => {
-    // Exaustivo de proposito: a lista nomeada acima protege os casos que
-    // ja queimaram, este protege os que ainda nao conhecemos. Hoje sao
-    // 268 aeroportos; quando a base crescer (fase 2 do plano), este
-    // teste e que garante que a expansao nao reabre o buraco.
+  it("a fronteira vale para TODO aeroporto da base, nos dois papeis", () => {
+    // Cada aeroporto e testado como origem E como destino. Isso cobre a
+    // base inteira sem percorrer o produto cartesiano: a faixa depende
+    // so de `regiao === "brasil"` de cada ponta, entao sondar cada
+    // aeroporto contra uma ponta brasileira e contra algumas
+    // estrangeiras esgota os casos que existem.
+    //
+    // A versao anterior varria todos os pares. Funcionava com 268
+    // aeroportos (71 mil pares); com ~3.700 viraram 13,5 milhoes e o
+    // teste estourou o tempo -- ele proprio avisou que a base tinha
+    // crescido, que era o combinado.
     const todos = aeroportos.aeroportos;
-    let foraDoModelo = 0;
 
-    for (const origem of todos) {
-      for (const destino of todos) {
-        if (origem.iata === destino.iata) continue;
+    const brasileiro = todos.find((a) => a.regiao === "brasil");
+    const estrangeiros = ["LIS", "JFK", "NRT", "JNB"]
+      .map((iata) => todos.find((a) => a.iata === iata))
+      .filter((a) => a !== undefined);
 
-        const r = classificarRota(origem.iata, destino.iata);
-        const deveriaTerFaixa =
-          origem.regiao === "brasil" || destino.regiao === "brasil";
+    expect(brasileiro).toBeDefined();
+    expect(estrangeiros).toHaveLength(4);
 
-        expect(r.tocaOBrasil).toBe(deveriaTerFaixa);
-        expect(r.faixa === null).toBe(!deveriaTerFaixa);
-        if (!deveriaTerFaixa) foraDoModelo++;
+    let comFaixa = 0;
+    let semFaixa = 0;
+
+    for (const a of todos) {
+      // Contra uma ponta brasileira SEMPRE ha faixa, nos dois sentidos.
+      expect(classificarRota(a.iata, brasileiro!.iata).faixa).not.toBeNull();
+      expect(classificarRota(brasileiro!.iata, a.iata).faixa).not.toBeNull();
+      comFaixa += 2;
+
+      if (a.regiao === "brasil") continue;
+
+      // Estrangeiro contra estrangeiro nunca recebe faixa.
+      for (const e of estrangeiros) {
+        if (e.iata === a.iata) continue;
+        expect(classificarRota(a.iata, e.iata).faixa).toBeNull();
+        expect(classificarRota(e.iata, a.iata).faixa).toBeNull();
+        semFaixa += 2;
       }
     }
 
     // Guarda contra o teste passar por vacuidade: se a base um dia
-    // perder os internacionais, o laco acima nao testaria nada.
-    expect(foraDoModelo).toBeGreaterThan(1000);
+    // perder os internacionais, os lacos acima nao testariam nada.
+    expect(comFaixa).toBeGreaterThan(2000);
+    expect(semFaixa).toBeGreaterThan(2000);
+  });
+
+  it("amostra determinista de pares cruzados respeita a fronteira", () => {
+    // Complementa o teste acima com pares que nenhuma sonda fixa
+    // cobriria. O passo e primo em relacao ao tamanho da base para
+    // varrer combinacoes bem distribuidas, e e DETERMINISTA de
+    // proposito -- teste intermitente e pior que teste nenhum.
+    const todos = aeroportos.aeroportos;
+    const n = todos.length;
+    let conferidos = 0;
+
+    for (let i = 0; i < n; i++) {
+      const origem = todos[i];
+      const destino = todos[(i * 7919 + 13) % n];
+      if (origem.iata === destino.iata) continue;
+
+      const r = classificarRota(origem.iata, destino.iata);
+      const deveriaTerFaixa =
+        origem.regiao === "brasil" || destino.regiao === "brasil";
+
+      expect(r.tocaOBrasil).toBe(deveriaTerFaixa);
+      expect(r.faixa === null).toBe(!deveriaTerFaixa);
+      conferidos++;
+    }
+
+    expect(conferidos).toBeGreaterThan(1000);
   });
 });
 

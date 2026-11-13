@@ -251,6 +251,12 @@ export const EsquemaAeroportos = z.object({
         lat: z.number().min(-90).max(90),
         lon: z.number().min(-180).max(180),
         nome: z.string(),
+        /**
+         * Desempate da busca, nunca filtro de inclusao. 2 = no Brasil,
+         * de onde a pessoa parte; 1 = destino internacional procurado
+         * por brasileiro; 0 = o resto, que continua buscavel.
+         */
+        relevancia: z.number().int().min(0).max(2),
       }),
     )
     .min(1),

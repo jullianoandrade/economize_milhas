@@ -36,7 +36,7 @@ app/
     promocoes/
   (entrada)/      boas-vindas e transparência, sem navegação
   api/            cálculo pesado fica no servidor: a base de aeroportos
-                  tem 268 entradas e não precisa ir ao navegador
+                  tem ~3.700 entradas e não precisa ir ao navegador
 components/
   casca/          navegação, rodapé, cabeçalho
   dominio/        Termo, ReguaDoResgate, LinkExterno, PerguntaDoCartao…
