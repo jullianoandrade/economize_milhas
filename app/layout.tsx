@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist } from "next/font/google";
+import { enderecoDoSite } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,6 +23,14 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
+  /**
+   * Sem isto, toda URL absoluta da metadata (og:image, canonical) sai
+   * com a origem que o Next conseguir adivinhar: localhost no servidor
+   * local e, na Vercel, o endereco DAQUELE deploy -- o hash do preview,
+   * nao o dominio. O WhatsApp buscaria a imagem de compartilhamento num
+   * host que muda a cada publicacao.
+   */
+  metadataBase: new URL(enderecoDoSite()),
   title: {
     default: "Milhas — vale mais em milhas ou em dinheiro?",
     template: "%s · Milhas",
