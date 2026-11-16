@@ -8,9 +8,19 @@ export default function manifest(): MetadataRoute.Manifest {
       "Compare o custo da sua viagem em dinheiro e em milhas, descubra o melhor mês para ir, a melhor hora de comprar e como acumular o que falta.",
     start_url: "/",
     display: "standalone",
-    orientation: "portrait",
-    background_color: "#f6f7fb",
-    theme_color: "#4338ca",
+    // Sem `orientation`. Estava travado em "portrait", de quando o app
+    // era so de celular -- o que passou a contradizer o proprio
+    // produto quando o desktop virou cidadao de primeira classe
+    // (barra superior, telas em duas colunas). Sem a chave, quem decide
+    // e o aparelho.
+    //
+    // As cores vem da paleta clara de globals.css, e nao de um indigo
+    // que sobrou de uma versao anterior: background_color pinta a tela
+    // de abertura e theme_color a barra do sistema, entao divergir do
+    // app faz o PWA piscar de uma cor para outra ao abrir. O
+    // theme_color aqui bate com o viewport.themeColor do layout raiz.
+    background_color: "#f8f5ec",
+    theme_color: "#f8f5ec",
     lang: "pt-BR",
     categories: ["travel", "finance"],
     icons: [
