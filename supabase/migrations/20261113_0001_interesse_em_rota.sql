@@ -177,8 +177,11 @@ grant execute on function registrar_interesse(char(3), char(3))
 
 -- promover_rotas_procuradas NAO recebe grant: so a service role chama.
 --
--- O revoke e de PUBLIC, e nao de anon/authenticated: o Postgres concede
--- EXECUTE a PUBLIC por padrao em toda funcao nova, e os dois papeis
--- herdam dali. Revogar so deles deixaria a funcao aberta assim mesmo.
+-- ATENCAO: este revoke SOZINHO nao bastou, e a migration
+-- 20261116_0001_corrige_grant_de_promocao.sql conserta. O Postgres
+-- concede EXECUTE a PUBLIC em toda funcao nova, mas o Supabase ainda
+-- mantem default privileges que dao um grant DIRETO a anon e
+-- authenticated -- revogar de PUBLIC nao alcanca esses. Medido depois
+-- de aplicar: anon continuava recebendo HTTP 200 ao chamar.
 revoke execute on function promover_rotas_procuradas(integer, integer)
   from public;
