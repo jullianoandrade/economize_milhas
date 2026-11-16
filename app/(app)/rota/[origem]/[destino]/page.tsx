@@ -14,7 +14,7 @@ import { BlocoDeQuando } from "./_componentes/BlocoDeQuando";
 import { curvaMensal, precoDoTrecho } from "@/lib/precos";
 import {
   curvaDeAntecedenciaDaRota,
-  observacoesDatadasDaRota,
+  precosPorDataDaRota,
   precosMensaisDaRota,
 } from "@/lib/historico";
 import { precosDasAlternativas } from "@/lib/alternativas";
@@ -29,8 +29,11 @@ import { calcularVeredito } from "@/lib/milhas/veredito";
 import rotasDestaque from "@/data/rotas-destaque.json";
 import { janelaDeCompraDaCurva } from "@/lib/tempo/antecedencia";
 import { calcularSazonalidade } from "@/lib/tempo/sazonalidade";
-import { compararOrigens, datasMaisBaratas } from "@/lib/tempo/flexibilidade";
-import { montarCalendario } from "@/lib/tempo/calendario";
+import {
+  compararOrigens,
+  datasMaisBaratasDeAgregado,
+} from "@/lib/tempo/flexibilidade";
+import { montarCalendarioDeAgregado } from "@/lib/tempo/calendario";
 import { diasAte, faseDaJornada } from "@/lib/monetizacao/jornada";
 
 /**
@@ -147,12 +150,12 @@ async function Conteudo({
 
   // As tres consultas sao independentes: em serie, a pagina esperaria a
   // soma delas em vez do maior tempo entre elas.
-  const [curvaDaApi, mensaisProprios, curvaPropria, datadas, alternativas] =
+  const [curvaDaApi, mensaisProprios, curvaPropria, porData, alternativas] =
     await Promise.all([
       curvaMensal(rota, heuristicasTempo.sazonalidadeBrasil.indicePorMes),
       precosMensaisDaRota(rota.origem.iata, rota.destino.iata),
       curvaDeAntecedenciaDaRota(rota.origem.iata, rota.destino.iata),
-      observacoesDatadasDaRota(rota.origem.iata, rota.destino.iata),
+      precosPorDataDaRota(rota.origem.iata, rota.destino.iata),
       precosDasAlternativas(rota.origem, rota.destino.iata),
     ]);
 
@@ -188,9 +191,14 @@ async function Conteudo({
     curvaPropria.observacoes,
   );
 
-  const { referenciaBRL, datas } = datasMaisBaratas(datadas);
+  // Agregado no banco sobre o historico inteiro. A leitura de linha
+  // crua sobrevive dentro de precosPorDataDaRota, como degradacao.
+  const { referenciaBRL, datas } = datasMaisBaratasDeAgregado(
+    porData.dados,
+    porData.medianaDaRotaBRL,
+  );
   const outrasOrigens = compararOrigens(rota.origem, preco.dados, alternativas);
-  const calendario = montarCalendario(datadas, new Date());
+  const calendario = montarCalendarioDeAgregado(porData.dados, new Date());
   const fase = faseDaJornada(diasAteAViagem);
   const melhorOrigemAlternativa = outrasOrigens[0] ?? null;
 

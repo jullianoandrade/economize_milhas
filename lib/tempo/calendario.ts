@@ -1,4 +1,8 @@
-import type { ObservacaoDatada } from "./flexibilidade";
+import {
+  agruparPorData,
+  type ObservacaoDatada,
+  type PrecoDeData,
+} from "./flexibilidade";
 
 /**
  * Preco dia a dia, para a pessoa ver a forma do mes inteiro.
@@ -63,22 +67,30 @@ export function montarCalendario(
   de: Date,
   janelaDias = 45,
 ): CalendarioDePrecos {
-  const porDia = new Map<string, number[]>();
-
-  for (const o of observacoes) {
-    if (!o?.partidaEm || !(o.precoBRL > 0)) continue;
-    const dia = o.partidaEm.slice(0, 10);
-    const lista = porDia.get(dia);
-    if (lista) lista.push(o.precoBRL);
-    else porDia.set(dia, [o.precoBRL]);
-  }
-
   // Um dia com varias observacoes vira a mediana delas, e nao a mais
   // barata: a menor tarifa de um dia costuma ser um assento unico que
-  // some antes de alguem comprar.
+  // some antes de alguem comprar. agruparPorData faz exatamente isso --
+  // e e a mesma conta que o SQL passou a fazer.
+  return montarCalendarioDeAgregado(agruparPorData(observacoes), de, janelaDias);
+}
+
+/**
+ * O calendario a partir de dados JA AGRUPADOS por data.
+ *
+ * Mesma saida da versao acima. O agrupamento saiu daqui para o banco
+ * porque a leitura de linha crua so entregava uma fatia arbitraria de
+ * 1.000 observacoes -- num calendario isso significa um dia barato de
+ * verdade simplesmente nao aparecer.
+ */
+export function montarCalendarioDeAgregado(
+  dados: PrecoDeData[],
+  de: Date,
+  janelaDias = 45,
+): CalendarioDePrecos {
   const precoPorDia = new Map<string, number>();
-  for (const [dia, precos] of porDia) {
-    precoPorDia.set(dia, mediana(precos));
+  for (const d of dados) {
+    if (!d?.partidaEm || !(d.precoMedianoBRL > 0)) continue;
+    precoPorDia.set(d.partidaEm.slice(0, 10), d.precoMedianoBRL);
   }
 
   const inicio = new Date(de);

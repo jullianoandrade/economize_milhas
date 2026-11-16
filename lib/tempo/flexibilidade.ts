@@ -24,8 +24,51 @@ export type DataMaisBarata = {
   economiaPct: number;
 };
 
+/**
+ * Uma data ja agrupada, venha de onde vier.
+ *
+ * O agrupamento passou a acontecer no banco (ver a migration
+ * ..._precos_por_data e lib/historico.ts): sao ~365 linhas por rota em
+ * vez das ate 5.500 que a tabela guarda, e sem o vies da fatia
+ * arbitraria que o PostgREST devolvia.
+ */
+export type PrecoDeData = {
+  partidaEm: string;
+  precoMedianoBRL: number;
+  amostras: number;
+};
+
 /** Amostras minimas por data para a mediana nao ser ruido. */
 const AMOSTRAS_MINIMAS_POR_DATA = 2;
+
+function mediana(valores: number[]): number {
+  if (valores.length === 0) return 0;
+  const ordenados = [...valores].sort((a, b) => a - b);
+  return ordenados[Math.floor(ordenados.length / 2)];
+}
+
+/** Agrupa observacoes cruas por data de partida. O que o SQL faz hoje. */
+export function agruparPorData(
+  observacoes: ObservacaoDatada[],
+): PrecoDeData[] {
+  const porData = new Map<string, number[]>();
+
+  for (const o of observacoes) {
+    if (!(o.precoBRL > 0) || !o.partidaEm) continue;
+    const dia = o.partidaEm.slice(0, 10);
+    const lista = porData.get(dia);
+    if (lista) lista.push(o.precoBRL);
+    else porData.set(dia, [o.precoBRL]);
+  }
+
+  return [...porData.entries()]
+    .map(([partidaEm, precos]) => ({
+      partidaEm,
+      precoMedianoBRL: mediana(precos),
+      amostras: precos.length,
+    }))
+    .sort((a, b) => a.partidaEm.localeCompare(b.partidaEm));
+}
 
 /**
  * Dias de partida mais baratos, comparados com a mediana da rota.
@@ -37,37 +80,48 @@ export function datasMaisBaratas(
   observacoes: ObservacaoDatada[],
   limite = 4,
 ): { referenciaBRL: number; datas: DataMaisBarata[] } {
-  const porData = new Map<string, number[]>();
+  // A referencia e a mediana de TODAS as observacoes -- cada oferta
+  // pesa uma vez. Nao e a mediana das medianas diarias, que pesaria
+  // cada dia por igual e daria outro numero. O SQL devolve este mesmo
+  // valor numa coluna justamente para a semantica nao mudar quando o
+  // agrupamento saiu do JavaScript.
+  const referenciaBRL = mediana(
+    observacoes.map((o) => o.precoBRL).filter((p) => p > 0),
+  );
 
-  for (const o of observacoes) {
-    if (!(o.precoBRL > 0) || !o.partidaEm) continue;
-    const dia = o.partidaEm.slice(0, 10);
-    const lista = porData.get(dia) ?? [];
-    lista.push(o.precoBRL);
-    porData.set(dia, lista);
-  }
+  return datasMaisBaratasDeAgregado(
+    agruparPorData(observacoes),
+    referenciaBRL,
+    limite,
+  );
+}
 
-  const todos = observacoes
-    .map((o) => o.precoBRL)
-    .filter((p) => p > 0)
-    .sort((a, b) => a - b);
-  if (todos.length === 0) return { referenciaBRL: 0, datas: [] };
+/**
+ * As datas mais baratas a partir de dados JA AGRUPADOS.
+ *
+ * Mesma regra de produto da versao acima -- corte de amostras minimas,
+ * so dias abaixo da referencia, ordenado pela economia. O que muda e de
+ * onde vem o agrupamento: do banco, sobre o historico inteiro, em vez
+ * de uma fatia de 1.000 linhas escolhida sem criterio.
+ */
+export function datasMaisBaratasDeAgregado(
+  dados: PrecoDeData[],
+  referenciaBRL: number,
+  limite = 4,
+): { referenciaBRL: number; datas: DataMaisBarata[] } {
+  if (!(referenciaBRL > 0)) return { referenciaBRL: 0, datas: [] };
 
-  const referenciaBRL = todos[Math.floor(todos.length / 2)];
-
-  const datas = [...porData.entries()]
-    .filter(([, precos]) => precos.length >= AMOSTRAS_MINIMAS_POR_DATA)
-    .map(([partidaEm, precos]) => {
-      const ordenados = [...precos].sort((a, b) => a - b);
-      const precoBRL = ordenados[Math.floor(ordenados.length / 2)];
-      return {
-        partidaEm,
-        precoBRL,
-        economiaBRL: referenciaBRL - precoBRL,
-        economiaPct:
-          referenciaBRL > 0 ? ((referenciaBRL - precoBRL) / referenciaBRL) * 100 : 0,
-      };
-    })
+  const datas = dados
+    .filter(
+      (d) =>
+        d.amostras >= AMOSTRAS_MINIMAS_POR_DATA && d.precoMedianoBRL > 0,
+    )
+    .map((d) => ({
+      partidaEm: d.partidaEm,
+      precoBRL: d.precoMedianoBRL,
+      economiaBRL: referenciaBRL - d.precoMedianoBRL,
+      economiaPct: ((referenciaBRL - d.precoMedianoBRL) / referenciaBRL) * 100,
+    }))
     .filter((d) => d.economiaBRL > 0)
     .sort((a, b) => b.economiaBRL - a.economiaBRL)
     .slice(0, limite);

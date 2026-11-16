@@ -6,6 +6,7 @@ import {
   type FaixaDaCurva,
   type Observacao,
 } from "@/lib/tempo/antecedencia";
+import { agruparPorData, type PrecoDeData } from "@/lib/tempo/flexibilidade";
 
 /**
  * Leitura do historico proprio de precos.
@@ -123,6 +124,72 @@ export async function observacoesDaRota(
     antecedenciaDias: Number(linha.antecedencia_dias),
     precoBRL: Number(linha.valor_brl),
   }));
+}
+
+export type PrecosPorData = {
+  dados: PrecoDeData[];
+  /** Mediana de TODAS as observacoes da rota -- a referencia de economia. */
+  medianaDaRotaBRL: number;
+};
+
+/**
+ * Preco por data de partida, agregado NO BANCO.
+ *
+ * Alimenta o calendario de precos e as datas mais baratas, que eram as
+ * duas telas que continuavam lendo linha crua depois que a curva de
+ * antecedencia saiu dali. Sao ~365 linhas por rota em vez das ate 5.500
+ * da tabela, e sem a fatia arbitraria de 1.000 que o PostgREST impoe --
+ * num calendario, aquela fatia podia esconder justamente o dia barato.
+ *
+ * A mediana da rota vem junto porque e sobre ela que a economia de cada
+ * data e medida, e ela pesa cada OBSERVACAO, nao cada dia. Calcula-la a
+ * partir das medianas diarias daria outro numero.
+ *
+ * Degrada para a leitura de linha crua quando o banco nao tem a funcao.
+ */
+export async function precosPorDataDaRota(
+  origem: string,
+  destino: string,
+): Promise<PrecosPorData> {
+  const vazio: PrecosPorData = { dados: [], medianaDaRotaBRL: 0 };
+
+  const banco = leitor();
+  if (!banco) return vazio;
+
+  const { data, error } = await banco.rpc("precos_por_data", {
+    p_origem: origem,
+    p_destino: destino,
+  });
+
+  if (!error && Array.isArray(data) && data.length > 0) {
+    const dados: PrecoDeData[] = data
+      .map((linha) => ({
+        partidaEm: String(linha.partida_em).slice(0, 10),
+        precoMedianoBRL: Number(linha.preco_mediano),
+        amostras: Number(linha.amostras),
+      }))
+      .filter((d) => d.precoMedianoBRL > 0 && Number.isFinite(d.amostras));
+
+    if (dados.length > 0) {
+      return {
+        dados,
+        medianaDaRotaBRL: Number(data[0].mediana_rota) || 0,
+      };
+    }
+  }
+
+  const brutas = await observacoesDatadasDaRota(origem, destino);
+  return {
+    dados: agruparPorData(brutas),
+    medianaDaRotaBRL: medianaDe(brutas.map((o) => o.precoBRL)),
+  };
+}
+
+/** A mesma mediana discreta que lib/tempo usa, para a degradacao bater. */
+function medianaDe(valores: number[]): number {
+  const validos = valores.filter((v) => v > 0).sort((a, b) => a - b);
+  if (validos.length === 0) return 0;
+  return validos[Math.floor(validos.length / 2)];
 }
 
 /** Observacoes com a data de partida, para a analise de flexibilidade. */
