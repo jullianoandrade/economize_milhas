@@ -18,6 +18,7 @@ import {
   precosMensaisDaRota,
 } from "@/lib/historico";
 import { precosDasAlternativas } from "@/lib/alternativas";
+import { bonusVigentes } from "@/lib/transferencias";
 import { heuristicasTempo } from "@/lib/dados";
 import { reais } from "@/lib/format";
 import {
@@ -145,8 +146,16 @@ async function Conteudo({
     throw erro;
   }
 
-  const preco = await precoDoTrecho(rota);
-  const veredito = calcularVeredito(rota, preco.dados);
+  // O bonus de transferencia vigente muda o custo da milha e, com ele,
+  // o veredito: 100% de bonus corta o CPM pela metade. Buscado junto do
+  // preco porque um sem o outro da resposta errada.
+  const [preco, bonus] = await Promise.all([
+    precoDoTrecho(rota),
+    bonusVigentes(),
+  ]);
+  const veredito = calcularVeredito(rota, preco.dados, {
+    bonusVigentes: bonus,
+  });
 
   // As tres consultas sao independentes: em serie, a pagina esperaria a
   // soma delas em vez do maior tempo entre elas.

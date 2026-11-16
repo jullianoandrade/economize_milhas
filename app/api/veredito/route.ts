@@ -5,6 +5,7 @@ import {
 } from "@/lib/milhas/regioes";
 import { calcularVeredito } from "@/lib/milhas/veredito";
 import { precoDoTrecho } from "@/lib/precos";
+import { bonusVigentes } from "@/lib/transferencias";
 
 /**
  * O mesmo veredito da tela de rota, com o CPM da pessoa.
@@ -40,9 +41,13 @@ export async function GET(requisicao: Request) {
     throw erro;
   }
 
-  const preco = await precoDoTrecho(rota);
+  const [preco, bonus] = await Promise.all([
+    precoDoTrecho(rota),
+    bonusVigentes(),
+  ]);
   const veredito = calcularVeredito(rota, preco.dados, {
     perfil: { gastoMensalCartaoBRL, cartaoId },
+    bonusVigentes: bonus,
   });
 
   return NextResponse.json({

@@ -167,6 +167,43 @@ export function bonusMedianoDeTransferencia(programaId: string): number {
 }
 
 /**
+ * Uma promocao de transferencia que esta valendo HOJE.
+ *
+ * Vem da tabela bonus_transferencia, curada a mao -- nao existe fonte
+ * automatizavel confiavel. O proprio data/calendario-transferencias.json
+ * ja previa isto desde outubro: "os bonus VIGENTES ficam no Supabase,
+ * porque mudam toda semana".
+ */
+export type BonusVigente = {
+  /** 100 significa "1.000 pontos viram 2.000 milhas". */
+  percentual: number;
+  /** De onde se transfere: livelo, esfera. */
+  origem: string;
+  /** yyyy-mm-dd. A pressa faz parte da informacao. */
+  terminaEm: string;
+};
+
+/** Bonus vigentes por programa de destino. */
+export type BonusPorPrograma = Record<string, BonusVigente | undefined>;
+
+function nomeDaOrigem(id: string): string {
+  return transferencias.origens.find((o) => o.id === id)?.nome ?? "Livelo";
+}
+
+/**
+ * "2026-11-28" vira "28/11". Data por extenso nao cabe no rotulo, e o
+ * que importa aqui e quanto tempo falta, nao o ano.
+ *
+ * Fatiado da string, sem new Date(): o construtor interpreta
+ * "2026-11-28" como UTC e, em fuso negativo como o nosso, devolveria o
+ * dia anterior -- uma promocao pareceria terminar um dia antes.
+ */
+function formatarDia(iso: string): string {
+  const [, mes, dia] = iso.split("-");
+  return mes && dia ? `${dia}/${mes}` : iso;
+}
+
+/**
  * A paridade Livelo -> programa de destino.
  *
  * Livelo e o hub que o resto do app ja assume como base (e o preco de
@@ -192,6 +229,13 @@ export function paridadeDeTransferencia(programaId: string) {
 export function caminhosDeAquisicao(
   programaId: string,
   perfil: PerfilDeAcumulo = {},
+  /**
+   * A promocao que esta valendo agora, quando houver. Entra por
+   * parametro, e nao por leitura de banco aqui dentro, porque este
+   * modulo e funcao pura -- sem rede e sem relogio. Quem le o banco e
+   * lib/transferencias.ts; aqui so se faz a conta.
+   */
+  bonusVigente?: BonusVigente,
 ): CaminhoDeAquisicao[] {
   const caminhos: CaminhoDeAquisicao[] = [];
   const cpm = cpmReferencia.programas[programaId];
@@ -230,21 +274,42 @@ export function caminhosDeAquisicao(
   // bonus vira vantagem de verdade. Sem cartao, a base e o preco de
   // compra de pontos Livelo em promocao, e o resultado costuma ficar
   // parecido com simplesmente comprar a milha pronta.
-  const bonus = bonusMedianoDeTransferencia(programaId);
+  //
+  // Quando ha promocao valendo, e ELA que vale: o mediano historico
+  // existe para nao deixar a tela muda nas semanas sem promocao, nao
+  // para competir com o numero real. E a confianca sobe junto --
+  // "pesquisado" em vez de "interpolado" -- porque deixou de ser
+  // estimativa.
+  //
+  // A ordem aqui importa: `?? ` nao serve, porque percentual 0 nao e
+  // nulo e o zero venceria o mediano -- o caminho de transferencia
+  // sumiria da lista em vez de cair no historico. Promocao de 0% nao e
+  // promocao.
+  const vigente = bonusVigente != null && bonusVigente.percentual > 0;
+  const bonus = vigente
+    ? bonusVigente.percentual
+    : bonusMedianoDeTransferencia(programaId);
+
   if (bonus > 0) {
     const viaCartao = cpmDoCartaoDoUsuario != null;
     const base = cpmDoCartaoDoUsuario ?? cpmReferencia.coalizao.livelo.alvoBRL;
+    const origem = vigente ? nomeDaOrigem(bonusVigente.origem) : "Livelo";
 
     caminhos.push({
       id: "transferencia",
       rotulo: viaCartao
         ? `Transferir os pontos do cartão com ${bonus}% de bônus`
-        : `Comprar pontos Livelo e transferir com ${bonus}% de bônus`,
+        : `Comprar pontos ${origem} e transferir com ${bonus}% de bônus`,
       cpmBRL: base / (1 + bonus / 100),
-      confianca: "interpolado",
-      explicacao: viaCartao
-        ? "Os pontos que o seu cartão já gera, multiplicados pelo bônus mediano histórico deste programa."
-        : "Preço de compra de pontos Livelo em promoção, multiplicado pelo bônus mediano histórico. O bônus vigente hoje pode estar maior ou menor.",
+      confianca: vigente ? "pesquisado" : "interpolado",
+      explicacao: vigente
+        ? `Promoção de ${bonus}% da ${origem} valendo agora, até ${formatarDia(bonusVigente.terminaEm)}.` +
+          (viaCartao
+            ? " Vale para os pontos que o seu cartão já gera."
+            : " Sobre o preço de compra de pontos em promoção.")
+        : viaCartao
+          ? "Os pontos que o seu cartão já gera, multiplicados pelo bônus mediano histórico deste programa."
+          : "Preço de compra de pontos Livelo em promoção, multiplicado pelo bônus mediano histórico. O bônus vigente hoje pode estar maior ou menor.",
       detalhe: `1.000 pontos viram ${Math.round(1000 * (1 + bonus / 100)).toLocaleString("pt-BR")} milhas`,
     });
   }

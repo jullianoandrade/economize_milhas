@@ -5,6 +5,7 @@ import { rotuloDoVeredito } from "@/lib/milhas/rotulos";
 import { destinosPopulares, temToken } from "@/lib/providers/travelpayouts";
 import { precoEstimadoPorRegiao } from "@/lib/precos";
 import { transferencias } from "@/lib/dados";
+import { bonusVigentes } from "@/lib/transferencias";
 
 /**
  * Oportunidades a partir da cidade da pessoa.
@@ -45,7 +46,26 @@ export async function GET(requisicao: Request) {
     );
   }
 
-  const bruto = temToken() ? await destinosPopulares(origem) : null;
+  const [bruto, bonus] = await Promise.all([
+    temToken() ? destinosPopulares(origem) : Promise.resolve(null),
+    bonusVigentes(),
+  ]);
+
+  /**
+   * O que a tela mostra sobre bonus, em ordem de qualidade do dado:
+   * promocao valendo agora, com data de fim; na falta dela, o mediano
+   * historico, que e expectativa e nao fato. Os dois nunca aparecem
+   * como se fossem a mesma coisa.
+   */
+  const promocoes = Object.entries(bonus)
+    .filter(([, b]) => b !== undefined)
+    .map(([destino, b]) => ({
+      destino,
+      percentual: b!.percentual,
+      origem: b!.origem,
+      terminaEm: b!.terminaEm,
+    }))
+    .sort((a, b) => b.percentual - a.percentual);
 
   if (!bruto || bruto.length === 0) {
     return NextResponse.json({
@@ -55,6 +75,7 @@ export async function GET(requisicao: Request) {
         ? "Nao encontramos buscas recentes partindo desta cidade."
         : "Token da Travelpayouts nao configurado.",
       oportunidades: [],
+      promocoesDeTransferencia: promocoes,
       bonusVigentes: [],
     });
   }
@@ -82,6 +103,7 @@ export async function GET(requisicao: Request) {
 
         const veredito = calcularVeredito(rota, oferta.precoBRL, {
           perfil: { gastoMensalCartaoBRL, cartaoId },
+          bonusVigentes: bonus,
         });
         if (!veredito.melhor) return [];
 
@@ -135,6 +157,7 @@ export async function GET(requisicao: Request) {
     observacao:
       "Precos de buscas recentes. Nao sao cotacao em tempo real: confirme antes de comprar.",
     oportunidades,
+    promocoesDeTransferencia: promocoes,
     bonusVigentes: transferencias.padraoHistorico.map((p) => ({
       destino: p.destino,
       bonusMedianoPct: p.bonusMedianoPct,

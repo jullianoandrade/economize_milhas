@@ -38,12 +38,29 @@ type Resposta = {
   fonte: string;
   observacao: string;
   oportunidades: Oportunidade[];
+  promocoesDeTransferencia: Array<{
+    destino: string;
+    percentual: number;
+    origem: string;
+    terminaEm: string;
+  }>;
   bonusVigentes: Array<{
     destino: string;
     bonusMedianoPct: number;
     observacao: string;
   }>;
 };
+
+const NOME_DA_ORIGEM: Record<string, string> = {
+  livelo: "Livelo",
+  esfera: "Esfera",
+};
+
+/** "2026-11-28" vira "28/11". Sem new Date(): ver lib/milhas/motor.ts. */
+function formatarDia(iso: string): string {
+  const [, mes, dia] = iso.split("-");
+  return mes && dia ? `${dia}/${mes}` : iso;
+}
 
 const NOME_DO_PROGRAMA: Record<string, string> = {
   smiles: "Smiles",
@@ -96,7 +113,45 @@ export default function Promocoes() {
         <div className="mb-5 h-[9.5rem] animate-pulse rounded-2xl bg-superficie-2" />
       ) : null}
 
-      {dados && dados.bonusVigentes.length > 0 ? (
+      {/* Promocao valendo agora tem precedencia sobre a expectativa
+          historica, e nunca aparecem juntas: sao dados de naturezas
+          diferentes -- uma e fato com data de fim, a outra e mediana.
+          Mostrar as duas lado a lado faria a segunda parecer tao firme
+          quanto a primeira. */}
+      {dados && dados.promocoesDeTransferencia.length > 0 ? (
+        <section className="mb-5 rounded-2xl border border-dinheiro-borda bg-dinheiro-fundo p-4">
+          <h2 className="mb-2 flex items-center gap-2 text-sm font-semibold text-tinta">
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-dinheiro opacity-75" />
+              <span className="relative inline-flex size-2 rounded-full bg-dinheiro" />
+            </span>
+            Bônus de transferência valendo agora
+          </h2>
+          <ul className="space-y-1.5 text-sm text-tinta-media">
+            {dados.promocoesDeTransferencia.map((p) => (
+              <li key={`${p.origem}-${p.destino}`} className="flex justify-between gap-3">
+                <span>
+                  {NOME_DA_ORIGEM[p.origem] ?? p.origem} →{" "}
+                  {NOME_DO_PROGRAMA[p.destino] ?? p.destino}
+                  <span className="block text-xs text-tinta-fraca">
+                    até {formatarDia(p.terminaEm)}
+                  </span>
+                </span>
+                <span className="tabular shrink-0 font-semibold text-dinheiro">
+                  +{p.percentual}%
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs leading-relaxed text-tinta-media">
+            Com bônus, cada 1.000 pontos vira mais milhas — e o custo do seu
+            milheiro cai na mesma proporção. Os vereditos abaixo já consideram
+            isto.
+          </p>
+        </section>
+      ) : null}
+
+      {dados && dados.promocoesDeTransferencia.length === 0 && dados.bonusVigentes.length > 0 ? (
         <section className="mb-5 rounded-2xl border border-milhas-borda bg-milhas-fundo p-4">
           <h2 className="mb-2 text-sm font-semibold text-tinta">
             Bônus de transferência: o que esperar

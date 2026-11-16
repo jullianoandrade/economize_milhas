@@ -2,6 +2,7 @@ import type { Confianca, Programa } from "@/lib/dados";
 import {
   caminhosDeAquisicao,
   estimarMilhas,
+  type BonusPorPrograma,
   type CaminhoDeAquisicao,
   type ClasseDeVoo,
   type PerfilDeAcumulo,
@@ -130,16 +131,29 @@ export function avaliarResgate(
 export function calcularVeredito(
   rota: RotaClassificada,
   precoDinheiroBRL: number,
-  opcoes: { classe?: ClasseDeVoo; perfil?: PerfilDeAcumulo } = {},
+  opcoes: {
+    classe?: ClasseDeVoo;
+    perfil?: PerfilDeAcumulo;
+    /**
+     * Promocoes de transferencia valendo hoje, por programa. Sem elas o
+     * motor usa o bonus mediano historico -- que e o comportamento de
+     * sempre, e continua sendo quando nao ha promocao nenhuma.
+     */
+    bonusVigentes?: BonusPorPrograma;
+  } = {},
 ): Veredito {
-  const { classe = "economica", perfil = {} } = opcoes;
+  const { classe = "economica", perfil = {}, bonusVigentes = {} } = opcoes;
 
   // O preco em dinheiro entra na estimativa porque os programas usam
   // precificacao dinamica: passagem mais cara, resgate mais caro.
   const avaliadas: OpcaoDeResgate[] = estimarMilhas(rota, classe, precoDinheiroBRL)
     .filter((e) => e.disponivel)
     .map((estimativa) => {
-      const caminho = caminhosDeAquisicao(estimativa.programa.id, perfil)[0];
+      const caminho = caminhosDeAquisicao(
+        estimativa.programa.id,
+        perfil,
+        bonusVigentes[estimativa.programa.id],
+      )[0];
       const milhas = estimativa.milhas.tipico;
       const analise = avaliarResgate(
         precoDinheiroBRL,

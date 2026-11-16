@@ -3,6 +3,7 @@ import { montarPlano } from "@/lib/milhas/acumulo";
 import { AeroportoDesconhecidoError, classificarRota } from "@/lib/milhas/regioes";
 import { calcularVeredito } from "@/lib/milhas/veredito";
 import { precoDoTrecho } from "@/lib/precos";
+import { bonusVigentes } from "@/lib/transferencias";
 import { cartoes, cpmReferencia, programas, transferencias } from "@/lib/dados";
 import { estimarMilhas } from "@/lib/milhas/motor";
 
@@ -53,7 +54,10 @@ export async function POST(requisicao: Request) {
     throw erro;
   }
 
-  const preco = await precoDoTrecho(rota);
+  const [preco, bonus] = await Promise.all([
+    precoDoTrecho(rota),
+    bonusVigentes(),
+  ]);
 
   // O perfil ja vinha no corpo e era usado so para montar o plano; o
   // veredito era calculado sem ele, e por isso cotava o custo de milhas
@@ -64,6 +68,7 @@ export async function POST(requisicao: Request) {
       gastoMensalCartaoBRL: numero(corpo.gastoMensalCartaoBRL),
       cartaoId: corpo.cartaoId ?? undefined,
     },
+    bonusVigentes: bonus,
   });
 
   // Sem programa escolhido, usa o que sai melhor nesta rota.
