@@ -257,6 +257,11 @@ export const EsquemaAeroportos = z.object({
          * por brasileiro; 0 = o resto, que continua buscavel.
          */
         relevancia: z.number().int().min(0).max(2),
+        /**
+         * Rotas aereas que servem o aeroporto. Desempata DENTRO da
+         * relevancia -- ver a ordenacao em lib/busca/lugares.ts.
+         */
+        conexoes: z.number().int().min(0),
       }),
     )
     .min(1),

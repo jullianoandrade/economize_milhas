@@ -187,3 +187,38 @@ describe("o formato fragil da Aviasales fica num unico arquivo", () => {
     expect(culpados).toEqual([]);
   });
 });
+
+describe("o painel de busca nao recorta a lista de sugestoes", () => {
+  /**
+   * Aconteceu, e passou meses despercebido: a <section> do painel de
+   * busca tinha `overflow-hidden` para cortar a ilustracao decorativa,
+   * e com isso cortava tambem a lista de sugestoes do CampoDeLugar --
+   * que e posicionada absoluta e desce para fora do painel.
+   *
+   * Dos 482px de lista, 15 apareciam. Nenhum resultado era clicavel: a
+   * busca, que e a interacao principal do app, ficava inutilizavel pelo
+   * mouse, e isso nao quebrava teste nenhum nem aparecia no build.
+   *
+   * O recorte da decoracao existe e deve continuar existindo -- so que
+   * numa camada propria, por dentro, e nao no elemento que contem o
+   * campo.
+   */
+  it("nenhuma <section> que contem CampoDeLugar usa overflow-hidden", () => {
+    const culpados = todosOsFontesDoProjeto(raiz)
+      .filter((arquivo) => arquivo.endsWith(".tsx"))
+      .filter((arquivo) => {
+        const codigo = readFileSync(arquivo, "utf8");
+        if (!codigo.includes("<CampoDeLugar")) return false;
+
+        return codigo
+          .split("\n")
+          .some(
+            (linha) =>
+              linha.includes("<section") && linha.includes("overflow-hidden"),
+          );
+      })
+      .map(RELATIVO);
+
+    expect(culpados).toEqual([]);
+  });
+});

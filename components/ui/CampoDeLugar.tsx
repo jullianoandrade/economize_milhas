@@ -6,6 +6,8 @@ export type Lugar = {
   iata: string;
   cidade: string;
   pais: string;
+  /** Pais por extenso. Ver a linha secundaria da sugestao abaixo. */
+  paisNome?: string;
   nome: string;
 };
 
@@ -156,7 +158,12 @@ export function CampoDeLugar({
                   <span className="block truncate text-sm font-medium text-tinta">
                     {lugar.cidade}
                   </span>
+                  {/* O pais vem primeiro na linha secundaria porque e
+                      ele que explica o resultado quando a busca foi por
+                      pais: digitar "Ucrania" e receber "Kiev" so faz
+                      sentido se a palavra que casou estiver a vista. */}
                   <span className="block truncate text-xs text-tinta-fraca">
+                    {lugar.paisNome ? `${lugar.paisNome} · ` : ""}
                     {lugar.nome}
                   </span>
                 </span>

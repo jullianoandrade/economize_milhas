@@ -25,6 +25,7 @@ import { writeFileSync } from "node:fs";
 
 const FONTE_AEROPORTOS = "https://api.travelpayouts.com/data/airports.json";
 const FONTE_CIDADES = "https://api.travelpayouts.com/data/cities.json";
+const FONTE_ROTAS = "https://api.travelpayouts.com/data/routes.json";
 
 /**
  * Destinos internacionais que um viajante brasileiro de fato procura.
@@ -222,10 +223,29 @@ async function baixar(url) {
   return resposta.json();
 }
 
-const [aeroportos, cidades] = await Promise.all([
+const [aeroportos, cidades, rotas] = await Promise.all([
   baixar(FONTE_AEROPORTOS),
   baixar(FONTE_CIDADES),
+  baixar(FONTE_ROTAS),
 ]);
+
+/**
+ * Quantas rotas aereas servem cada aeroporto.
+ *
+ * E o unico sinal de IMPORTANCIA que existe em dado real aqui, e
+ * substitui adivinhacao: Heathrow tem 1.027 rotas e London City 122;
+ * Kiev/Boryspil tem 330 e Chernivtsi 4. Sem isto, o desempate da busca
+ * caia no alfabeto, e "Ucrania" devolvia Chernivtsi antes de Kiev.
+ *
+ * Conta chegada e partida: um aeroporto bem servido aparece nas duas
+ * pontas, e somar as duas nao muda a ordem relativa.
+ */
+const conexoesPorIata = new Map();
+for (const rota of rotas) {
+  for (const ponta of [rota.departure_airport_iata, rota.arrival_airport_iata]) {
+    if (ponta) conexoesPorIata.set(ponta, (conexoesPorIata.get(ponta) ?? 0) + 1);
+  }
+}
 
 const nomeDaCidade = new Map(
   cidades.map((c) => [c.code, c.name_translations?.pt || c.name]),
@@ -255,6 +275,11 @@ const selecionados = aeroportos
     // resto, que continua buscavel e so nao ganha empate.
     relevancia:
       a.country_code === "BR" ? 2 : DESTINOS_PROCURADOS.has(a.code) ? 1 : 0,
+    // Desempate DENTRO da relevancia. Os dois existem porque medem
+    // coisas diferentes: relevancia e quem e o nosso usuario (parte do
+    // Brasil), conexoes e o tamanho do aeroporto. Contagem de rotas
+    // nunca saberia que um hub chines importa menos aqui que Lisboa.
+    conexoes: conexoesPorIata.get(a.code) ?? 0,
     lat: Number(a.coordinates.lat.toFixed(4)),
     lon: Number(a.coordinates.lon.toFixed(4)),
     nome: a.name_translations?.pt || a.name,
@@ -278,3 +303,6 @@ const porRegiao = selecionados.reduce((acc, a) => {
 }, {});
 console.log(`${selecionados.length} aeroportos gravados em data/aeroportos.json`);
 console.log(porRegiao);
+console.log(
+  `${selecionados.filter((a) => a.conexoes > 0).length} com rota conhecida`,
+);

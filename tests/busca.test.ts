@@ -114,3 +114,107 @@ describe("busca de lugares", () => {
     expect(procurarLugares("santos dumont").length).toBeLessThanOrEqual(8);
   });
 });
+
+/**
+ * Busca por pais.
+ *
+ * Veio de uso real: alguem digitou "Ucrania" e nao recebeu nada. Os 13
+ * aeroportos ucranianos estavam na base o tempo todo -- o indice e que
+ * so conhecia cidade, nome de aeroporto e codigo IATA. Quem nao sabe o
+ * nome da cidade, ou cujo destino E o pais ("quero ir pra Portugal"),
+ * batia num vazio que parecia falta de cobertura.
+ */
+describe("busca por pais", () => {
+  it.each([
+    ["ucrania", "UA"],
+    ["Ucrânia", "UA"],
+    ["portugal", "PT"],
+    ["japao", "JP"],
+    ["italia", "IT"],
+    ["africa do sul", "ZA"],
+  ])("'%s' encontra aeroportos de %s", (consulta, iso) => {
+    const r = procurarLugares(consulta);
+    expect(r.length).toBeGreaterThan(0);
+    expect(r.every((l) => l.pais === iso)).toBe(true);
+  });
+
+  it("aceita o nome que o brasileiro usa, nao so o oficial", () => {
+    // Intl devolve "Paises Baixos" e "Reino Unido"; quase ninguem
+    // digita assim.
+    expect(procurarLugares("holanda").every((l) => l.pais === "NL")).toBe(true);
+    expect(procurarLugares("inglaterra").every((l) => l.pais === "GB")).toBe(
+      true,
+    );
+  });
+
+  it("prefixo de pais tambem casa", () => {
+    expect(procurarLugares("ucra").some((l) => l.pais === "UA")).toBe(true);
+  });
+
+  it("cidade vence pais quando as duas batem", () => {
+    // "Singapura" e cidade e pais. Quem digita quer o aeroporto.
+    expect(procurarLugares("singapura")[0].iata).toBe("SIN");
+  });
+
+  it("nao casa pais por trecho solto no meio da palavra", () => {
+    // "ran" esta dentro de "Franca" e de "Ira". Casar pais por trecho
+    // encheria a busca de resultado que ninguem pediu.
+    const r = procurarLugares("ran", 8);
+    const porPais = r.filter((l) => l.pais === "FR" || l.pais === "IR");
+    expect(porPais).toEqual([]);
+  });
+
+  it("devolve o pais por extenso, para a tela explicar o casamento", () => {
+    const [kiev] = procurarLugares("ucrania", 1);
+    expect(kiev.paisNome).toBe("Ucrânia");
+  });
+});
+
+/**
+ * Conexoes como desempate.
+ *
+ * A relevancia (Brasil > destino procurado > resto) resolve o empate
+ * entre tiers, mas dentro de um tier ela nao distingue nada -- e num
+ * pais sem hub nenhum da nossa lista, todo mundo empata em zero. Foi o
+ * que a busca por pais expos: "Ucrania" devolvia Chernivtsi, de quatro
+ * rotas, antes de Kiev, de trezentas e trinta.
+ *
+ * A contagem vem de routes.json da Travelpayouts: ~65 mil rotas aereas
+ * reais, e nao palpite nosso sobre o que e importante.
+ */
+describe("conexoes desempatam dentro da relevancia", () => {
+  const ordem = (q: string, n = 8) => procurarLugares(q, n).map((l) => l.iata);
+
+  it("o aeroporto principal do pais vem primeiro", () => {
+    expect(ordem("ucrania")[0]).toBe("KBP");
+  });
+
+  it.each([
+    ["londres", "LHR", "LCY"],
+    ["paris", "CDG", "BVA"],
+    ["rio de janeiro", "GIG", "SDU"],
+  ])("'%s': %s antes de %s", (consulta, maior, menor) => {
+    const r = ordem(consulta);
+    expect(r.indexOf(maior)).toBeGreaterThanOrEqual(0);
+    expect(r.indexOf(maior)).toBeLessThan(r.indexOf(menor));
+  });
+
+  it("nao atropela a relevancia: Brasil continua na frente", () => {
+    // SSA (Salvador, BR) tem menos rotas que varios estrangeiros que
+    // casam com "salvador", e ainda assim vem primeiro -- quem usa o
+    // app parte do Brasil.
+    expect(ordem("salvador")[0]).toBe("SSA");
+  });
+
+  it("todo aeroporto tem contagem de conexoes valida", () => {
+    const invalidos = aeroportos.aeroportos.filter(
+      (a) => !Number.isInteger(a.conexoes) || a.conexoes < 0,
+    );
+    expect(invalidos).toEqual([]);
+
+    // Guarda contra o campo virar zero para todo mundo -- se a fonte
+    // mudar de formato, o desempate some sem nada falhar.
+    const comRota = aeroportos.aeroportos.filter((a) => a.conexoes > 0);
+    expect(comRota.length).toBeGreaterThan(2000);
+  });
+});
