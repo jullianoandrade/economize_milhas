@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ABAS, estaAtiva } from "./abas";
 import { AlternadorDeTema } from "./AlternadorDeTema";
+import { MARCA } from "@/lib/marca";
 
 /**
  * A navegação do app em telas grandes.
@@ -28,7 +29,7 @@ export function BarraSuperior() {
           href="/"
           className="display shrink-0 text-lg text-tinta transition-colors hover:text-marca"
         >
-          Milhas
+          {MARCA.nome}
         </Link>
 
         <nav aria-label="Navegação principal">

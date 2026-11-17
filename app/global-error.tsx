@@ -1,5 +1,7 @@
 "use client";
 
+import { MARCA as PRODUTO } from "@/lib/marca";
+
 /**
  * O ultimo anteparo: quando o proprio layout raiz quebra.
  *
@@ -53,7 +55,7 @@ export default function ErroGlobal({
             "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
         }}
       >
-        <title>Algo quebrou · Milhas</title>
+        <title>{`Algo quebrou · ${PRODUTO.nome}`}</title>
 
         <main
           style={{

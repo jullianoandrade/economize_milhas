@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
+import { MARCA } from "@/lib/marca";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Milhas — viagem em milhas ou em dinheiro",
-    short_name: "Milhas",
+    name: `${MARCA.nome} — ${MARCA.chamadaDoApp}`,
+    short_name: MARCA.nome,
     description:
       "Compare o custo da sua viagem em dinheiro e em milhas, descubra o melhor mês para ir, a melhor hora de comprar e como acumular o que falta.",
     start_url: "/",

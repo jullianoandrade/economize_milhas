@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist } from "next/font/google";
 import { enderecoDoSite } from "@/lib/site";
 import "./globals.css";
+import { MARCA } from "@/lib/marca";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,16 +33,16 @@ export const metadata: Metadata = {
    */
   metadataBase: new URL(enderecoDoSite()),
   title: {
-    default: "Milhas — vale mais em milhas ou em dinheiro?",
-    template: "%s · Milhas",
+    default: `${MARCA.nome} — ${MARCA.chamada}`,
+    template: `%s · ${MARCA.nome}`,
   },
   description:
     "Descubra quanto custa sua viagem em dinheiro e em milhas, em que mês ir, quando comprar e como acumular as milhas que faltam.",
-  applicationName: "Milhas",
+  applicationName: MARCA.nome,
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
-    title: "Milhas",
+    title: MARCA.nome,
     statusBarStyle: "default",
   },
 };
