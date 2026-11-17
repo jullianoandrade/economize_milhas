@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CampoDeLugar, type Lugar } from "@/components/ui/CampoDeLugar";
-import { Ilustracao } from "@/components/ui/Ilustracao";
 import { usarPerfil } from "@/store/perfil";
 
 /**
@@ -46,24 +45,6 @@ export function BuscaDeViagem() {
 
   return (
     <section className="painel relative mb-6 rounded-[28px] px-5 pb-5 pt-5">
-      {/* Decoracao, nao conteudo: fica no canto, cortada, e some do
-          leitor de tela.
-
-          O recorte vive NESTA camada, e nao na <section>, e a diferenca
-          nao e cosmetica. Com `overflow-hidden` na secao, o painel
-          cortava tambem a lista de sugestoes do campo de destino -- ela
-          e posicionada absoluta e desce para fora do painel, entao so
-          15px dos 482px apareciam, e nenhum resultado era clicavel. A
-          busca, que e a interacao principal do app, ficava inutilizavel
-          pelo mouse. Ver a trava em tests/arquitetura.test.ts. */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px]">
-        <Ilustracao
-          cena="viagem"
-          tom="claro"
-          className="absolute -right-10 -top-6 w-56 opacity-20"
-        />
-      </div>
-
       <div className="relative">
         {trocandoOrigem ? (
           <div className="mb-4">

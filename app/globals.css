@@ -1,64 +1,78 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Tokens de design — paleta Van Gogh
+   Tokens de design — identidade VoeMilo
 
-   Nao e a paleta dele repintada na interface: isso destruiria a
-   legibilidade e brigaria com o veredito. E a ESTRUTURA da Noite
-   Estrelada -- campo azul-ultramar profundo, superficie de tela crua, e
-   o ocre como a unica coisa que brilha.
+   Quatro cores de marca, e so quatro:
+     marinho     #0e1a2e   tinta do dia, fundo da noite, painel
+     creme       #f2ede0   superficie do dia, tinta da noite
+     ambar       #f2b33d   milhas (a noite); acento
+     azul claro  #8098c4   decoracao e texto secundario sobre marinho
+
+   O que a paleta NAO pode fazer, medido (WCAG AA = 4,5:1):
+     ambar sobre creme      1,59  -- nunca texto, nunca so-cor
+     azul claro sobre creme 2,49  -- idem
+     ambar sobre azul claro 1,57  -- idem
+   Por isso, no tema claro, enfase e MARINHO: botao, aba ativa, link.
+   Ambar e azul claro so entram como preenchimento com tinta marinha
+   em cima (9,36 e 5,98) ou como decoracao sem informacao.
 
    Uma regra organiza o arquivo: AS CORES SEMANTICAS MANDAM.
    Ambar e milhas, verde e dinheiro, vermelho e alerta. Os tres carregam
    o veredito e foram validados para daltonismo. A marca existe para
-   NAO competir com eles -- por isso e azul: marca verde brigaria com
-   "dinheiro", marca laranja com "milhas".
+   NAO competir com eles -- por isso e marinho e azul.
 
-   O acaso util: o nosso ambar de milhas ja era praticamente o ocre dos
-   Girassois. A cor que significava alguma coisa no app e a mesma que
-   acende o quadro.
+   Direcao: fintech, nao agencia de viagem. Pouca sombra, borda
+   discreta, nenhum gradiente que se perceba como gradiente.
 
-   Todo par texto/superficie daqui foi medido por script, nao estimado.
+   Todo par texto/superficie daqui foi medido por tests/paleta.test.ts,
+   nao estimado.
    ============================================================ */
 
 :root {
   /* Superficies — tela crua */
-  --fundo: #f8f5ec;
-  --superficie: #fffdf7;
-  --superficie-2: #f1ecdd;
-  --borda: #e5decb;
+  --fundo: #f7f4ec;
+  --superficie: #fffdf8;
+  --superficie-2: #f2ede0;
+  --borda: #e3dccb;
 
   /* Texto — azul-cipreste, nao preto */
-  --tinta: #15233f;
-  --tinta-media: #4a5876;
-  /* 4,78:1 sobre a superficie secundaria. O tom mais claro que eu
-     queria (#6B7490) dava 3,97 ali e reprovava. */
-  --tinta-fraca: #5e677f;
+  --tinta: #0e1a2e;
+  --tinta-media: #3e4a62;
+  /* O mais claro que ainda passa 4,5:1 sobre o creme da superficie
+     secundaria -- quem quiser clarear, o teste de paleta reprova. */
+  --tinta-fraca: #5a6479;
 
   /* Marca — ultramar */
-  --marca: #20406f;
-  --marca-forte: #16304f;
-  --marca-fraca: #e7edf7;
+  --marca: #0e1a2e;
+  --marca-forte: #22355a;
+  --marca-fraca: #e7ebf3;
   /* So para decoracao: gradiente, ilustracao, traco de fundo.
      Nunca para texto nem para borda que carregue significado. */
-  --marca-suave: #6189c0;
-  --marca-contraste: #fffdf7;
+  --marca-suave: #8098c4;
+  --marca-contraste: #fffdf8;
 
   /* Painel de destaque — o campo noturno do quadro.
      Tokens proprios, e nao "a marca mais escura", porque no modo escuro
      um painel mais escuro que a superficie nao existe: ele precisa ficar
      MAIS claro. Sem esta separacao, o texto branco fixo que estava nos
      componentes caia para 1,70:1 a noite. */
-  --painel: #16304f;
-  --painel-tinta: #fffdf7;
-  --painel-tinta-fraca: #bdcde6;
-  --painel-realce: #2a4a74;
+  --painel: #0e1a2e;
+  --painel-tinta: #f2ede0;
+  --painel-tinta-fraca: #a9b6d3;
+  --painel-realce: #1b2a44;
   /* O estado de pressionado vai mais FUNDO, nao mais claro. Alem de ser
      o que o dedo espera, e o que mantem o texto secundario legivel: a
      versao clara deste token reprovava em 4,41 sobre o proprio rotulo
      que ele carrega. */
-  --painel-realce-forte: #1f3a5e;
+  --painel-realce-forte: #070f1c;
   --painel-borda: transparent;
+  /* Acao sobre o painel: botao e link de marca dentro dele. Marinho
+     sobre marinho some -- foi o que aconteceu com "Resgatar no Smiles"
+     quando a marca do dia virou marinho. Ver a regra .painel abaixo. */
+  --painel-acao: #f2ede0;
+  --painel-acao-forte: #fffdf8;
+  --painel-acao-tinta: #0e1a2e;
 
   /* Veredito: milhas (ocre) x dinheiro (verde) */
   --milhas: #b45309;
@@ -92,46 +106,23 @@
   --grafico-neutro: #cfc7b3;
 
   /* Elevacao — sombra quente, para nao acinzentar a tela crua */
-  --sombra-card: 0 1px 2px rgb(33 25 10 / 0.05), 0 4px 14px rgb(33 25 10 / 0.07);
+  --sombra-card: 0 1px 2px rgb(14 26 46 / 0.04), 0 1px 6px rgb(14 26 46 / 0.04);
   /* A nav flutua sobre o conteudo: precisa de uma sombra que a separe
      de verdade, nao do mesmo realce dos cartoes. */
-  --sombra-flutuante: 0 4px 10px rgb(33 25 10 / 0.1), 0 12px 32px rgb(33 25 10 / 0.16);
+  --sombra-flutuante: 0 2px 6px rgb(14 26 46 / 0.06), 0 10px 28px rgb(14 26 46 / 0.12);
 
-  --gradiente-marca: linear-gradient(140deg, #16304f 0%, #20406f 45%, #3e63a0 100%);
-  --gradiente-ceu: linear-gradient(180deg, #efe9d8 0%, #f8f5ec 100%);
-
-  /* ---- A cabine ----------------------------------------------------
-     O heroi da tela de rota e uma JANELA: moldura de vidro, ceu atras.
-     Os tokens de vidro valem so para superficie SEM numero decisivo --
-     nav, chips, painel de "quando ir". O cartao do veredito continua
-     opaco, porque contraste sobre translucido deixa de ser propriedade
-     do token e passa a depender do que esta atras, e tests/paleta.test.ts
-     nao tem como medir isso. */
-  --vidro: rgb(255 253 247 / 0.58);
-  --vidro-borda: rgb(21 35 63 / 0.12);
-  --vidro-desfoque: 18px;
-
-  /* A moldura da janela da cabine, sobre o painel escuro do heroi. */
-  --janela-borda: rgb(242 237 224 / 0.42);
-  --janela-brilho: inset 0 2px 20px rgb(255 253 247 / 0.22);
-
-  /* O ceu que aparece dentro da janela. Vai do alto da atmosfera ao
-     horizonte dourado -- a hora do voo, nao a do relogio de ninguem. */
-  --ceu-alto: #2a4a7a;
-  --ceu-medio: #35578c;
-  --ceu-baixo: #6d7fa8;
-  --ceu-horizonte: #caa06a;
+  --gradiente-marca: linear-gradient(180deg, #0e1a2e 0%, #14233c 100%);
 
   /* O mascote. Cores proprias para ele nao herdar tom de marca por
      acidente quando mudar de contexto. */
-  --mascote-corpo: #fffdf7;
-  --mascote-asa: #4e74b0;
-  --mascote-sombra: #20406f;
-  --mascote-tinta: #15233f;
+  --mascote-corpo: #fffdf8;
+  --mascote-asa: #8098c4;
+  --mascote-sombra: #33496f;
+  --mascote-tinta: #0e1a2e;
 
   /* Cor da barra de status no aparelho. O script de tema reescreve a
      meta tag; este valor e o de partida. */
-  --barra-do-sistema: #f8f5ec;
+  --barra-do-sistema: #f7f4ec;
 
   color-scheme: light;
 }
@@ -148,31 +139,34 @@
 
 :root[data-tema="escuro"] {
   --fundo: #0e1a2e;
-  --superficie: #152339;
-  --superficie-2: #1d2e48;
-  --borda: #2b405f;
+  --superficie: #132139;
+  --superficie-2: #1a2a44;
+  --borda: #26385a;
 
   --tinta: #f2ede0;
-  --tinta-media: #b6bed0;
-  --tinta-fraca: #8e99b0;
+  --tinta-media: #b7bfd1;
+  --tinta-fraca: #919cb4;
 
-  --marca: #8fb2e8;
-  --marca-forte: #aec8f0;
-  --marca-fraca: #1a2b45;
-  --marca-suave: #5a7cb5;
+  --marca: #9fb2d8;
+  --marca-forte: #bccbe6;
+  --marca-fraca: #1a2a44;
+  --marca-suave: #8098c4;
   --marca-contraste: #0e1a2e;
 
   /* Mais claro que a superficie, nao mais escuro: a noite inverte a
      direcao da elevacao. A separacao fica em 1,52 -- modesta de
      proposito, porque e a borda que carrega o recorte aqui. */
-  --painel: #26406a;
+  --painel: #1a2a44;
   --painel-tinta: #f2ede0;
-  --painel-tinta-fraca: #aebcd4;
+  --painel-tinta-fraca: #a9b6d3;
   /* A noite o chip e RECUADO: sobre um painel ja claro, o realce para
      cima empurrava o texto secundario para 3,97. */
-  --painel-realce: #1c3254;
-  --painel-realce-forte: #152840;
-  --painel-borda: #3c5b8c;
+  --painel-realce: #13223a;
+  --painel-realce-forte: #0e1a2e;
+  --painel-borda: #2c4066;
+  --painel-acao: #9fb2d8;
+  --painel-acao-forte: #bccbe6;
+  --painel-acao-tinta: #0e1a2e;
 
   /* O amarelo-cromio das estrelas. De dia o mesmo papel e do ocre, que
      e o que sobrevive a um fundo claro. */
@@ -193,30 +187,14 @@
   --grafico-dinheiro: #1f9c6c;
   --grafico-neutro: #35445e;
 
-  --sombra-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 12px rgb(0 0 0 / 0.25);
-  --sombra-flutuante: 0 4px 10px rgb(0 0 0 / 0.4), 0 12px 32px rgb(0 0 0 / 0.5);
+  --sombra-card: 0 1px 2px rgb(0 0 0 / 0.25);
+  --sombra-flutuante: 0 4px 10px rgb(0 0 0 / 0.35), 0 12px 32px rgb(0 0 0 / 0.4);
 
-  --gradiente-marca: linear-gradient(140deg, #1b2c47 0%, #26406a 48%, #37578c 100%);
-  --gradiente-ceu: linear-gradient(180deg, #16243c 0%, #0e1a2e 100%);
-
-  --vidro: rgb(21 35 57 / 0.58);
-  --vidro-borda: rgb(143 178 232 / 0.2);
-  --vidro-desfoque: 18px;
-
-  --janela-borda: rgb(242 237 224 / 0.34);
-  --janela-brilho: inset 0 2px 20px rgb(255 253 247 / 0.14);
-
-  /* Ceu noturno. Mantem alcance do alto ao horizonte: sem ele o ceu
-     vira um retangulo chapado e as estrelas parecem sujeira. O
-     horizonte esfria e perde o dourado, mas nao some. */
-  --ceu-alto: #0c1628;
-  --ceu-medio: #1d3358;
-  --ceu-baixo: #4a6186;
-  --ceu-horizonte: #9c7d4e;
+  --gradiente-marca: linear-gradient(180deg, #1a2a44 0%, #16253d 100%);
 
   --mascote-corpo: #f2ede0;
-  --mascote-asa: #5a7cb5;
-  --mascote-sombra: #1a2b45;
+  --mascote-asa: #8098c4;
+  --mascote-sombra: #1a2a44;
   --mascote-tinta: #0e1a2e;
 
   --barra-do-sistema: #0e1a2e;
@@ -267,7 +245,7 @@
   --color-atencao: var(--atencao);
 
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-display: var(--font-display), Georgia, serif;
+  --font-display: var(--font-geist-sans), system-ui, sans-serif;
 
   --shadow-card: var(--sombra-card);
   --shadow-flutuante: var(--sombra-flutuante);
@@ -290,13 +268,13 @@ body {
   overflow-x: hidden;
 }
 
-/* Titulos de tela usam a serifa.
-   Ela carrega a personalidade do app -- o resto da interface e numero, e
-   numero pede a fonte sem serifa, que tem tabular. */
+/* Titulos de tela. Mesma familia do resto -- a hierarquia vem do peso
+   e do espacamento negativo, que e o que faz a Geist grande parecer
+   desenhada e nao so aumentada. */
 .display {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-weight: 600;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.025em;
 }
 
 /* Numeros alinhados em tabelas e comparativos de preco:
@@ -368,13 +346,23 @@ body {
   border: 1px solid var(--painel-borda);
 }
 
+/* Dentro de um painel (ou do heroi marinho), "marca" passa a ser a acao
+   do painel. Os utilitarios do Tailwind leem var(--marca) direto (por
+   causa do @theme inline), entao redefinir aqui alcanca todo
+   bg-marca/text-marca da subarvore -- inclusive componente que nao sabe
+   em que fundo foi colocado, como o LinkExterno. */
+.painel,
+.gradiente-marca {
+  --marca: var(--painel-acao);
+  --marca-forte: var(--painel-acao-forte);
+  --marca-contraste: var(--painel-acao-tinta);
+  --marca-fraca: var(--painel-realce);
+}
+
 .gradiente-marca {
   background: var(--gradiente-marca);
 }
 
-.gradiente-ceu {
-  background: var(--gradiente-ceu);
-}
 
 /* Os primeiros @keyframes do projeto (Fase 5 -- movimento). Regra:
    anima RELACOES, nao numeros; anima MUDANCAS, nao chegadas. */

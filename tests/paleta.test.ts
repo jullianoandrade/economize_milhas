@@ -87,6 +87,10 @@ const PARES: ReadonlyArray<readonly [string, string]> = [
   ["painel-tinta-fraca", "painel-realce-forte"],
   // Botao claro sobre o painel: os papeis se invertem.
   ["painel", "painel-tinta"],
+  // Botao e link de marca dentro do painel (a regra .painel do CSS
+  // redefine --marca para estes tokens).
+  ["painel-acao-tinta", "painel-acao"],
+  ["painel-acao", "painel"],
 
   // Veredito.
   ["milhas", "milhas-fundo"],

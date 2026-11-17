@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Geist } from "next/font/google";
+import { Geist } from "next/font/google";
 import { enderecoDoSite } from "@/lib/site";
 import "./globals.css";
 import { MARCA } from "@/lib/marca";
@@ -10,18 +10,11 @@ const geistSans = Geist({
 });
 
 /**
- * A serifa dos titulos.
- *
- * Carregada so com os pesos que a interface usa: uma variavel completa
- * traria sete eixos de desenho que nenhuma tela pede, e peso de fonte e
- * o tipo de gordura que aparece direto na metrica de carregamento.
+ * Uma familia so. A serifa dos titulos (Fraunces) saiu na identidade
+ * VoeMilo: a direcao e de fintech -- precisao, nao editorial -- e a
+ * hierarquia passa a vir de peso, tamanho e espacamento, nao de troca
+ * de familia. De quebra, uma fonte a menos no carregamento.
  */
-const fraunces = Fraunces({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["600", "700"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   /**
@@ -73,7 +66,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}
+      className={`${geistSans.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <script dangerouslySetInnerHTML={{ __html: APLICAR_TEMA }} />
