@@ -29,7 +29,8 @@ import {
  * As cores sao fixas: o globo e sempre noturno, nos dois temas.
  */
 
-export type Enquadramento = "centro" | "direita" | "acima" | "esquerda";
+/** "inteiro": o globo cabe todo na caixa, como no topo do Inicio. */
+export type Enquadramento = "centro" | "direita" | "acima" | "esquerda" | "inteiro";
 
 const CENTRO_DO_BRASIL: LatLon = [-14, -51];
 
@@ -61,6 +62,8 @@ function vistaAlvo(
       return { lam, phi, R: Math.min(w * 0.38, h * 0.2), cx: w / 2, cy: h * 0.3 };
     case "esquerda":
       return { lam, phi, R: Math.min(w * 0.26, h * 0.36), cx: w * 0.32, cy: h * 0.54 };
+    case "inteiro":
+      return { lam, phi, R: Math.min(w, h) * 0.42, cx: w / 2, cy: h / 2 };
   }
 }
 

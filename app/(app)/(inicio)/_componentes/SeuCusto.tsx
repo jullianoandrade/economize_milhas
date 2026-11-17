@@ -21,12 +21,10 @@ import { milhas as fmtMilhas, reaisExatos } from "@/lib/format";
  */
 
 /**
- * A reserva maior a partir de `md` acompanha a de ObjetivoEmAndamento:
- * ali os dois dividem uma linha de grade, e a linha assume a altura do
- * mais alto. Os dois numeros precisam andar juntos -- ver o comentario
- * em ObjetivoEmAndamento.tsx, onde a medicao esta registrada.
+ * Altura reservada antes da hidratacao: o conteudo so e decidido quando
+ * o localStorage chega, e sem a reserva ele empurraria a tela ao entrar.
  */
-const ALTURA = "min-h-[8.5rem] md:min-h-[10.5rem]";
+const ALTURA = "min-h-[8.5rem]";
 
 export function SeuCusto() {
   const hidratado = usePerfilHidratado();

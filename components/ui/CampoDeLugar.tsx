@@ -14,6 +14,8 @@ export type Lugar = {
    * realmente voa, e a que distancia.
    */
   servidaPor?: { cidade: string; km: number };
+  lat?: number;
+  lon?: number;
 };
 
 /**

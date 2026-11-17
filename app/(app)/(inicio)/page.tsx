@@ -1,55 +1,41 @@
-import { BuscaDeViagem } from "./_componentes/BuscaDeViagem";
-import { ObjetivoEmAndamento } from "./_componentes/ObjetivoEmAndamento";
-import { OportunidadesDaHome } from "./_componentes/OportunidadesDaHome";
+import { catalogoDaCarteira } from "@/lib/carteira/catalogo";
+import { HeroiDoInicio } from "./_componentes/HeroiDoInicio";
 import { PrimeiraVisita } from "./_componentes/PrimeiraVisita";
+import { ResumoDoInicio } from "./_componentes/ResumoDoInicio";
 import { SeuCusto } from "./_componentes/SeuCusto";
 
 /**
- * A home.
+ * O Inicio, na navegacao VoeMilo (17/11/2026).
  *
- * A ordem da tela e uma ordem de prioridade, e cada bloco responde a uma
- * pergunta diferente de quem abre o app:
+ * Cada bloco responde a uma pergunta de quem abre o app, em ordem:
  *
- *   1. busca        -- "quanto custa ir para X?"       (quem chega com destino)
- *   2. objetivo     -- "como esta a minha meta?"       (quem volta)
- *   3. seu custo    -- "eu tenho alguma coisa aqui?"   (quem nunca usou milhas)
- *   4. oportunidade -- "tem alguma coisa boa agora?"   (quem nao tem destino)
+ *   1. o topo        -- "como esta a minha viagem?" (ou: "para onde?")
+ *   2. a carteira    -- "quanto valem os meus pontos? algo vencendo?"
+ *   3. oportunidades -- "tem alguma coisa boa agora?"
+ *   4. seu custo     -- "eu ja acumulo milhas sem saber?"
  *
- * O custo proprio vem ANTES das oportunidades porque e ele que decide se
- * cada oportunidade vale: a mesma passagem e um bom resgate para quem
- * tem cartao isento e um mau negocio para quem compra milhas.
+ * Buscar destino saiu daqui e foi para o Explorar, que faz isso melhor
+ * (o globo, a resposta na hora). O topo leva ate la.
  *
- * A lista estatica de "rotas para experimentar" que ficava aqui saiu: ela
- * ocupava o lugar nobre com rota fixa enquanto as oportunidades reais,
- * calculadas a partir da cidade da pessoa, respondem a mesma pergunta
- * com dado de verdade.
- *
- * Em telas grandes a ordem nao muda -- so o arranjo. A busca continua no
- * topo, em destaque, e os dois blocos de "como voce esta" (objetivo em
- * andamento e custo das suas milhas) passam a dividir uma linha, em vez
- * de empurrarem as oportunidades para fora da primeira tela.
- *
- * Os dois ficam lado a lado por reposicionamento, nunca por duplicacao:
- * renderizar o mesmo componente duas vezes com `hidden` em cada um
- * criaria dois estados independentes -- ajustar o gasto num nao mexeria
- * no outro -- alem de dobrar efeitos e montagens.
+ * Em telas grandes, os blocos de baixo dividem duas colunas: o que e da
+ * pessoa (carteira, custo) a esquerda, o que e do mercado a direita.
  */
-
-export default function Home() {
+export default function Inicio() {
   return (
     <>
       <PrimeiraVisita />
+      <HeroiDoInicio />
 
-      <BuscaDeViagem />
-
-      <div className="md:grid md:grid-cols-2 md:gap-4">
-        <ObjetivoEmAndamento />
-        <SeuCusto />
+      <div className="mt-5 grid gap-6 md:mt-6 md:grid-cols-2 md:gap-8">
+        <div>
+          <ResumoDoInicio catalogo={catalogoDaCarteira()} />
+        </div>
+        <div>
+          <SeuCusto />
+        </div>
       </div>
 
-      <OportunidadesDaHome />
-
-      <p className="text-xs leading-relaxed text-tinta-fraca">
+      <p className="mt-4 text-xs leading-relaxed text-tinta-fraca">
         Os valores em milhas são estimativas: nenhum programa brasileiro
         publica tabela fixa nem expõe API. Sempre confirme no site do programa
         antes de resgatar.

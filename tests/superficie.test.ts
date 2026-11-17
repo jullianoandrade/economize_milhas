@@ -40,7 +40,7 @@ const CODIGOS_TSX = todosOsTsx(raiz).map((f) => readFileSync(f, "utf8"));
  * `variavel` e o nome que o codigo realmente usa para a instancia do
  * tipo (confirmado lendo os componentes, nao adivinhado): `opcao` em
  * CardPrograma, `sazonalidade` em CurvaDeMeses, `janela` em
- * CardQuandoComprar, `progresso` em TelaDeObjetivos/ObjetivoEmAndamento,
+ * CardQuandoComprar, `progresso` em TelaDeObjetivos/HeroiDoInicio,
  * `plano` em TelaDeObjetivos (via `resposta.plano`, por isso o acesso
  * direto sem `\b` antes de `variavel` tambem precisa casar com isso).
  */

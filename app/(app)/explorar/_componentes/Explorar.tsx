@@ -10,6 +10,7 @@ import { SeloDeOrigem } from "@/components/ui/SeloDeOrigem";
 import { buscarVeredito, type VerediteDaPessoa } from "@/lib/cliente/veredito";
 import { milhas as fmtMilhas, reais } from "@/lib/format";
 import { usarPerfil, usePerfilHidratado } from "@/store/perfil";
+import { useLugar } from "@/lib/cliente/lugar";
 
 /**
  * Explorar: o globo e a pergunta "para onde?".
@@ -50,12 +51,16 @@ export function Explorar({
   const origemIata = usarPerfil((s) => s.origemIata);
   const gasto = usarPerfil((s) => s.gastoMensalCartaoBRL);
   const cartaoId = usarPerfil((s) => s.cartaoId);
+  const definirOrigem = usarPerfil((s) => s.definirOrigem);
+  const [trocandoOrigem, setTrocandoOrigem] = useState(false);
   const larga = useTelaLarga();
   const [estado, setEstado] = useState<Estado>({ fase: "espera" });
   // A chave do campo: trocar a chave limpa o texto digitado ao fechar.
   const [chaveDoCampo, setChaveDoCampo] = useState(0);
 
   const origem = hidratado ? origemIata : "GRU";
+  const lugarDeOrigem = useLugar(origem);
+  const nomeDaOrigem = lugarDeOrigem?.cidade ?? origem;
 
   const escolher = useCallback(
     (destino: { iata: string; cidade: string }) => {
@@ -102,12 +107,42 @@ export function Explorar({
       </div>
 
       <div className="vidro absolute inset-x-3 top-3 z-20 rounded-[26px] p-4 md:left-6 md:right-auto md:top-6 md:w-[380px]">
-        <CampoDeLugar
-          key={chaveDoCampo}
-          rotulo={`Para onde, saindo de ${origem}?`}
-          tom="claro"
-          aoSelecionar={(lugar) => escolher({ iata: lugar.iata, cidade: lugar.cidade })}
-        />
+        {trocandoOrigem ? (
+          <CampoDeLugar
+            key="origem"
+            rotulo="De onde você sai?"
+            tom="claro"
+            autoFocus
+            aoSelecionar={(lugar) => {
+              definirOrigem(lugar.iata);
+              setTrocandoOrigem(false);
+              setEstado({ fase: "espera" });
+            }}
+          />
+        ) : (
+          <CampoDeLugar
+            key={chaveDoCampo}
+            rotulo="Para onde você vai?"
+            tom="claro"
+            aoSelecionar={(lugar) => escolher({ iata: lugar.iata, cidade: lugar.cidade })}
+          />
+        )}
+        {/* A origem fica guardada no aparelho porque quase nunca muda:
+            quem mora em Recife nao quer redigitar Recife toda vez. */}
+        <button
+          type="button"
+          onClick={() => setTrocandoOrigem((t) => !t)}
+          className="mt-2.5 min-h-9 text-sm text-painel-tinta-fraca"
+        >
+          {trocandoOrigem ? (
+            "Cancelar"
+          ) : (
+            <>
+              Saindo de <strong className="font-semibold text-painel-tinta">{nomeDaOrigem}</strong>{" "}
+              <span className="underline underline-offset-2">trocar</span>
+            </>
+          )}
+        </button>
       </div>
 
       {estado.fase === "espera" ? (

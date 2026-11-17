@@ -178,6 +178,9 @@ export type LugarEncontrado = {
    * precisa dizer de onde a pessoa realmente voa.
    */
   servidaPor?: { cidade: string; km: number };
+  /** Do aeroporto -- e o que o globo usa para tracar um arco. */
+  lat: number;
+  lon: number;
 };
 
 /** Texto curto demais devolve lista vazia em vez de meia base. */
@@ -244,6 +247,8 @@ export function procurarLugares(
         pais: item.aeroporto.pais,
         paisNome: nomeDoPais(item.aeroporto.pais),
         nome: item.aeroporto.nome,
+        lat: item.aeroporto.lat,
+        lon: item.aeroporto.lon,
       },
     });
   }
@@ -270,6 +275,8 @@ export function procurarLugares(
         pais: item.cidade.pais,
         paisNome: nomeDoPais(item.cidade.pais),
         nome: aeroporto.nome,
+        lat: aeroporto.lat,
+        lon: aeroporto.lon,
         servidaPor: { cidade: aeroporto.cidade, km: item.cidade.km },
       },
     });
