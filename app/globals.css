@@ -371,7 +371,17 @@ body {
   --marca: var(--painel-acao);
   --marca-forte: var(--painel-acao-forte);
   --marca-contraste: var(--painel-acao-tinta);
-  --marca-fraca: var(--painel-realce);
+  /* --marca-fraca NAO e redefinida aqui: ela pinta o destaque da lista
+     de sugestoes do CampoDeLugar, que abre DENTRO do painel mas sobre
+     superficie clara -- redefinida, a sugestao destacada ficava com
+     texto marinho sobre fundo marinho. */
+  /* Sobre o painel o vidro e sempre noturno, nos dois temas: o globo
+     da tela Explorar e um mundo escuro, e vidro claro em cima dele
+     apagaria o texto creme. */
+  --vidro: rgb(242 237 224 / 0.09);
+  --vidro-borda: rgb(242 237 224 / 0.16);
+  --vidro-brilho: inset 0 1px 0 rgb(242 237 224 / 0.18);
+  --vidro-solido: #16243c;
 }
 
 /* Vidro: so em controles que flutuam sobre algo vivo. Ver --vidro. */

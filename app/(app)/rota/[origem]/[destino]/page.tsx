@@ -238,7 +238,7 @@ async function Conteudo({
         <div className="relative">
           <div className="relative">
           <Link
-            href="/"
+            href="/explorar"
             className="mb-3 inline-flex items-center gap-1 text-sm text-tinta-media transition-colors hover:text-tinta"
           >
             <svg
@@ -393,7 +393,7 @@ function RotaNaoEncontrada({ iata }: { iata: string }) {
         internacionais. Tente buscar pelo nome da cidade.
       </p>
       <Link
-        href="/"
+        href="/explorar"
         className="mt-4 inline-block rounded-xl bg-marca px-4 py-2.5 text-sm font-medium text-marca-contraste"
       >
         Voltar para a busca

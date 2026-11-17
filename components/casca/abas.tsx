@@ -25,12 +25,16 @@ const traco = {
 
 export const ABAS: Aba[] = [
   {
-    href: "/",
-    rotulo: "Buscar",
+    // Provisorio ate a navegacao nova (Inicio, Explorar, Carteira,
+    // Oportunidades): por ora o Explorar ocupa o lugar da antiga "Buscar",
+    // e a home continua acessivel pela marca na barra.
+    href: "/explorar",
+    rotulo: "Explorar",
     icone: (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="size-[22px]">
-        <circle cx="11" cy="11" r="6.5" {...traco} />
-        <path d="m16 16 4.5 4.5" {...traco} />
+        <circle cx="12" cy="12" r="8.5" {...traco} />
+        <path d="M3.5 12h17" {...traco} />
+        <path d="M12 3.5c2.6 2.6 2.6 14.4 0 17c-2.6-2.6-2.6-14.4 0-17Z" {...traco} />
       </svg>
     ),
   },
@@ -67,8 +71,8 @@ export const ABAS: Aba[] = [
   },
 ];
 
-/** A busca e a rota sao a mesma aba: /rota e para onde a busca leva. */
+/** Explorar e a rota sao a mesma aba: /rota e o detalhe da resposta. */
 export function estaAtiva(pathname: string, href: string): boolean {
-  if (href === "/") return pathname === "/" || pathname.startsWith("/rota");
+  if (href === "/explorar") return pathname === "/explorar" || pathname.startsWith("/rota");
   return pathname === href || pathname.startsWith(`${href}/`);
 }

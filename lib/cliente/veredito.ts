@@ -17,10 +17,13 @@ import type { Fonte } from "@/lib/providers/travelpayouts";
  * lib/cliente/catalogo.ts faz para o catalogo.
  */
 
+export type PontoDaRota = { iata: string; cidade: string; lat: number; lon: number };
+
 export type VerediteDaPessoa = {
   veredito: Veredito;
   fonte: Fonte;
   observacaoDaFonte: string;
+  rota: { origem: PontoDaRota; destino: PontoDaRota; distanciaKm: number };
 };
 
 const cache = new Map<string, Promise<VerediteDaPessoa>>();
@@ -34,7 +37,7 @@ function chave(
   return `${origem}|${destino}|${gasto}|${cartaoId ?? ""}`;
 }
 
-function buscar(
+export function buscarVeredito(
   origem: string,
   destino: string,
   gasto: number,
@@ -56,11 +59,13 @@ function buscar(
         if (!r.ok) throw new Error("veredito indisponível");
         return r.json() as Promise<{
           veredito: Veredito;
+          rota: VerediteDaPessoa["rota"];
           preco: { fonte: Fonte; observacao: string };
         }>;
       })
       .then((corpo) => ({
         veredito: corpo.veredito,
+        rota: corpo.rota,
         fonte: corpo.preco.fonte,
         observacaoDaFonte: corpo.preco.observacao,
       }))
@@ -90,7 +95,7 @@ export function useVereditoPersonalizado(
     if (!hidratado || gasto === null) return;
 
     let vivo = true;
-    buscar(origem, destino, gasto, cartaoId)
+    buscarVeredito(origem, destino, gasto, cartaoId)
       .then((r) => {
         if (vivo) setResultado(r);
       })

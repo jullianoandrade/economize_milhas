@@ -56,10 +56,22 @@ export async function GET(requisicao: Request) {
 
   return NextResponse.json({
     veredito,
+    // O minimo da rota que o globo da tela Explorar precisa para tracar
+    // o arco e escrever o nome das cidades. A base de aeroportos inteira
+    // continua no servidor.
+    rota: {
+      origem: pontoDaRota(rota.origem),
+      destino: pontoDaRota(rota.destino),
+      distanciaKm: rota.distanciaKm,
+    },
     preco: {
       valorBRL: preco.dados,
       fonte: preco.fonte,
       observacao: preco.observacao,
     },
   });
+}
+
+function pontoDaRota(a: { iata: string; cidade: string; lat: number; lon: number }) {
+  return { iata: a.iata, cidade: a.cidade, lat: a.lat, lon: a.lon };
 }
