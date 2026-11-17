@@ -1,7 +1,7 @@
 /**
  * Limite de requisicoes por chave, em janela fixa.
  *
- * POR QUE EXISTE: /veredito, /plano e /promocoes consultam a
+ * POR QUE EXISTE: /veredito, /plano e /promocoes (a API) consultam a
  * Travelpayouts a cada chamada, e o cache e por URL -- variar o par de
  * aeroportos fura o cache. Sem limite, um unico script esgota a cota
  * diaria da API e derruba o produto para todo mundo. /interesse escreve

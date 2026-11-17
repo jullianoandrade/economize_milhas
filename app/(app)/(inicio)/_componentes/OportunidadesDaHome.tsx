@@ -81,7 +81,7 @@ export function OportunidadesDaHome() {
           {dados ? `Saindo de ${dados.origem.cidade}` : "Oportunidades agora"}
         </h2>
         <Link
-          href="/promocoes"
+          href="/oportunidades"
           className="shrink-0 text-sm font-semibold text-marca underline underline-offset-4"
         >
           ver todas

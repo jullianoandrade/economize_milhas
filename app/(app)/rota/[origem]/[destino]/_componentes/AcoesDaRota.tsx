@@ -77,7 +77,7 @@ export function AcoesDaRota({
 
       <div className="text-center">
         <Link
-          href="/promocoes"
+          href="/oportunidades"
           className="text-sm font-semibold text-tinta-media underline underline-offset-4"
         >
           Suas milhas rendem mais em outro trecho

@@ -3,6 +3,14 @@ import { cabecalhosDeSeguranca } from "./lib/seguranca/cabecalhos";
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  /**
+   * /promocoes virou /oportunidades na navegacao nova (17/11/2026).
+   * Permanente (308) para buscador e link compartilhado seguirem o
+   * endereco novo sem perder o que ja estava indexado.
+   */
+  async redirects() {
+    return [{ source: "/promocoes", destination: "/oportunidades", permanent: true }];
+  },
   async headers() {
     return [
       {

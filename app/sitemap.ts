@@ -28,7 +28,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const estaticas: MetadataRoute.Sitemap = [
     { url: urlDoSite("/"), lastModified: agora, changeFrequency: "daily", priority: 1 },
-    { url: urlDoSite("/promocoes"), lastModified: agora, changeFrequency: "daily", priority: 0.8 },
+    { url: urlDoSite("/explorar"), lastModified: agora, changeFrequency: "weekly", priority: 0.9 },
+    { url: urlDoSite("/oportunidades"), lastModified: agora, changeFrequency: "daily", priority: 0.8 },
+    { url: urlDoSite("/carteira"), lastModified: agora, changeFrequency: "monthly", priority: 0.6 },
     { url: urlDoSite("/aprender"), lastModified: agora, changeFrequency: "monthly", priority: 0.6 },
     { url: urlDoSite("/objetivos"), lastModified: agora, changeFrequency: "monthly", priority: 0.5 },
     { url: urlDoSite("/boas-vindas"), lastModified: agora, changeFrequency: "yearly", priority: 0.3 },

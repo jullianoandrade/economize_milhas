@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
 import { Milo } from "@/components/ui/Milo";
 import { SeloDeOrigem } from "@/components/ui/SeloDeOrigem";
@@ -15,6 +16,7 @@ import {
   type ProgramaDaCarteira,
 } from "@/lib/carteira/modelo";
 import { useCarteiraHidratada, usarCarteira } from "@/store/carteira";
+import { usarPerfil } from "@/store/perfil";
 import { FolhaDaCarteira, type PedidoDeFolha } from "./FolhaDaCarteira";
 
 /**
@@ -42,6 +44,7 @@ export function Carteira({
 }) {
   const hidratada = useCarteiraHidratada();
   const saldos = usarCarteira((s) => s.saldos);
+  const metas = usarPerfil((p) => p.metas);
   const [foco, setFoco] = useState<string | null>(null);
   const [folha, setFolha] = useState<PedidoDeFolha | null>(null);
 
@@ -135,6 +138,25 @@ export function Carteira({
           />
         </>
       )}
+
+      <Link
+        href="/objetivos"
+        className="mt-8 flex items-center justify-between gap-3 rounded-2xl bg-superficie px-5 py-4 text-tinta shadow-card"
+      >
+        <span>
+          <span className="block text-base font-semibold">Objetivos de viagem</span>
+          <span className="mt-0.5 block text-sm text-tinta-media">
+            {metas.length === 0
+              ? "Escolha um destino e acompanhe quanto falta."
+              : metas.length === 1
+                ? "1 objetivo em andamento"
+                : `${metas.length} objetivos em andamento`}
+          </span>
+        </span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+          <path d="m9 6 6 6-6 6" />
+        </svg>
+      </Link>
 
       <p className="mt-6 flex items-start gap-2 text-sm leading-relaxed text-tinta-media">
         <svg viewBox="0 0 24 24" aria-hidden="true" className="mt-0.5 size-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
