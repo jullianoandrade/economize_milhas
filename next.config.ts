@@ -1,8 +1,16 @@
 import type { NextConfig } from "next";
+import { cabecalhosDeSeguranca } from "./lib/seguranca/cabecalhos";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: cabecalhosDeSeguranca(process.env.NODE_ENV === "development"),
+      },
+    ];
+  },
   partialPrefetching: true,
   experimental: {
     // Marca que a atualizacao de seguranca para 16.4.6 foi feita por

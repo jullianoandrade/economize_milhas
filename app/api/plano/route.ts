@@ -6,6 +6,9 @@ import { precoDoTrecho } from "@/lib/precos";
 import { bonusVigentes } from "@/lib/transferencias";
 import { cartoes, cpmReferencia, programas, transferencias } from "@/lib/dados";
 import { estimarMilhas } from "@/lib/milhas/motor";
+import { lerCorpo, limitar } from "@/lib/seguranca/requisicao";
+import { REGRAS } from "@/lib/seguranca/limite";
+import { corpoDoPlano } from "@/lib/seguranca/esquemas";
 
 /**
  * Monta o plano de acumulo para um destino.
@@ -16,30 +19,16 @@ import { estimarMilhas } from "@/lib/milhas/motor";
  * -- a pagina do plano fica leve e pede a conta pronta.
  */
 
-type Corpo = {
-  origem?: string;
-  destino?: string;
-  programa?: string;
-  saldoMilhas?: number;
-  saldoPontosCoalizao?: number;
-  gastoMensalCartaoBRL?: number;
-  cartaoId?: string | null;
-  aceitaClube?: boolean;
-};
-
-const numero = (v: unknown, padrao = 0) =>
-  typeof v === "number" && Number.isFinite(v) && v >= 0 ? v : padrao;
+const numero = (v: number | null | undefined) => v ?? 0;
 
 export async function POST(requisicao: Request) {
-  let corpo: Corpo;
-  try {
-    corpo = (await requisicao.json()) as Corpo;
-  } catch {
-    return NextResponse.json({ erro: "corpo invalido" }, { status: 400 });
-  }
+  const bloqueio = limitar(requisicao, "plano", REGRAS.consultaExterna);
+  if (bloqueio) return bloqueio;
 
-  const origem = (corpo.origem ?? "").trim().toUpperCase();
-  const destino = (corpo.destino ?? "").trim().toUpperCase();
+  const leitura = await lerCorpo(requisicao, corpoDoPlano);
+  if (!leitura.ok) return leitura.resposta;
+  const corpo = leitura.dados;
+  const { origem, destino } = corpo;
 
   let rota;
   try {

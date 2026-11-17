@@ -6,6 +6,9 @@ import { destinosPopulares, temToken } from "@/lib/providers/travelpayouts";
 import { precoEstimadoPorRegiao } from "@/lib/precos";
 import { transferencias } from "@/lib/dados";
 import { bonusVigentes } from "@/lib/transferencias";
+import { limitar } from "@/lib/seguranca/requisicao";
+import { REGRAS } from "@/lib/seguranca/limite";
+import { consultaDasPromocoes, parametrosDe } from "@/lib/seguranca/esquemas";
 
 /**
  * Oportunidades a partir da cidade da pessoa.
@@ -27,18 +30,18 @@ const MAXIMO_DE_DESTINOS = 14;
 /** Desconto minimo sobre o preco tipico da regiao para contar como oferta. */
 const DESCONTO_MINIMO = 0.1;
 
-const numero = (v: string | null) => {
-  const n = v !== null ? Number(v) : NaN;
-  return Number.isFinite(n) && n >= 0 ? n : 0;
-};
-
 export async function GET(requisicao: Request) {
-  const parametros = new URL(requisicao.url).searchParams;
-  const origem = (parametros.get("origem") ?? "").trim().toUpperCase();
-  const gastoMensalCartaoBRL = numero(parametros.get("gasto"));
-  const cartaoId = parametros.get("cartaoId") ?? undefined;
+  const bloqueio = limitar(requisicao, "promocoes", REGRAS.consultaExterna);
+  if (bloqueio) return bloqueio;
 
-  const aeroporto = aeroportoPorIata(origem);
+  const consulta = consultaDasPromocoes.safeParse(
+    parametrosDe(requisicao.url, ["origem", "gasto", "cartaoId"]),
+  );
+  const origem = consulta.success ? consulta.data.origem : "";
+  const gastoMensalCartaoBRL = consulta.success ? consulta.data.gasto : 0;
+  const cartaoId = consulta.success ? consulta.data.cartaoId : undefined;
+
+  const aeroporto = consulta.success ? aeroportoPorIata(origem) : undefined;
   if (!aeroporto) {
     return NextResponse.json(
       { erro: "informe uma origem valida" },

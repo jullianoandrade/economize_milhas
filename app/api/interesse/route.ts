@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
-import { leitor } from "@/lib/supabase";
+import { escritor } from "@/lib/supabase";
 import { avaliarInteresse } from "@/lib/interesse";
+import {
+  dentroDoLimite,
+  ipDe,
+  lerCorpo,
+  limitar,
+} from "@/lib/seguranca/requisicao";
+import { REGRAS } from "@/lib/seguranca/limite";
+import { corpoDoInteresse } from "@/lib/seguranca/esquemas";
 
 /**
  * Registra que alguem olhou uma rota.
@@ -20,20 +28,24 @@ import { avaliarInteresse } from "@/lib/interesse";
  *
  * Quem decide o que entra e lib/interesse.ts, que e puro e testado;
  * aqui fica so a casca HTTP.
+ *
+ * ESTA ROTA E A UNICA PORTA. Ate 17/11/2026 a funcao do banco aceitava
+ * chamada direta do papel anon, e qualquer pessoa com a chave publica
+ * (que esta no navegador, por definicao) inflava o contador de qualquer
+ * par sem passar pela validacao daqui -- medido: QQQ-WWW, par que nao
+ * existe, chegou a 6 buscas. A migration 20261117_0001 tira o grant do
+ * anon e a escrita passa a ser da service role, chamada so depois da
+ * validacao e do limite por IP.
  */
 
 export async function POST(requisicao: Request) {
-  let corpo: { origem?: unknown; destino?: unknown };
-  try {
-    corpo = (await requisicao.json()) as typeof corpo;
-  } catch {
-    return NextResponse.json({ erro: "corpo invalido" }, { status: 400 });
-  }
+  const bloqueio = limitar(requisicao, "interesse", REGRAS.interesse);
+  if (bloqueio) return bloqueio;
 
-  const decisao = avaliarInteresse(
-    String(corpo.origem ?? ""),
-    String(corpo.destino ?? ""),
-  );
+  const leitura = await lerCorpo(requisicao, corpoDoInteresse);
+  if (!leitura.ok) return leitura.resposta;
+
+  const decisao = avaliarInteresse(leitura.dados.origem, leitura.dados.destino);
 
   if (!decisao.registrar) {
     // 400 so para rota que nao existe -- isso e erro de quem chamou.
@@ -46,7 +58,15 @@ export async function POST(requisicao: Request) {
     );
   }
 
-  const banco = leitor();
+  // O mesmo IP conta o mesmo par uma vez por janela: o sensor mede
+  // gente interessada, nao recarregamento. Nao e erro -- quem chama nao
+  // tem o que corrigir -- entao responde 200.
+  const par = `${decisao.origem}-${decisao.destino}`;
+  if (!dentroDoLimite(`interesse-par:${ipDe(requisicao)}:${par}`, REGRAS.interessePorPar)) {
+    return NextResponse.json({ registrado: false, motivo: "repetido" });
+  }
+
+  const banco = escritor();
   if (!banco) return NextResponse.json({ registrado: false });
 
   const { error } = await banco.rpc("registrar_interesse", {

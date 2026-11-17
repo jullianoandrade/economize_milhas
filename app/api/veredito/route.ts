@@ -6,6 +6,9 @@ import {
 import { calcularVeredito } from "@/lib/milhas/veredito";
 import { precoDoTrecho } from "@/lib/precos";
 import { bonusVigentes } from "@/lib/transferencias";
+import { limitar } from "@/lib/seguranca/requisicao";
+import { REGRAS } from "@/lib/seguranca/limite";
+import { consultaDoVeredito, parametrosDe } from "@/lib/seguranca/esquemas";
 
 /**
  * O mesmo veredito da tela de rota, com o CPM da pessoa.
@@ -16,17 +19,18 @@ import { bonusVigentes } from "@/lib/transferencias";
  * com `gasto`/`cartaoId` que ja estao no localStorage da pessoa.
  */
 
-const numero = (v: string | null) => {
-  const n = v !== null ? Number(v) : NaN;
-  return Number.isFinite(n) && n >= 0 ? n : 0;
-};
-
 export async function GET(requisicao: Request) {
-  const parametros = new URL(requisicao.url).searchParams;
-  const origem = (parametros.get("origem") ?? "").trim().toUpperCase();
-  const destino = (parametros.get("destino") ?? "").trim().toUpperCase();
-  const gastoMensalCartaoBRL = numero(parametros.get("gasto"));
-  const cartaoId = parametros.get("cartaoId") ?? undefined;
+  const bloqueio = limitar(requisicao, "veredito", REGRAS.consultaExterna);
+  if (bloqueio) return bloqueio;
+
+  const consulta = consultaDoVeredito.safeParse(
+    parametrosDe(requisicao.url, ["origem", "destino", "gasto", "cartaoId"]),
+  );
+  if (!consulta.success) {
+    return NextResponse.json({ erro: "rota invalida" }, { status: 400 });
+  }
+  const { origem, destino, gasto: gastoMensalCartaoBRL, cartaoId } =
+    consulta.data;
 
   let rota;
   try {

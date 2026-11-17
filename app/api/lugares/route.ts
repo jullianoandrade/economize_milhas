@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { procurarLugares } from "@/lib/busca/lugares";
+import { limitar } from "@/lib/seguranca/requisicao";
+import { REGRAS } from "@/lib/seguranca/limite";
 
 /**
  * Autocomplete de cidades e aeroportos.
@@ -14,6 +16,11 @@ import { procurarLugares } from "@/lib/busca/lugares";
  * Nenhum token envolvido.
  */
 export async function GET(requisicao: Request) {
-  const q = new URL(requisicao.url).searchParams.get("q") ?? "";
+  const bloqueio = limitar(requisicao, "lugares", REGRAS.autocomplete);
+  if (bloqueio) return bloqueio;
+
+  // Nenhum nome de cidade ou aeroporto passa de 80 caracteres; texto
+  // maior que isso so serve para gastar CPU do ranqueamento.
+  const q = (new URL(requisicao.url).searchParams.get("q") ?? "").slice(0, 80);
   return NextResponse.json({ lugares: procurarLugares(q) });
 }
