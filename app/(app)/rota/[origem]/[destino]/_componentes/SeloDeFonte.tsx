@@ -1,5 +1,6 @@
 import type { Confianca } from "@/lib/dados";
 import type { Fonte } from "@/lib/providers/travelpayouts";
+import { SeloDeOrigem } from "@/components/ui/SeloDeOrigem";
 
 /**
  * Selos que dizem de onde o numero veio.
@@ -10,9 +11,6 @@ import type { Fonte } from "@/lib/providers/travelpayouts";
  * de precisao.
  */
 
-const ESTILO_BASE =
-  "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium";
-
 export function SeloDeFonte({
   fonte,
   observacao,
@@ -20,20 +18,14 @@ export function SeloDeFonte({
   fonte: Fonte;
   observacao: string;
 }) {
-  const real = fonte === "travelpayouts";
-
-  return (
-    <span
-      title={observacao}
-      className={`${ESTILO_BASE} ${
-        real
-          ? "bg-dinheiro-fundo text-dinheiro"
-          : "bg-superficie-2 text-tinta-media"
-      }`}
-    >
-      <span aria-hidden="true" className="size-1.5 rounded-full bg-current" />
-      {real ? "preço de busca real" : "estimativa"}
-    </span>
+  return fonte === "travelpayouts" ? (
+    <SeloDeOrigem origem="real" detalhe={observacao}>
+      busca real de hoje
+    </SeloDeOrigem>
+  ) : (
+    <SeloDeOrigem origem="estimado" detalhe={observacao}>
+      estimativa
+    </SeloDeOrigem>
   );
 }
 
@@ -49,9 +41,5 @@ export function SeloDeConfianca({ confianca }: { confianca: Confianca }) {
   const rotulo = ROTULO_CONFIANCA[confianca];
   if (!rotulo) return null;
 
-  return (
-    <span className={`${ESTILO_BASE} bg-superficie-2 text-tinta-fraca`}>
-      {rotulo}
-    </span>
-  );
+  return <SeloDeOrigem origem="estimado">{rotulo}</SeloDeOrigem>;
 }

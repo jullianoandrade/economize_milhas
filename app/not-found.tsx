@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Milo } from "@/components/ui/Milo";
 
 /**
  * A tela de endereco que nao existe.
@@ -19,11 +20,10 @@ import Link from "next/link";
 export default function NaoEncontrado() {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col justify-center px-5 py-10">
-      <p className="text-sm font-semibold uppercase tracking-widest text-tinta-fraca">
-        Erro 404
-      </p>
+      {/* Pagina vazia e um dos lugares do Milo: ele aponta a saida. */}
+      <Milo className="mb-6 w-32" />
 
-      <h1 className="display mt-2 text-3xl text-tinta">
+      <h1 className="display text-3xl text-tinta">
         Esta página não existe
       </h1>
 

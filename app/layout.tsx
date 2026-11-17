@@ -1,20 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Bricolage_Grotesque } from "next/font/google";
 import { enderecoDoSite } from "@/lib/site";
 import "./globals.css";
 import { MARCA } from "@/lib/marca";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
 /**
- * Uma familia so. A serifa dos titulos (Fraunces) saiu na identidade
- * VoeMilo: a direcao e de fintech -- precisao, nao editorial -- e a
- * hierarquia passa a vir de peso, tamanho e espacamento, nao de troca
- * de familia. De quebra, uma fonte a menos no carregamento.
+ * Uma familia so: Bricolage Grotesque, escolhida na direcao "Globo e
+ * Carteira" (17/11/2026). Grotesca com personalidade, sem cair no
+ * genérico de fintech -- e com eixo de tamanho optico (opsz), que
+ * desenha o numero grande do veredito diferente do texto de 13 px em
+ * vez de so aumenta-lo. A hierarquia vem de peso, tamanho e opsz.
  */
+const voemilo = Bricolage_Grotesque({
+  variable: "--font-voemilo",
+  subsets: ["latin"],
+  axes: ["opsz"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   /**
@@ -46,7 +48,7 @@ export const viewport: Viewport = {
   viewportFit: "cover",
   // Sem variante escura enquanto a paleta clara nao estiver decidida.
   // O seletor de paleta reescreve esta meta tag ao trocar.
-  themeColor: "#f8f5ec",
+  themeColor: "#e6e9ef",
 };
 
 /**
@@ -60,13 +62,13 @@ export const viewport: Viewport = {
  * ao botao manual, o que evita manter duas copias da paleta escura no
  * CSS, uma para a media query e outra para o atributo.
  */
-const APLICAR_TEMA = `try{var t=localStorage.getItem("milhas-tema");if(t!=="claro"&&t!=="escuro")t=matchMedia("(prefers-color-scheme: dark)").matches?"escuro":"claro";document.documentElement.setAttribute("data-tema",t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",t==="escuro"?"#0e1a2e":"#f8f5ec")}catch(e){}`;
+const APLICAR_TEMA = `try{var t=localStorage.getItem("milhas-tema");if(t!=="claro"&&t!=="escuro")t=matchMedia("(prefers-color-scheme: dark)").matches?"escuro":"claro";document.documentElement.setAttribute("data-tema",t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",t==="escuro"?"#0e1a2e":"#e6e9ef")}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} h-full antialiased`}
+      className={`${voemilo.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <script dangerouslySetInnerHTML={{ __html: APLICAR_TEMA }} />

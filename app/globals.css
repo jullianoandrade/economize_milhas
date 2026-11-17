@@ -31,10 +31,10 @@
 
 :root {
   /* Superficies — tela crua */
-  --fundo: #f7f4ec;
-  --superficie: #fffdf8;
+  --fundo: #e6e9ef;
+  --superficie: #f6f7fa;
   --superficie-2: #f2ede0;
-  --borda: #e3dccb;
+  --borda: #d6dbe4;
 
   /* Texto — azul-cipreste, nao preto */
   --tinta: #0e1a2e;
@@ -122,7 +122,16 @@
 
   /* Cor da barra de status no aparelho. O script de tema reescreve a
      meta tag; este valor e o de partida. */
-  --barra-do-sistema: #f7f4ec;
+  --barra-do-sistema: #e6e9ef;
+
+  /* Vidro: so em controles que flutuam sobre algo vivo (o globo). Numero
+     decisivo NUNCA fica sobre vidro -- contraste em superficie
+     translucida depende do que passa atras, e o teste de paleta nao
+     mede isso. Numero vai numa placa opaca. */
+  --vidro: rgb(246 247 250 / 0.62);
+  --vidro-borda: rgb(14 26 46 / 0.10);
+  --vidro-brilho: inset 0 1px 0 rgb(255 255 255 / 0.5);
+  --vidro-solido: #f6f7fa;
 
   color-scheme: light;
 }
@@ -199,6 +208,11 @@
 
   --barra-do-sistema: #0e1a2e;
 
+  --vidro: rgb(242 237 224 / 0.09);
+  --vidro-borda: rgb(242 237 224 / 0.16);
+  --vidro-brilho: inset 0 1px 0 rgb(242 237 224 / 0.18);
+  --vidro-solido: #16243c;
+
   color-scheme: dark;
 }
 
@@ -244,8 +258,8 @@
   --color-alerta-fundo: var(--alerta-fundo);
   --color-atencao: var(--atencao);
 
-  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-display: var(--font-geist-sans), system-ui, sans-serif;
+  --font-sans: var(--font-voemilo), system-ui, sans-serif;
+  --font-display: var(--font-voemilo), system-ui, sans-serif;
 
   --shadow-card: var(--sombra-card);
   --shadow-flutuante: var(--sombra-flutuante);
@@ -261,9 +275,10 @@ html {
 }
 
 body {
+  font-optical-sizing: auto;
   background: var(--fundo);
   color: var(--tinta);
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-voemilo), system-ui, -apple-system, sans-serif;
   /* Evita rolagem horizontal acidental no mobile */
   overflow-x: hidden;
 }
@@ -272,7 +287,7 @@ body {
    e do espacamento negativo, que e o que faz a Geist grande parecer
    desenhada e nao so aumentada. */
 .display {
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-voemilo), system-ui, sans-serif;
   font-weight: 600;
   letter-spacing: -0.025em;
 }
@@ -357,6 +372,23 @@ body {
   --marca-forte: var(--painel-acao-forte);
   --marca-contraste: var(--painel-acao-tinta);
   --marca-fraca: var(--painel-realce);
+}
+
+/* Vidro: so em controles que flutuam sobre algo vivo. Ver --vidro. */
+.vidro {
+  background: var(--vidro);
+  border: 1px solid var(--vidro-borda);
+  box-shadow: var(--vidro-brilho);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+}
+
+/* Sem desfoque (navegador antigo, ou economia de bateria em aparelho
+   fraco), o vidro vira superficie solida -- o texto continua legivel. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .vidro {
+    background: var(--vidro-solido);
+  }
 }
 
 .gradiente-marca {
