@@ -37,17 +37,69 @@ export function CeuDoDestino({ destino }: { destino: Destino }) {
   const estrelas = Array.from({ length: QUANTAS_ESTRELAS }, () => ({
     x: aleatorio() * LARGURA,
     y: aleatorio() * horizonte,
-    raio: 0.5 + aleatorio() * 1.1,
-    opacidade: 0.3 + aleatorio() * 0.5,
+    raio: 0.5 + aleatorio() * 1.0,
+    // Fraca de proposito. O titulo e o subtitulo da rota ficam SOBRE
+    // este ceu, e estrela com opacidade alta competia com a letra --
+    // decoracao nunca pode chegar perto do contraste do texto.
+    opacidade: 0.14 + aleatorio() * 0.26,
   }));
+
+  // Semente propria para o brilho do horizonte, para ele nao cair
+  // sempre no mesmo lugar que a primeira estrela.
+  const brilhoX = LARGURA * (0.25 + aleatorio() * 0.5);
 
   return (
     <svg
       viewBox={`0 0 ${LARGURA} ${ALTURA}`}
-      className="w-full"
+      className="h-full w-full"
+      preserveAspectRatio="none"
       aria-hidden="true"
       focusable="false"
     >
+      <defs>
+        {/* O ceu da janela da cabine: do alto da atmosfera ao
+            horizonte. As paradas sao tokens, entao o modo escuro troca
+            o ceu inteiro sem uma segunda copia deste desenho. */}
+        <linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="var(--ceu-alto)" />
+          <stop offset="38%" stopColor="var(--ceu-medio)" />
+          <stop offset="76%" stopColor="var(--ceu-baixo)" />
+          <stop offset="100%" stopColor="var(--ceu-horizonte)" />
+        </linearGradient>
+
+        {/* O sol baixo, difuso. Sempre abaixo das estrelas, sempre
+            perto do horizonte daquele destino. */}
+        {/* A base do ceu se dissolve em vez de cortar reto. Mascara, e
+            nao um degrade por cima: assim o painel que esta ATRAS
+            aparece de verdade, qualquer que seja a cor dele -- um
+            degrade por cima exigiria repetir aqui a cor do painel, e
+            as duas sairiam do lugar na primeira troca de tema. */}
+        <linearGradient id="dissolve" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#fff" stopOpacity="1" />
+          <stop offset="62%" stopColor="#fff" stopOpacity="1" />
+          <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+        </linearGradient>
+        <mask id="emenda">
+          <rect width={LARGURA} height={ALTURA} fill="url(#dissolve)" />
+        </mask>
+
+        <radialGradient id="brilho">
+          <stop offset="0%" stopColor="var(--ceu-horizonte)" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="var(--ceu-horizonte)" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      <g mask="url(#emenda)">
+      <rect width={LARGURA} height={ALTURA} fill="url(#ceu)" />
+
+      <ellipse
+        cx={brilhoX}
+        cy={horizonte + 6}
+        rx={LARGURA * 0.34}
+        ry={ALTURA * 0.28}
+        fill="url(#brilho)"
+      />
+
       {estrelas.map((e, i) => (
         <circle
           key={i}
@@ -58,6 +110,7 @@ export function CeuDoDestino({ destino }: { destino: Destino }) {
           opacity={e.opacidade}
         />
       ))}
+      </g>
     </svg>
   );
 }

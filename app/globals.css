@@ -100,6 +100,35 @@
   --gradiente-marca: linear-gradient(140deg, #16304f 0%, #20406f 45%, #3e63a0 100%);
   --gradiente-ceu: linear-gradient(180deg, #efe9d8 0%, #f8f5ec 100%);
 
+  /* ---- A cabine ----------------------------------------------------
+     O heroi da tela de rota e uma JANELA: moldura de vidro, ceu atras.
+     Os tokens de vidro valem so para superficie SEM numero decisivo --
+     nav, chips, painel de "quando ir". O cartao do veredito continua
+     opaco, porque contraste sobre translucido deixa de ser propriedade
+     do token e passa a depender do que esta atras, e tests/paleta.test.ts
+     nao tem como medir isso. */
+  --vidro: rgb(255 253 247 / 0.58);
+  --vidro-borda: rgb(21 35 63 / 0.12);
+  --vidro-desfoque: 18px;
+
+  /* A moldura da janela da cabine, sobre o painel escuro do heroi. */
+  --janela-borda: rgb(242 237 224 / 0.42);
+  --janela-brilho: inset 0 2px 20px rgb(255 253 247 / 0.22);
+
+  /* O ceu que aparece dentro da janela. Vai do alto da atmosfera ao
+     horizonte dourado -- a hora do voo, nao a do relogio de ninguem. */
+  --ceu-alto: #2a4a7a;
+  --ceu-medio: #35578c;
+  --ceu-baixo: #6d7fa8;
+  --ceu-horizonte: #caa06a;
+
+  /* O mascote. Cores proprias para ele nao herdar tom de marca por
+     acidente quando mudar de contexto. */
+  --mascote-corpo: #fffdf7;
+  --mascote-asa: #4e74b0;
+  --mascote-sombra: #20406f;
+  --mascote-tinta: #15233f;
+
   /* Cor da barra de status no aparelho. O script de tema reescreve a
      meta tag; este valor e o de partida. */
   --barra-do-sistema: #f8f5ec;
@@ -169,6 +198,26 @@
 
   --gradiente-marca: linear-gradient(140deg, #1b2c47 0%, #26406a 48%, #37578c 100%);
   --gradiente-ceu: linear-gradient(180deg, #16243c 0%, #0e1a2e 100%);
+
+  --vidro: rgb(21 35 57 / 0.58);
+  --vidro-borda: rgb(143 178 232 / 0.2);
+  --vidro-desfoque: 18px;
+
+  --janela-borda: rgb(242 237 224 / 0.34);
+  --janela-brilho: inset 0 2px 20px rgb(255 253 247 / 0.14);
+
+  /* Ceu noturno. Mantem alcance do alto ao horizonte: sem ele o ceu
+     vira um retangulo chapado e as estrelas parecem sujeira. O
+     horizonte esfria e perde o dourado, mas nao some. */
+  --ceu-alto: #0c1628;
+  --ceu-medio: #1d3358;
+  --ceu-baixo: #4a6186;
+  --ceu-horizonte: #9c7d4e;
+
+  --mascote-corpo: #f2ede0;
+  --mascote-asa: #5a7cb5;
+  --mascote-sombra: #1a2b45;
+  --mascote-tinta: #0e1a2e;
 
   --barra-do-sistema: #0e1a2e;
 

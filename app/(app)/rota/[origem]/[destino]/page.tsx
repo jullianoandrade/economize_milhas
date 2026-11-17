@@ -227,15 +227,45 @@ async function Conteudo({
       {/* 1. O heroi -- "a resposta". Um unico painel escuro: o veredito,
           a regua, a faixa de precificacao dinamica, o arco da rota, o
           ceu do destino e o que fazer a respeito. */}
+      {/* O HERÓI É UMA JANELA DE CABINE.
+          
+          A moldura arredondada em elipse, a borda clara de vidro e o
+          brilho interno fazem o painel ler como vidro espesso; o céu do
+          destino fica ATRÁS dele, não ao lado. É por isso que o raio é
+          elíptico (`rounded-[56px/40px]`) e não circular: janela de
+          avião é mais larga que alta.
+          
+          O que NÃO muda: o cartão do veredito continua opaco, logo
+          abaixo. O céu é ambiente; o número é decisão, e decisão não se
+          lê através de vidro. */}
       <section
-        className="gradiente-marca relative overflow-hidden rounded-[28px] p-5 lg:sticky lg:top-24 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto"
+        className="gradiente-marca relative overflow-hidden rounded-[56px/40px] border border-[color:var(--janela-borda)] p-5 shadow-[var(--janela-brilho)] lg:sticky lg:top-24 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto"
         style={TEMA_DO_HEROI}
       >
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-28 opacity-90">
-          <CeuDoDestino destino={rota.destino} />
-        </div>
+        {/* O reflexo do vidro: uma única faixa diagonal de luz, que é o
+            que separa "vidro" de "painel translúcido". */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-[56px/40px]"
+          style={{
+            background:
+              "linear-gradient(135deg, rgb(255 253 247 / 0.16) 0%, rgb(255 253 247 / 0) 38%)",
+          }}
+        />
 
+        {/* O LADO DE DENTRO DA JANELA.
+            
+            O céu é o fundo DESTE bloco, e não uma faixa de altura fixa
+            no topo do painel: assim ele cobre exatamente o título e o
+            arco, e o avião passa a voar dentro do céu em vez de sobre o
+            painel, que era o ponto da direção. A altura acompanha o
+            conteúdo em qualquer largura de tela, sem número mágico. */}
         <div className="relative">
+          <div className="pointer-events-none absolute -inset-x-5 -top-5 bottom-0">
+            <CeuDoDestino destino={rota.destino} />
+          </div>
+
+          <div className="relative">
           <Link
             href="/"
             className="mb-3 inline-flex items-center gap-1 text-sm text-tinta-media transition-colors hover:text-tinta"
@@ -266,9 +296,13 @@ async function Conteudo({
             Valores por trecho, só ida, em classe econômica.
           </p>
 
-          <div className="my-4">
+          <div className="mt-4">
             <ArcoDaRota origem={rota.origem} destino={rota.destino} />
           </div>
+          </div>
+        </div>
+
+        <div className="relative mt-4">
 
           <div className="mb-4">
             <SeletorDeData valor={dataEscolhida} />
