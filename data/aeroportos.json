@@ -1,5 +1,5 @@
 {
- "atualizadoEm": "2026-11-16",
+ "atualizadoEm": "2026-11-17",
  "fonte": "https://api.travelpayouts.com/data/airports.json",
  "explicacao": "Gerado por scripts/gerar-aeroportos.mjs: todo aeroporto operante (flightable), do tipo airport e com coordenada. A base vive so no servidor -- nenhum componente de cliente a importa, o campo de busca fala com /api/lugares. Regenere rodando o script.",
  "aeroportos": [

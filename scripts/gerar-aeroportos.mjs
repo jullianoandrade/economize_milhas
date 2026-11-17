@@ -306,3 +306,95 @@ console.log(porRegiao);
 console.log(
   `${selecionados.filter((a) => a.conexoes > 0).length} com rota conhecida`,
 );
+
+/* ------------------------------------------------------------------ */
+/* Cidades sem aeroporto, e qual aeroporto serve cada uma              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Quem digita o nome da PROPRIA cidade raramente mora num lugar com
+ * aeroporto. "Gravatai" nao devolvia nada, e parecia falta de
+ * cobertura -- mas o aeroporto que serve Gravatai (Porto Alegre) fica a
+ * 24 km, e o app simplesmente nao sabia dizer isso.
+ *
+ * O calculo acontece AQUI, uma vez, e nao a cada busca: sao 6.122
+ * cidades contra ~3.700 aeroportos, o que no servidor levaria mais de
+ * um segundo por consulta. Gerado, vira uma tabela de consulta direta.
+ */
+
+const TETO_KM = 250;
+
+/**
+ * Acima disto nao se oferece nada.
+ *
+ * O projeto ja trata 150 km como "vale pegar a estrada" (ver
+ * RAIO_ALTERNATIVO_KM em lib/tempo/flexibilidade.ts), mas la a pergunta
+ * e outra: trocar um aeroporto por outro MELHOR. Aqui nao ha escolha --
+ * ou e esse aeroporto, ou a pessoa nao voa. Por isso o teto e mais
+ * generoso, e a distancia aparece na tela para quem decide ser ela.
+ */
+
+const RAIO_TERRA_KM = 6371;
+const paraRad = (g) => (g * Math.PI) / 180;
+
+function distanciaKm(a, b) {
+  const dLat = paraRad(b.lat - a.lat);
+  const dLon = paraRad(b.lon - a.lon);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.sin(dLon / 2) ** 2 * Math.cos(paraRad(a.lat)) * Math.cos(paraRad(b.lat));
+  return 2 * RAIO_TERRA_KM * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+const semAeroporto = cidades
+  .filter((c) => c.coordinates?.lat != null && !c.has_flightable_airport)
+  .flatMap((c) => {
+    let maisProximo = null;
+    let menorKm = Infinity;
+
+    for (const a of selecionados) {
+      const km = distanciaKm(c.coordinates, a);
+      if (km < menorKm) {
+        menorKm = km;
+        maisProximo = a;
+      }
+    }
+
+    if (!maisProximo || menorKm > TETO_KM) return [];
+
+    const original = c.name_translations?.pt || c.name;
+    const traduzido = NOME_EM_PORTUGUES[original];
+
+    return [
+      {
+        cidade: traduzido || original,
+        aliases: traduzido ? [original] : [],
+        pais: c.country_code,
+        // O aeroporto que serve a cidade, e a que distancia.
+        iata: maisProximo.iata,
+        cidadeDoAeroporto: maisProximo.cidade,
+        km: Math.round(menorKm),
+      },
+    ];
+  })
+  .sort((a, b) => a.cidade.localeCompare(b.cidade));
+
+writeFileSync(
+  "data/cidades-sem-aeroporto.json",
+  JSON.stringify(
+    {
+      atualizadoEm: new Date().toISOString().slice(0, 10),
+      fonte: FONTE_CIDADES,
+      explicacao:
+        `Cidades sem aeroporto proprio e o aeroporto operante mais proximo, ate ${TETO_KM} km. Gerado por scripts/gerar-aeroportos.mjs a partir das coordenadas da fonte. Serve a busca: quem digita a propria cidade descobre de onde voa.`,
+      tetoKm: TETO_KM,
+      cidades: semAeroporto,
+    },
+    null,
+    1,
+  ) + "\n",
+);
+
+console.log(
+  `${semAeroporto.length} cidades sem aeroporto gravadas em data/cidades-sem-aeroporto.json`,
+);

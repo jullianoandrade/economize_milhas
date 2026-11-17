@@ -271,6 +271,33 @@ export type RegiaoGeografica = z.infer<
   typeof EsquemaAeroportos
 >["aeroportos"][number]["regiao"];
 
+/**
+ * Cidades sem aeroporto proprio, e qual aeroporto serve cada uma.
+ *
+ * Existe porque quem digita o nome da propria cidade raramente mora
+ * num lugar com aeroporto: "Gravatai" nao devolvia nada, e parecia
+ * falta de cobertura, quando o aeroporto que a serve fica a 24 km.
+ */
+export const EsquemaCidadesSemAeroporto = z.object({
+  atualizadoEm: dataISO,
+  fonte: z.string(),
+  explicacao: z.string(),
+  tetoKm: z.number().positive(),
+  cidades: z
+    .array(
+      z.object({
+        cidade: z.string(),
+        aliases: z.array(z.string()),
+        pais: z.string().length(2),
+        /** O aeroporto que serve a cidade. */
+        iata: z.string().length(3),
+        cidadeDoAeroporto: z.string(),
+        km: z.number().int().min(0),
+      }),
+    )
+    .min(1),
+});
+
 export const EsquemaPrecosReferencia = z.object({
   atualizadoEm: dataISO,
   explicacao: z.string(),

@@ -1,4 +1,9 @@
-import { aeroportos, type Aeroporto } from "@/lib/dados";
+import {
+  aeroportos,
+  cidadesSemAeroporto,
+  type Aeroporto,
+  type CidadeSemAeroporto,
+} from "@/lib/dados";
 
 /**
  * A busca de cidade e aeroporto.
@@ -78,6 +83,32 @@ const indice: Indexado[] = aeroportos.aeroportos.map((aeroporto) => ({
   apelidosDePais: (APELIDOS_DE_PAIS[aeroporto.pais] ?? []).map(normalizar),
 }));
 
+type CidadeIndexada = {
+  cidade: CidadeSemAeroporto;
+  nome: string;
+  aliases: string[];
+};
+
+/**
+ * Cidades que nao tem aeroporto, apontando para quem as serve.
+ *
+ * Quem digita o nome da propria cidade raramente mora num lugar com
+ * aeroporto. "Gravatai" nao devolvia nada -- e o aeroporto que a serve,
+ * Porto Alegre, fica a 24 km.
+ */
+const indiceDeCidades: CidadeIndexada[] = cidadesSemAeroporto.cidades.map(
+  (cidade) => ({
+    cidade,
+    nome: normalizar(cidade.cidade),
+    aliases: cidade.aliases.map(normalizar),
+  }),
+);
+
+/** O aeroporto que a cidade aponta, para montar o resultado. */
+const aeroportoPorIata = new Map(
+  aeroportos.aeroportos.map((a) => [a.iata, a]),
+);
+
 /**
  * Menor pontuacao vence: casamento mais forte aparece primeiro.
  *
@@ -98,17 +129,38 @@ function pontuar(item: Indexado, busca: string): number | null {
   if (item.pais === busca || item.apelidosDePais.some((a) => a === busca)) {
     return 3;
   }
-  if (item.cidade.startsWith(busca)) return 4;
-  if (item.aliases.some((a) => a.startsWith(busca))) return 5;
+  if (item.cidade.startsWith(busca)) return 5;
+  if (item.aliases.some((a) => a.startsWith(busca))) return 6;
   if (
     item.pais.startsWith(busca) ||
     item.apelidosDePais.some((a) => a.startsWith(busca))
   ) {
-    return 6;
+    return 8;
   }
+  if (item.nome.startsWith(busca)) return 9;
+  if (item.cidade.includes(busca)) return 10;
+  if (item.nome.includes(busca)) return 11;
+  return null;
+}
+
+/**
+ * Pontua uma cidade SEM aeroporto.
+ *
+ * Usa a mesma escala de `pontuar`, intercalada de proposito: cidade sem
+ * aeroporto exata (4) perde para aeroporto exato (1) e para alias
+ * exato (2), mas ganha de "comeca com" (5) e de qualquer trecho solto.
+ *
+ * A ordem nao e arbitraria. Um resultado destes e um PONTEIRO -- a
+ * pessoa nao embarca em Gravatai -- entao nunca pode passar na frente
+ * de um aeroporto que casa igualmente bem. Mas quem digitou o nome
+ * exato da cidade onde mora merece resposta antes de um aeroporto que
+ * so tem aquelas letras no meio do nome.
+ */
+function pontuarCidade(item: CidadeIndexada, busca: string): number | null {
+  if (item.nome === busca) return 4;
+  if (item.aliases.some((a) => a === busca)) return 4;
   if (item.nome.startsWith(busca)) return 7;
-  if (item.cidade.includes(busca)) return 8;
-  if (item.nome.includes(busca)) return 9;
+  if (item.aliases.some((a) => a.startsWith(busca))) return 7;
   return null;
 }
 
@@ -120,6 +172,12 @@ export type LugarEncontrado = {
   /** Pais por extenso, em portugues: a tela mostra por que casou. */
   paisNome: string;
   nome: string;
+  /**
+   * Preenchido quando o resultado veio de uma cidade SEM aeroporto.
+   * `cidade` entao e a cidade buscada, nao a do aeroporto -- e a tela
+   * precisa dizer de onde a pessoa realmente voa.
+   */
+  servidaPor?: { cidade: string; km: number };
 };
 
 /** Texto curto demais devolve lista vazia em vez de meia base. */
@@ -148,6 +206,11 @@ export const LIMITE_PADRAO = 8;
  * relevancia: num pais sem nenhum hub da nossa lista, todo mundo
  * empatava em zero e o alfabeto decidia -- "Ucrania" devolvia
  * Chernivtsi (4 rotas) antes de Kiev (330).
+ *
+ * As cidades sem aeroporto entram na mesma lista, com a mesma escala de
+ * pontos (ver `pontuarCidade`), e nao numa secao separada: quem digita
+ * "Gravatai" quer uma resposta, nao uma aula sobre a diferenca entre
+ * cidade e aeroporto. A tela diz de onde ele realmente voa.
  */
 export function procurarLugares(
   texto: string,
@@ -156,24 +219,70 @@ export function procurarLugares(
   const busca = normalizar(texto);
   if (busca.length < MINIMO_DE_LETRAS) return [];
 
-  return indice
-    .flatMap((item) => {
-      const pontos = pontuar(item, busca);
-      return pontos === null ? [] : [{ item, pontos }];
-    })
+  type Candidato = {
+    pontos: number;
+    relevancia: number;
+    conexoes: number;
+    ordem: string;
+    lugar: LugarEncontrado;
+  };
+
+  const candidatos: Candidato[] = [];
+
+  for (const item of indice) {
+    const pontos = pontuar(item, busca);
+    if (pontos === null) continue;
+
+    candidatos.push({
+      pontos,
+      relevancia: item.aeroporto.relevancia,
+      conexoes: item.aeroporto.conexoes,
+      ordem: item.cidade,
+      lugar: {
+        iata: item.aeroporto.iata,
+        cidade: item.aeroporto.cidade,
+        pais: item.aeroporto.pais,
+        paisNome: nomeDoPais(item.aeroporto.pais),
+        nome: item.aeroporto.nome,
+      },
+    });
+  }
+
+  for (const item of indiceDeCidades) {
+    const pontos = pontuarCidade(item, busca);
+    if (pontos === null) continue;
+
+    const aeroporto = aeroportoPorIata.get(item.cidade.iata);
+    if (!aeroporto) continue;
+
+    candidatos.push({
+      pontos,
+      relevancia: aeroporto.relevancia,
+      // Entre duas cidades que casam igual, a mais perto do aeroporto
+      // vem primeiro: a distancia e o custo real de escolher aquela.
+      conexoes: aeroporto.conexoes - item.cidade.km,
+      ordem: item.nome,
+      lugar: {
+        iata: aeroporto.iata,
+        // A cidade BUSCADA, nao a do aeroporto -- foi ela que a pessoa
+        // digitou, e e ela que faz o resultado parecer certo.
+        cidade: item.cidade.cidade,
+        pais: item.cidade.pais,
+        paisNome: nomeDoPais(item.cidade.pais),
+        nome: aeroporto.nome,
+        servidaPor: { cidade: aeroporto.cidade, km: item.cidade.km },
+      },
+    });
+  }
+
+  return candidatos
     .sort(
       (a, b) =>
         a.pontos - b.pontos ||
-        b.item.aeroporto.relevancia - a.item.aeroporto.relevancia ||
-        b.item.aeroporto.conexoes - a.item.aeroporto.conexoes ||
-        a.item.cidade.localeCompare(b.item.cidade),
+        b.relevancia - a.relevancia ||
+        b.conexoes - a.conexoes ||
+        a.ordem.localeCompare(b.ordem),
     )
     .slice(0, limite)
-    .map(({ item }) => ({
-      iata: item.aeroporto.iata,
-      cidade: item.aeroporto.cidade,
-      pais: item.aeroporto.pais,
-      paisNome: nomeDoPais(item.aeroporto.pais),
-      nome: item.aeroporto.nome,
-    }));
+    .map((c) => c.lugar);
 }

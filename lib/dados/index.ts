@@ -1,4 +1,5 @@
 import aeroportosJson from "@/data/aeroportos.json";
+import cidadesSemAeroportoJson from "@/data/cidades-sem-aeroporto.json";
 import cartoesJson from "@/data/cartoes.json";
 import clubesJson from "@/data/clubes.json";
 import cpmJson from "@/data/cpm-referencia.json";
@@ -11,6 +12,7 @@ import transferenciasJson from "@/data/calendario-transferencias.json";
 
 import {
   EsquemaAeroportos,
+  EsquemaCidadesSemAeroporto,
   EsquemaCartoes,
   EsquemaClubes,
   EsquemaCpm,
@@ -36,6 +38,9 @@ import {
  */
 
 export const aeroportos = EsquemaAeroportos.parse(aeroportosJson);
+export const cidadesSemAeroporto = EsquemaCidadesSemAeroporto.parse(
+  cidadesSemAeroportoJson,
+);
 export const precosReferencia = EsquemaPrecosReferencia.parse(precosJson);
 export const programas = EsquemaProgramas.parse(programasJson);
 export const tabelasResgate = EsquemaTabelasResgate.parse(tabelasJson);
@@ -52,6 +57,8 @@ export type PlanoDeClube = Clube["planos"][number];
 export type Cartao = (typeof cartoes.cartoes)[number];
 export type Regiao = (typeof tabelasResgate.regioes)[number];
 export type Aeroporto = (typeof aeroportos.aeroportos)[number];
+export type CidadeSemAeroporto =
+  (typeof cidadesSemAeroporto.cidades)[number];
 export type Paridade = (typeof transferencias.paridades)[number];
 
 export const idsDeProgramas = programas.programas.map((p) => p.id);

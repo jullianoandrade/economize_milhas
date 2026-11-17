@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aeroportos } from "@/lib/dados";
+import { aeroportos, cidadesSemAeroporto } from "@/lib/dados";
 import { procurarLugares, normalizar } from "@/lib/busca/lugares";
 
 /**
@@ -216,5 +216,73 @@ describe("conexoes desempatam dentro da relevancia", () => {
     // mudar de formato, o desempate some sem nada falhar.
     const comRota = aeroportos.aeroportos.filter((a) => a.conexoes > 0);
     expect(comRota.length).toBeGreaterThan(2000);
+  });
+});
+
+/**
+ * Cidade sem aeroporto proprio.
+ *
+ * Veio de uso real, de novo: alguem digitou "Gravatai" e nao recebeu
+ * nada. Quem digita o nome da PROPRIA cidade raramente mora num lugar
+ * com aeroporto -- e o que serve Gravatai fica a 24 km, em Porto
+ * Alegre. O app tinha a coordenada das duas pontas e nao sabia dizer.
+ */
+describe("cidade sem aeroporto aponta para quem a serve", () => {
+  it.each([
+    ["Gravataí", "POA"],
+    ["Campinas", "VCP"],
+    ["Criciúma", "JJG"],
+    ["Santos", "CGH"],
+  ])("'%s' devolve %s com a distancia", (consulta, iata) => {
+    const [primeiro] = procurarLugares(consulta, 1);
+
+    expect(primeiro.iata).toBe(iata);
+    expect(primeiro.servidaPor).toBeDefined();
+    expect(primeiro.servidaPor!.km).toBeGreaterThan(0);
+    expect(primeiro.servidaPor!.km).toBeLessThanOrEqual(250);
+    // A cidade mostrada e a BUSCADA, nao a do aeroporto: foi ela que a
+    // pessoa digitou.
+    expect(primeiro.servidaPor!.cidade).not.toBe(primeiro.cidade);
+  });
+
+  it("aeroporto de verdade continua vencendo o ponteiro", () => {
+    // "Porto Alegre" e o nome do aeroporto POA e tambem de uma cidade
+    // em Sao Tome. O aeroporto real vem primeiro.
+    const [primeiro] = procurarLugares("Porto Alegre", 1);
+    expect(primeiro.iata).toBe("POA");
+    expect(primeiro.servidaPor).toBeUndefined();
+  });
+
+  it("codigo IATA exato nunca perde para uma cidade", () => {
+    const [primeiro] = procurarLugares("GRU", 1);
+    expect(primeiro.iata).toBe("GRU");
+    expect(primeiro.servidaPor).toBeUndefined();
+  });
+
+  it("quem tem aeroporto proprio nao ganha ponteiro", () => {
+    for (const q of ["Lisboa", "Recife", "Salvador"]) {
+      expect(procurarLugares(q, 1)[0].servidaPor).toBeUndefined();
+    }
+  });
+
+  it("entre cidades que casam igual, a mais perto do aeroporto vem antes", () => {
+    const r = procurarLugares("santa", 8).filter((l) => l.servidaPor);
+    const kms = r.map((l) => l.servidaPor!.km);
+    expect([...kms].sort((a, b) => a - b)).toEqual(kms);
+  });
+
+  it("nenhuma cidade da tabela aponta para aeroporto inexistente", () => {
+    const iatas = new Set(aeroportos.aeroportos.map((a) => a.iata));
+    const orfas = cidadesSemAeroporto.cidades.filter(
+      (c) => !iatas.has(c.iata),
+    );
+    expect(orfas).toEqual([]);
+  });
+
+  it("respeita o teto de distancia declarado no proprio arquivo", () => {
+    const acima = cidadesSemAeroporto.cidades.filter(
+      (c) => c.km > cidadesSemAeroporto.tetoKm,
+    );
+    expect(acima).toEqual([]);
   });
 });

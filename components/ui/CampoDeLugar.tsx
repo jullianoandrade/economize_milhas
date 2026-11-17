@@ -9,6 +9,11 @@ export type Lugar = {
   /** Pais por extenso. Ver a linha secundaria da sugestao abaixo. */
   paisNome?: string;
   nome: string;
+  /**
+   * Quando a cidade buscada nao tem aeroporto proprio: de onde a pessoa
+   * realmente voa, e a que distancia.
+   */
+  servidaPor?: { cidade: string; km: number };
 };
 
 /**
@@ -158,14 +163,23 @@ export function CampoDeLugar({
                   <span className="block truncate text-sm font-medium text-tinta">
                     {lugar.cidade}
                   </span>
-                  {/* O pais vem primeiro na linha secundaria porque e
-                      ele que explica o resultado quando a busca foi por
-                      pais: digitar "Ucrania" e receber "Kiev" so faz
-                      sentido se a palavra que casou estiver a vista. */}
-                  <span className="block truncate text-xs text-tinta-fraca">
-                    {lugar.paisNome ? `${lugar.paisNome} · ` : ""}
-                    {lugar.nome}
-                  </span>
+                  {/* A linha secundaria explica o resultado. Quando a
+                      cidade buscada nao tem aeroporto, a explicacao e de
+                      ONDE a pessoa voa -- sem isso, digitar "Gravatai" e
+                      receber um resultado com codigo POA parece erro.
+                      Nos outros casos quem explica e o pais, que e o que
+                      faz "Ucrania" devolver "Kiev" fazer sentido. */}
+                  {lugar.servidaPor ? (
+                    <span className="block truncate text-xs text-marca-suave">
+                      Aeroporto de {lugar.servidaPor.cidade} ·{" "}
+                      {lugar.servidaPor.km} km
+                    </span>
+                  ) : (
+                    <span className="block truncate text-xs text-tinta-fraca">
+                      {lugar.paisNome ? `${lugar.paisNome} · ` : ""}
+                      {lugar.nome}
+                    </span>
+                  )}
                 </span>
               </button>
             </li>
