@@ -65,3 +65,19 @@ describe("o painel marinho continua marinho", () => {
     ]);
   });
 });
+
+describe("globals.css e CSS valido", () => {
+  /*
+   * Em 17/11/2026 uma insercao apagou a abertura de um comentario e o
+   * resto do arquivo virou seletor invalido. Nenhum teste viu: eles leem
+   * o CSS como texto. So o servidor de desenvolvimento acusou, com 500
+   * em toda tela. lightningcss e o mesmo analisador que o Tailwind usa.
+   */
+  it("o analisador do Tailwind aceita o arquivo inteiro", async () => {
+    const { transform } = await import("lightningcss");
+    const codigo = readFileSync(path.join(raiz, "app", "globals.css"));
+    expect(() =>
+      transform({ filename: "globals.css", code: codigo, errorRecovery: false }),
+    ).not.toThrow();
+  });
+});

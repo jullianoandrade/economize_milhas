@@ -39,6 +39,17 @@ export const ABAS: Aba[] = [
     ),
   },
   {
+    href: "/carteira",
+    rotulo: "Carteira",
+    icone: (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-[22px]">
+        <rect x="3" y="6" width="18" height="13" rx="2.5" {...traco} />
+        <path d="M3 10.5h18" {...traco} />
+        <path d="M15.5 15h2" {...traco} />
+      </svg>
+    ),
+  },
+  {
     href: "/promocoes",
     rotulo: "Promoções",
     icone: (
