@@ -1,11 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { MarcoDoObjetivo } from "@/components/dominio/MarcoDoObjetivo";
-import { Cabecalho } from "@/components/casca/Cabecalho";
+import { Globo } from "@/components/dominio/Globo";
 import { CampoDeLugar, type Lugar } from "@/components/ui/CampoDeLugar";
-import { Ilustracao } from "@/components/ui/Ilustracao";
+import { Milo } from "@/components/ui/Milo";
+import { SeloDeOrigem } from "@/components/ui/SeloDeOrigem";
+import { useLugar } from "@/lib/cliente/lugar";
 import { LinhaDoObjetivo } from "./LinhaDoObjetivo";
 import { Termo } from "@/components/dominio/Termo";
 import { usarPerfil, usePerfilHidratado } from "@/store/perfil";
@@ -81,16 +84,20 @@ type Resposta = {
   };
 };
 
-const APARENCIA_DA_SITUACAO: Record<
-  Situacao,
-  { rotulo: string; classe: string }
-> = {
-  concluida: { rotulo: "Meta batida", classe: "bg-dinheiro-fundo text-dinheiro" },
-  adiantada: { rotulo: "Adiantado", classe: "bg-dinheiro-fundo text-dinheiro" },
-  "no-ritmo": { rotulo: "No ritmo", classe: "bg-marca-fraca text-marca" },
-  atrasada: { rotulo: "Atrasado", classe: "bg-alerta-fundo text-alerta" },
-  parada: { rotulo: "Sem acúmulo", classe: "bg-alerta-fundo text-alerta" },
-  "sem-prazo": { rotulo: "Sem data", classe: "bg-superficie-2 text-tinta-media" },
+/**
+ * A situacao aparece sobre o painel marinho. Selo escuro com um PONTO de
+ * cor, e nao fundo colorido: a cor nunca e a unica pista (o texto diz a
+ * situacao) e o texto creme passa contraste em qualquer tema. A versao
+ * anterior usava bg-marca-fraca/text-marca, que dentro do painel virava
+ * creme sobre claro.
+ */
+const APARENCIA_DA_SITUACAO: Record<Situacao, { rotulo: string; ponto: string }> = {
+  concluida: { rotulo: "Meta batida", ponto: "#4ade9f" },
+  adiantada: { rotulo: "Adiantado", ponto: "#4ade9f" },
+  "no-ritmo": { rotulo: "No ritmo", ponto: "#f2b33d" },
+  atrasada: { rotulo: "Atrasado", ponto: "#f87171" },
+  parada: { rotulo: "Sem acúmulo", ponto: "#f87171" },
+  "sem-prazo": { rotulo: "Sem data", ponto: "#a9b6d3" },
 };
 
 /**
@@ -316,29 +323,37 @@ export function TelaDeObjetivos() {
   }
 
   return (
-    <div className={ALTURA_RESERVADA}>
-      <Cabecalho
-        sobrelinha={metas.length > 0 ? "Seus objetivos" : undefined}
-        titulo={emCriacao ? "Um novo objetivo" : "Quanto falta"}
-        subtitulo={
-          emCriacao
-            ? "Escolha o destino e diga quantas milhas você tem hoje. Esse número vira o seu ponto de partida — é com ele que o app mede o quanto você andou."
-            : "O app guarda o seu ponto de partida e acompanha a distância até a viagem."
-        }
-      />
+    <div className={`${ALTURA_RESERVADA} mx-auto max-w-2xl pb-16`}>
+      <Link
+        href="/carteira"
+        className="-ml-1 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-tinta-media hover:text-tinta"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+          <path d="m15 6-6 6 6 6" />
+        </svg>
+        Carteira
+      </Link>
+      <h1 className="display text-[28px] text-tinta">
+        {emCriacao ? "Novo objetivo" : "Objetivos de viagem"}
+      </h1>
+      <p className="mt-1 text-base leading-relaxed text-tinta-media">
+        {emCriacao
+          ? "Escolha o destino e diga quantas milhas você tem hoje. Esse número vira o ponto de partida: é com ele que o app mede o quanto você andou."
+          : "O app guarda o seu ponto de partida e acompanha a distância até a viagem."}
+      </p>
 
       {metas.length > 1 && !emCriacao ? (
-        <div className="faixa-rolante -mx-4 mb-4 gap-2 px-4 pb-1">
+        <div className="faixa-rolante -mx-4 mt-4 gap-2 px-4 pb-1">
           {metas.map((m) => (
             <button
               key={m.id}
               type="button"
               onClick={() => setIdAtivo(m.id)}
               aria-pressed={m.id === metaAtiva?.id}
-              className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+              className={`min-h-11 shrink-0 rounded-full px-4 text-[15px] font-semibold transition-colors ${
                 m.id === metaAtiva?.id
-                  ? "border-marca bg-marca text-marca-contraste"
-                  : "border-borda bg-superficie text-tinta-media"
+                  ? "bg-marca text-marca-contraste"
+                  : "border border-borda bg-superficie text-tinta"
               }`}
             >
               {m.destinoCidade}
@@ -348,20 +363,15 @@ export function TelaDeObjetivos() {
       ) : null}
 
       {emCriacao ? (
-        <section className="mb-5 rounded-[28px] border border-borda bg-superficie p-4 shadow-card">
-          <div className="mb-4">
-            <CampoDeLugar
-              rotulo="Para onde você quer ir?"
-              valorInicial={destinoDaUrl ?? ""}
-              aoSelecionar={setDestinoNovo}
-            />
-          </div>
+        <section className="mt-5 flex flex-col gap-5 rounded-[24px] bg-superficie p-5 shadow-card">
+          <CampoDeLugar
+            rotulo="Para onde você quer ir?"
+            valorInicial={destinoDaUrl ?? ""}
+            aoSelecionar={setDestinoNovo}
+          />
 
-          <div className="mb-4">
-            <label
-              htmlFor="partida"
-              className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-tinta-fraca"
-            >
+          <div>
+            <label htmlFor="partida" className="mb-2 block text-[15px] font-semibold text-tinta">
               Quantas milhas você tem hoje
             </label>
             <input
@@ -373,20 +383,17 @@ export function TelaDeObjetivos() {
               value={saldoDigitado}
               onChange={(e) => setSaldoDigitado(e.target.value)}
               placeholder="0"
-              className="tabular w-full rounded-xl border border-borda bg-superficie px-3 py-3 text-base text-tinta outline-none focus:border-marca"
+              className="tabular h-14 w-full rounded-2xl border border-borda bg-superficie px-4 text-[17px] text-tinta outline-none focus:border-marca"
             />
-            <p className="mt-1.5 text-xs leading-relaxed text-tinta-fraca">
-              Pode ser zero. O valor fica guardado como marco inicial e não é
-              alterado depois — é o que permite dizer quanto você acumulou.
+            <p className="mt-2 text-sm leading-relaxed text-tinta-media">
+              Pode ser zero. O valor fica guardado como marco inicial e não muda
+              depois: é o que permite dizer quanto você acumulou.
             </p>
           </div>
 
           <div>
-            <label
-              htmlFor="alvo"
-              className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-tinta-fraca"
-            >
-              Quando quer viajar (opcional)
+            <label htmlFor="alvo" className="mb-2 block text-[15px] font-semibold text-tinta">
+              Quando quer viajar <span className="font-normal text-tinta-media">(opcional)</span>
             </label>
             <input
               id="alvo"
@@ -394,46 +401,53 @@ export function TelaDeObjetivos() {
               min={paraIso(new Date())}
               value={dataAlvoDigitada}
               onChange={(e) => setDataAlvoDigitada(e.target.value)}
-              className="w-full rounded-xl border border-borda bg-superficie px-3 py-3 text-base text-tinta outline-none focus:border-marca"
+              className="h-14 w-full rounded-2xl border border-borda bg-superficie px-4 text-[17px] text-tinta outline-none focus:border-marca"
             />
           </div>
         </section>
       ) : null}
 
       {!destinoAlvo ? (
-        <section className="rounded-[28px] border border-dashed border-borda bg-superficie-2 p-6 text-center">
-          <Ilustracao cena="meta" className="mx-auto mb-3 w-48" />
-          <p className="text-sm leading-relaxed text-tinta-media">
-            Escolha um destino acima para o app calcular quantas milhas a
-            viagem custa e montar o objetivo.
+        <section className="relative mt-5 rounded-[24px] bg-superficie-2 px-5 pb-6 pt-5">
+          <p className="max-w-[15rem] text-[19px] font-semibold leading-snug text-tinta">
+            Escolha um destino acima.
           </p>
+          <p className="mt-2 max-w-[14rem] text-[15px] leading-relaxed text-tinta-media">
+            O app calcula quantas milhas a viagem custa e monta o objetivo.
+          </p>
+          {/* O recorte fica numa camada propria, e nao na <section>: ver
+              tests/arquitetura.test.ts (lista de sugestoes cortada). */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[24px]">
+            <Milo className="absolute -bottom-3 right-1 w-[118px]" />
+          </div>
         </section>
       ) : null}
 
       {erro ? (
-        <p className="mb-4 rounded-2xl border border-borda bg-alerta-fundo p-4 text-sm text-alerta">
+        <p role="alert" className="mt-4 rounded-2xl bg-alerta-fundo p-4 text-[15px] text-alerta">
           {erro}
         </p>
       ) : null}
 
       {destinoAlvo && !resposta && !erro ? (
-        <div className="h-64 animate-pulse rounded-[28px] bg-superficie-2" />
+        <div className="mt-5 h-64 animate-pulse rounded-[24px] bg-superficie-2" />
       ) : null}
 
       {/* ---------------- Criacao: previa antes de confirmar ------------- */}
 
       {emCriacao && resposta ? (
-        <section className="mb-5 painel rounded-[28px] p-5">
-          <p className="text-xs font-bold uppercase tracking-widest text-painel-tinta-fraca">
-            {resposta.programa.nome}
+        <section className="painel mt-5 rounded-[24px] p-5">
+          <p className="text-[15px] text-painel-tinta-fraca">{resposta.programa.nome}</p>
+          <h2 className="display mt-0.5 text-[28px] leading-tight">{resposta.rota.destino.cidade}</h2>
+          <p className="tabular mt-2 text-[15px]">
+            {fmtMilhas(resposta.plano.milhasNecessarias)} milhas por trecho, passagem a{" "}
+            {reais(resposta.plano.precoDaPassagemBRL)}
           </p>
-          <h2 className="display mt-0.5 text-2xl">
-            {resposta.rota.destino.cidade}
-          </h2>
-          <p className="tabular mt-2 text-sm text-painel-tinta-fraca">
-            {fmtMilhas(resposta.plano.milhasNecessarias)} milhas por trecho ·
-            passagem a {reais(resposta.plano.precoDaPassagemBRL)}
-          </p>
+          <div className="mt-2.5">
+            <SeloDeOrigem origem="estimado" detalhe="Os programas usam precificação dinâmica; a quantidade de milhas é estimativa.">
+              estimativa do trecho
+            </SeloDeOrigem>
+          </div>
           <p className="mt-3 text-sm leading-relaxed text-painel-tinta-fraca">
             {resposta.plano.explicacao}
           </p>
@@ -441,7 +455,7 @@ export function TelaDeObjetivos() {
           <button
             type="button"
             onClick={criarObjetivo}
-            className="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-painel-tinta px-5 text-sm font-semibold text-painel"
+            className="mt-5 min-h-12 w-full rounded-2xl bg-marca px-5 text-[15px] font-semibold text-marca-contraste"
           >
             Criar objetivo
           </button>
@@ -453,9 +467,9 @@ export function TelaDeObjetivos() {
                 setModo("acompanhando");
                 setDestinoNovo(null);
               }}
-              className="mt-2 w-full text-center text-sm text-painel-tinta-fraca underline underline-offset-4"
+              className="mt-1 min-h-11 w-full text-center text-sm text-painel-tinta-fraca underline underline-offset-4"
             >
-              cancelar
+              Cancelar
             </button>
           ) : null}
         </section>
@@ -474,24 +488,31 @@ export function TelaDeObjetivos() {
           aoAtualizarEstimativa={(milhas, preco) =>
             atualizarEstimativa(metaAtiva.id, milhas, preco)
           }
-          aoRemover={() => {
-            removerMeta(metaAtiva.id);
-            setIdAtivo(null);
-          }}
         />
       ) : null}
 
-      {/* ---------------- Como acelerar: o plano de acumulo -------------- */}
+      {/* ---------------- Como acelerar: o plano de acumulo --------------
+          Fechado no acompanhamento (e detalhe para quem quer acelerar),
+          aberto na criacao (ali ele responde "de onde viriam as milhas",
+          que faz parte de decidir criar o objetivo). */}
 
       {resposta ? (
-        <section className="mt-5 rounded-[28px] border border-borda bg-superficie p-4 shadow-card">
-          <h2 className="display mb-1 text-xl text-tinta">
-            {emCriacao ? "De onde viriam as milhas" : "Como acelerar"}
-          </h2>
-          <p className="mb-4 text-sm leading-relaxed text-tinta-media">
-            Ajuste a sua situação e veja o prazo mudar.
-          </p>
+        <details className="group mt-4 rounded-[24px] bg-superficie shadow-card" open={emCriacao}>
+          <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 [&::-webkit-details-marker]:hidden">
+            <span>
+              <span className="block text-[17px] font-semibold text-tinta">
+                {emCriacao ? "De onde viriam as milhas" : "Como chegar mais rápido"}
+              </span>
+              <span className="mt-0.5 block text-sm text-tinta-media">
+                Ajuste a sua situação e veja o prazo mudar.
+              </span>
+            </span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 shrink-0 text-tinta-media transition-transform group-open:rotate-180" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </summary>
 
+          <div className="px-5 pb-5">
           <div className="mb-5 space-y-5">
             <Deslizante
               rotulo="Quanto você passa no cartão por mês"
@@ -505,10 +526,7 @@ export function TelaDeObjetivos() {
             />
 
             <div>
-              <label
-                htmlFor="cartao"
-                className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-tinta-fraca"
-              >
+              <label htmlFor="cartao" className="mb-2 block text-[15px] font-semibold text-tinta">
                 Seu cartão
               </label>
               <select
@@ -518,12 +536,12 @@ export function TelaDeObjetivos() {
                   setCartaoId(e.target.value);
                   gravarAcumulo({ cartao: e.target.value });
                 }}
-                className="w-full rounded-xl border border-borda bg-superficie px-3 py-3 text-base text-tinta outline-none focus:border-marca"
+                className="h-14 w-full rounded-2xl border border-borda bg-superficie px-4 text-[17px] text-tinta outline-none focus:border-marca"
               >
                 <option value="">Não tenho / não sei</option>
                 {catalogo?.cartoes.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.nome} · {c.pontosPorDolarNacional} pts/US$
+                    {c.nome}, {c.pontosPorDolarNacional} pts por dólar
                   </option>
                 ))}
               </select>
@@ -554,7 +572,7 @@ export function TelaDeObjetivos() {
               ) : null}
             </div>
 
-            <label className="flex items-center gap-3 text-sm text-tinta">
+            <label className="flex min-h-11 items-center gap-3 text-[15px] text-tinta">
               <input
                 type="checkbox"
                 checked={aceitaClube}
@@ -641,7 +659,8 @@ export function TelaDeObjetivos() {
               </ul>
             </div>
           ) : null}
-        </section>
+          </div>
+        </details>
       ) : null}
 
       {!emCriacao && metas.length > 0 ? (
@@ -653,11 +672,52 @@ export function TelaDeObjetivos() {
             setSaldoDigitado("");
             setDataAlvoDigitada("");
           }}
-          className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-marca px-5 text-sm font-semibold text-marca"
+          className="mt-6 min-h-12 w-full rounded-2xl border border-borda bg-superficie px-5 text-[15px] font-semibold text-tinta"
         >
           Novo objetivo
         </button>
       ) : null}
+
+      {/* A acao destrutiva por ultimo, e com confirmacao na propria tela. */}
+      {!emCriacao && metaAtiva ? (
+        <ApagarObjetivo
+          key={metaAtiva.id}
+          cidade={metaAtiva.destinoCidade}
+          aoApagar={() => {
+            removerMeta(metaAtiva.id);
+            setIdAtivo(null);
+          }}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+function ApagarObjetivo({ cidade, aoApagar }: { cidade: string; aoApagar: () => void }) {
+  const [confirmando, setConfirmando] = useState(false);
+  return (
+    <div className="mt-3">
+      {confirmando ? (
+        <div className="flex items-center justify-between gap-3 rounded-2xl bg-superficie-2 px-4 py-2">
+          <span className="text-sm text-tinta">Apagar o objetivo {cidade}?</span>
+          <span className="flex gap-1">
+            <button type="button" onClick={() => setConfirmando(false)} className="min-h-11 px-3 text-sm font-semibold text-tinta-media">
+              Manter
+            </button>
+            <button type="button" onClick={aoApagar} className="min-h-11 px-3 text-sm font-semibold text-alerta">
+              Apagar
+            </button>
+          </span>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setConfirmando(true)}
+          className="min-h-11 w-full text-center text-sm text-tinta-media underline underline-offset-2 hover:text-alerta"
+        >
+          Apagar este objetivo
+        </button>
+      )}
     </div>
   );
 }
@@ -670,14 +730,12 @@ function ObjetivoAtivo({
   aoRegistrar,
   aoDefinirData,
   aoAtualizarEstimativa,
-  aoRemover,
 }: {
   meta: Meta;
   resposta: Resposta | null;
   aoRegistrar: (saldo: number) => void;
   aoDefinirData: (data: string | null) => void;
   aoAtualizarEstimativa: (milhas: number, preco: number) => void;
-  aoRemover: () => void;
 }) {
   const hoje = new Date();
   const progresso = calcularProgresso(meta, hoje);
@@ -696,10 +754,28 @@ function ObjetivoAtivo({
       : 0;
   const estimativaMudou = desvio > DESVIO_QUE_MERECE_AVISO;
 
+  const origem = useLugar(meta.origemIata);
+  const destino = useLugar(meta.destinoIata);
+  const rota =
+    origem && destino
+      ? {
+          origem: [origem.lat, origem.lon] as const,
+          destino: [destino.lat, destino.lon] as const,
+          rotulos: [origem.iata, destino.iata] as [string, string],
+        }
+      : null;
+  const batida = progresso.situacao === "concluida";
+
   return (
     <>
-      <section className="mb-4 painel rounded-[28px] p-5">
-        <div className="mb-4 flex items-center gap-4">
+      <section className="painel relative mt-5 rounded-[28px] p-5 md:p-7">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px]">
+          <div className="absolute -right-6 -top-4 size-[230px] md:right-6 md:top-1/2 md:size-[260px] md:-translate-y-1/2">
+            <Globo rota={rota} enquadramento="inteiro" />
+          </div>
+        </div>
+
+        <div className="relative max-w-[13rem] md:max-w-sm">
           <MarcoDoObjetivo
             metaId={meta.id}
             percentual={progresso.percentual}
@@ -707,171 +783,166 @@ function ObjetivoAtivo({
             tom="claro"
             rotulo="pronto"
           />
-          <div className="min-w-0">
-            <p className="text-xs font-bold uppercase tracking-widest text-painel-tinta-fraca">
-              {meta.programaNome}
-            </p>
-            <h2 className="display truncate text-2xl leading-tight">
-              {meta.destinoCidade}
-            </h2>
-            <p className="tabular mt-1 text-sm text-painel-tinta-fraca">
-              {fmtMilhas(progresso.saldoAtual)} de{" "}
-              {fmtMilhas(meta.milhasNecessarias)} milhas
-            </p>
-          </div>
+          <p className="mt-3 text-[15px] text-painel-tinta-fraca">{meta.programaNome}</p>
+          <h2 className="display text-[30px] leading-tight">{meta.destinoCidade}</h2>
+          <p className="tabular mt-1 text-[15px]">
+            {fmtMilhas(progresso.saldoAtual)} de {fmtMilhas(meta.milhasNecessarias)} milhas
+          </p>
+          <span className="mt-3 inline-flex items-center gap-2 rounded-full bg-painel-realce px-3 py-1.5 text-sm font-semibold text-painel-tinta">
+            <span aria-hidden="true" className="size-2 rounded-full" style={{ background: aparencia.ponto }} />
+            {aparencia.rotulo}
+          </span>
         </div>
 
-        <span
-          className={`inline-block rounded-full px-3 py-1 text-xs font-bold ${aparencia.classe}`}
-        >
-          {aparencia.rotulo}
-        </span>
-
-        <p className="mt-3 text-sm leading-relaxed text-painel-tinta-fraca">
+        <p className="relative mt-4 text-[15px] leading-relaxed text-painel-tinta-fraca md:max-w-md">
           {progresso.resumo}
         </p>
 
         {progresso.chegadaPrevistaEm ? (
-          <p className="tabular mt-3 flex items-baseline gap-2 border-t border-painel-realce pt-3 text-sm">
+          <p className="tabular relative mt-3 flex items-baseline gap-2 border-t border-painel-tinta/15 pt-3 text-[15px] md:max-w-md">
             <span className="text-painel-tinta-fraca">Chegada prevista</span>
-            <span className="font-semibold text-painel-tinta">
-              {mesAno(progresso.chegadaPrevistaEm)}
-            </span>
-          </p>
-        ) : null}
-      </section>
-
-      <section className="mb-4 rounded-[28px] border border-borda bg-superficie p-4 shadow-card">
-        <h3 className="display mb-3 text-lg text-tinta">Como você andou</h3>
-
-        <LinhaDoObjetivo meta={meta} hoje={hoje} />
-
-        <dl className="tabular mt-4 grid grid-cols-3 gap-2 border-t border-borda pt-3 text-center">
-          <div>
-            <dt className="text-[11px] text-tinta-fraca">Ponto de partida</dt>
-            <dd className="text-sm font-semibold text-tinta">
-              {fmtMilhas(progresso.pontoDePartida)}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-[11px] text-tinta-fraca">Acumulado</dt>
-            <dd className="text-sm font-semibold text-dinheiro">
-              +{fmtMilhas(progresso.ganhoDesdeOInicio)}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-[11px] text-tinta-fraca">
-              {progresso.ritmoRealMensal === null ? "Ritmo previsto" : "Ritmo real"}
-            </dt>
-            <dd className="text-sm font-semibold text-tinta">
-              {fmtMilhas(progresso.ritmoConsiderado)}/mês
-            </dd>
-          </div>
-        </dl>
-
-        {progresso.ritmoRealMensal === null ? (
-          <p className="mt-2 text-xs leading-relaxed text-tinta-fraca">
-            Ainda não dá para medir o seu ritmo real: são necessários pelo
-            menos dois registros com três semanas entre eles. Até lá, o prazo
-            vem da projeção do plano de acúmulo.
+            <span className="font-semibold text-painel-tinta">{mesAno(progresso.chegadaPrevistaEm)}</span>
           </p>
         ) : null}
 
-        <div className="mt-4 border-t border-borda pt-4">
-          <label
-            htmlFor="novo-saldo"
-            className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-tinta-fraca"
-          >
-            Atualizar saldo de hoje
-          </label>
-          <div className="flex gap-2">
-            <input
-              id="novo-saldo"
-              type="number"
-              inputMode="numeric"
-              min={0}
-              step={500}
-              value={novoSaldo}
-              onChange={(e) => setNovoSaldo(e.target.value)}
-              placeholder={String(progresso.saldoAtual)}
-              className="tabular min-w-0 flex-1 rounded-xl border border-borda bg-superficie px-3 py-3 text-base text-tinta outline-none focus:border-marca"
-            />
-            <button
-              type="button"
-              disabled={novoSaldo === ""}
-              onClick={() => {
-                aoRegistrar(Number(novoSaldo));
-                setNovoSaldo("");
-              }}
-              className="shrink-0 rounded-xl bg-marca px-5 text-sm font-semibold text-marca-contraste disabled:opacity-40"
-            >
-              Registrar
-            </button>
-          </div>
-          <p className="mt-1.5 text-xs leading-relaxed text-tinta-fraca">
-            Confira o saldo no app do {meta.programaNome} e registre aqui de
-            vez em quando. Cada registro melhora a medida do seu ritmo.
-          </p>
-        </div>
-
-        <div className="mt-4 border-t border-borda pt-4">
-          <label
-            htmlFor="data-alvo"
-            className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-tinta-fraca"
-          >
-            Data pretendida da viagem
-          </label>
-          <input
-            id="data-alvo"
-            type="date"
-            min={paraIso(hoje)}
-            value={meta.dataAlvo ?? ""}
-            onChange={(e) => aoDefinirData(e.target.value || null)}
-            className="w-full rounded-xl border border-borda bg-superficie px-3 py-3 text-base text-tinta outline-none focus:border-marca"
-          />
-          {progresso.ritmoNecessarioMensal &&
-          progresso.situacao === "atrasada" ? (
-            <p className="tabular mt-1.5 text-xs leading-relaxed text-alerta">
-              Para chegar nessa data seriam{" "}
-              {fmtMilhas(progresso.ritmoNecessarioMensal)} milhas por mês.
+        {/* Meta batida e conquista: um dos lugares do Milo. */}
+        {batida ? (
+          <div className="relative mt-4 flex items-center gap-3 rounded-2xl bg-painel-realce p-3 md:max-w-md">
+            <Milo variante="rosto" className="size-12 shrink-0 rounded-full bg-[#f2ede0]" />
+            <p className="text-[15px] text-painel-tinta">
+              Você chegou lá.{" "}
+              <Link
+                href={`/rota/${meta.origemIata}/${meta.destinoIata}`}
+                className="font-semibold underline underline-offset-4"
+              >
+                Ver a hora certa de resgatar
+              </Link>
             </p>
-          ) : null}
-        </div>
+          </div>
+        ) : null}
       </section>
 
       {estimativaMudou && estimativaAtual && resposta ? (
-        <section className="mb-4 rounded-2xl border border-milhas-borda bg-milhas-fundo p-4">
-          <h3 className="mb-1 text-sm font-semibold text-tinta">
-            A estimativa desta rota mudou
-          </h3>
-          <p className="tabular text-sm leading-relaxed text-tinta-media">
+        <section className="mt-4 rounded-[20px] bg-superficie-2 p-5">
+          <h3 className="text-[15px] font-semibold text-tinta">A estimativa desta rota mudou</h3>
+          <p className="tabular mt-1 text-[15px] leading-relaxed text-tinta-media">
             Quando você criou o objetivo, o trecho custava{" "}
-            {fmtMilhas(meta.milhasNecessarias)} milhas. Hoje a nossa estimativa
-            é de {fmtMilhas(estimativaAtual)}. Programas usam precificação
-            dinâmica — a conta muda com o preço da passagem.
+            {fmtMilhas(meta.milhasNecessarias)} milhas. Hoje a nossa estimativa é
+            de {fmtMilhas(estimativaAtual)}: os programas usam precificação
+            dinâmica e a conta muda com o preço da passagem.
           </p>
           <button
             type="button"
-            onClick={() =>
-              aoAtualizarEstimativa(
-                estimativaAtual,
-                resposta.plano.precoDaPassagemBRL,
-              )
-            }
-            className="mt-3 rounded-full bg-milhas px-4 py-2 text-xs font-semibold text-milhas-contraste"
+            onClick={() => aoAtualizarEstimativa(estimativaAtual, resposta.plano.precoDaPassagemBRL)}
+            className="mt-3 min-h-11 rounded-2xl bg-marca px-4 text-sm font-semibold text-marca-contraste"
           >
             Atualizar a meta para {fmtMilhas(estimativaAtual)}
           </button>
         </section>
       ) : null}
 
-      <button
-        type="button"
-        onClick={aoRemover}
-        className="text-sm text-tinta-fraca underline underline-offset-2 hover:text-alerta"
-      >
-        Apagar este objetivo
-      </button>
+      {/* A acao mais frequente da tela, logo abaixo do objetivo. */}
+      <section className="mt-4 rounded-[24px] bg-superficie p-5 shadow-card">
+        <label htmlFor="novo-saldo" className="block text-[17px] font-semibold text-tinta">
+          Atualizar o saldo de hoje
+        </label>
+        <div className="mt-3 flex gap-2">
+          <input
+            id="novo-saldo"
+            type="number"
+            inputMode="numeric"
+            min={0}
+            step={500}
+            value={novoSaldo}
+            onChange={(e) => setNovoSaldo(e.target.value)}
+            placeholder={String(progresso.saldoAtual)}
+            className="tabular h-14 min-w-0 flex-1 rounded-2xl border border-borda bg-superficie px-4 text-[17px] text-tinta outline-none focus:border-marca"
+          />
+          <button
+            type="button"
+            disabled={novoSaldo === ""}
+            onClick={() => {
+              aoRegistrar(Number(novoSaldo));
+              setNovoSaldo("");
+            }}
+            className="h-14 shrink-0 rounded-2xl bg-marca px-5 text-[15px] font-semibold text-marca-contraste disabled:opacity-40"
+          >
+            Registrar
+          </button>
+        </div>
+        <p className="mt-2 text-sm leading-relaxed text-tinta-media">
+          Confira no app do {meta.programaNome}. Cada registro melhora a medida
+          do seu ritmo.
+        </p>
+      </section>
+
+      <details className="group mt-4 rounded-[24px] bg-superficie shadow-card">
+        <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 [&::-webkit-details-marker]:hidden">
+          <span>
+            <span className="block text-[17px] font-semibold text-tinta">Como você andou</span>
+            <span className="tabular mt-0.5 block text-sm text-tinta-media">
+              +{fmtMilhas(progresso.ganhoDesdeOInicio)} milhas desde o início
+            </span>
+          </span>
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 shrink-0 text-tinta-media transition-transform group-open:rotate-180" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </summary>
+
+        <div className="px-5 pb-5">
+          <LinhaDoObjetivo meta={meta} hoje={hoje} />
+
+          <dl className="tabular mt-4 grid grid-cols-3 gap-2 border-t border-borda pt-3 text-center">
+            <div>
+              <dt className="text-xs text-tinta-media">Ponto de partida</dt>
+              <dd className="text-[15px] font-semibold text-tinta">{fmtMilhas(progresso.pontoDePartida)}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-tinta-media">Acumulado</dt>
+              <dd className="text-[15px] font-semibold text-dinheiro">+{fmtMilhas(progresso.ganhoDesdeOInicio)}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-tinta-media">
+                {progresso.ritmoRealMensal === null ? "Ritmo previsto" : "Ritmo real"}
+              </dt>
+              <dd className="text-[15px] font-semibold text-tinta">{fmtMilhas(progresso.ritmoConsiderado)}/mês</dd>
+            </div>
+          </dl>
+
+          {progresso.ritmoRealMensal === null ? (
+            <div className="mt-3">
+              <SeloDeOrigem origem="estimado" detalhe="São necessários pelo menos dois registros com três semanas entre eles.">
+                ritmo projetado, ainda não medido
+              </SeloDeOrigem>
+              <p className="mt-2 text-sm leading-relaxed text-tinta-media">
+                Para medir o seu ritmo real são precisos pelo menos dois registros
+                com três semanas entre eles. Até lá, o prazo vem da projeção do
+                plano de acúmulo.
+              </p>
+            </div>
+          ) : null}
+
+          <div className="mt-5 border-t border-borda pt-4">
+            <label htmlFor="data-alvo" className="mb-2 block text-[15px] font-semibold text-tinta">
+              Data pretendida da viagem
+            </label>
+            <input
+              id="data-alvo"
+              type="date"
+              min={paraIso(hoje)}
+              value={meta.dataAlvo ?? ""}
+              onChange={(e) => aoDefinirData(e.target.value || null)}
+              className="h-14 w-full rounded-2xl border border-borda bg-superficie px-4 text-[17px] text-tinta outline-none focus:border-marca"
+            />
+            {progresso.ritmoNecessarioMensal && progresso.situacao === "atrasada" ? (
+              <p className="tabular mt-2 text-sm leading-relaxed text-alerta">
+                Para chegar nessa data seriam {fmtMilhas(progresso.ritmoNecessarioMensal)} milhas por mês.
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </details>
+
     </>
   );
 }
@@ -901,7 +972,7 @@ function Deslizante({
   return (
     <div>
       <div className="mb-1.5 flex items-baseline justify-between gap-3">
-        <label className="text-xs font-semibold uppercase tracking-wide text-tinta-fraca">
+        <label className="text-[15px] font-semibold text-tinta">
           {rotulo}
         </label>
         <output className="tabular text-sm font-semibold text-tinta">
