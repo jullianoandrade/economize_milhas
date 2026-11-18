@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useId } from "react";
+import { useId, useSyncExternalStore } from "react";
 
 /**
  * Data pretendida da viagem.
@@ -13,6 +13,8 @@ import { useId } from "react";
  * E opcional de proposito. Boa parte das pessoas chega aqui sem data
  * definida, e a pagina precisa responder alguma coisa util mesmo assim.
  */
+const nada = () => () => {};
+
 export function SeletorDeData({ valor }: { valor: string | null }) {
   const id = useId();
   const router = useRouter();
@@ -30,7 +32,14 @@ export function SeletorDeData({ valor }: { valor: string | null }) {
     });
   }
 
-  const hoje = new Date().toISOString().slice(0, 10);
+  // A data de hoje so existe no aparelho. Lida durante a renderizacao,
+  // ela quebrava o pre-render ("unstable value new Date()"); assim o
+  // servidor rende sem `min` e o navegador preenche ao hidratar.
+  const hoje = useSyncExternalStore(
+    nada,
+    () => new Date().toISOString().slice(0, 10),
+    () => undefined,
+  );
 
   return (
     <div className="flex flex-wrap items-center gap-2">

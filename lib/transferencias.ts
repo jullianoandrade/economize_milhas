@@ -1,5 +1,6 @@
 import "server-only";
 
+import { connection } from "next/server";
 import { leitor } from "@/lib/supabase";
 import type { BonusPorPrograma, BonusVigente } from "@/lib/milhas/motor";
 
@@ -55,6 +56,12 @@ type BonusLinha = {
 export async function bonusVigentes(): Promise<BonusPorPrograma> {
   const banco = leitor();
   if (!banco) return {};
+
+  // Promocao vigente depende do dia de hoje, entao isto e dado de
+  // requisicao, nao de build. Sem connection(), ler o relogio abaixo
+  // quebrava o pre-render da tela de rota ("unstable value new
+  // Date()") -- o erro que aparecia no log desde a Fase 1.
+  await connection();
 
   // "Hoje" no fuso de quem usa o app, nao em UTC. O servidor roda em
   // UTC, entao toISOString() viraria o dia as 21h de Brasilia: uma

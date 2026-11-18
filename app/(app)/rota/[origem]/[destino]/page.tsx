@@ -84,14 +84,17 @@ export async function generateMetadata({
  */
 const TEMA_DO_HEROI = {
   "--tinta": "#f2ede0",
-  "--tinta-media": "#b6bed0",
-  "--tinta-fraca": "#8e99b0",
-  "--superficie": "#152339",
-  "--superficie-2": "#1d2e48",
-  "--borda": "#2b405f",
-  "--marca": "#8fb2e8",
+  "--tinta-media": "#b7bfd1",
+  "--tinta-fraca": "#919cb4",
+  "--superficie": "#132139",
+  "--superficie-2": "#1a2a44",
+  "--borda": "#26385a",
+  // A acao do heroi e creme, como a do painel e a do Explorar: o mesmo
+  // botao para a mesma decisao nas duas telas.
+  "--marca": "#f2ede0",
+  "--marca-forte": "#fffdf8",
   "--marca-contraste": "#0e1a2e",
-  "--marca-fraca": "#1a2b45",
+  "--marca-fraca": "#1a2a44",
   "--milhas": "#f2b33d",
   "--milhas-fundo": "#2e2410",
   "--milhas-borda": "#56410f",
@@ -211,11 +214,12 @@ async function Conteudo({
   const melhorOrigemAlternativa = outrasOrigens[0] ?? null;
 
   return (
-    /* Em telas grandes a tela vira duas colunas: a RESPOSTA fica à
-       esquerda, grudada, enquanto os detalhes rolam à direita. É a tese
-       do app sempre à vista -- em vez de o veredito sumir no topo assim
-       que a pessoa desce para conferir o calendário. Abaixo de `lg`
-       nada disso existe e a ordem empilhada continua igual. */
+    /* Em telas grandes a tela vira duas colunas: a RESPOSTA a esquerda,
+       os detalhes a direita. O painel da resposta era grudado (sticky)
+       com altura limitada a tela; saiu em 18/11/2026, quando a resposta
+       ganhou "Guardar como objetivo" e "Por que essa resposta?" -- com a
+       altura limitada, os dois ficavam escondidos numa rolagem interna
+       que ninguem percebe. Abaixo de `lg` a ordem empilhada e a mesma. */
     <div className="lg:grid lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:items-start lg:gap-6">
       {/* Nao desenha nada: avisa o servidor que esta rota foi olhada,
           para que o uso real decida o que entra na coleta diaria. */}
@@ -232,7 +236,7 @@ async function Conteudo({
           e nao decoracao. Ficou o que carrega informacao: o arco da
           rota com o aviao, que mostra origem, destino e distancia. */}
       <section
-        className="gradiente-marca relative overflow-hidden rounded-[28px] border border-painel-borda p-5 lg:sticky lg:top-24 lg:max-h-[calc(100dvh-7rem)] lg:overflow-y-auto"
+        className="gradiente-marca relative overflow-hidden rounded-[28px] border border-painel-borda p-5"
         style={TEMA_DO_HEROI}
       >
         <div className="relative">
@@ -256,15 +260,12 @@ async function Conteudo({
             Nova busca
           </Link>
 
-          <h1 className="display text-2xl text-tinta">
+          <h1 className="display text-[26px] leading-tight text-tinta">
             {rota.origem.cidade} → {rota.destino.cidade}
           </h1>
           <p className="tabular mt-1 text-sm text-tinta-media">
-            {rota.origem.iata} · {rota.destino.iata} ·{" "}
-            {rota.distanciaKm.toLocaleString("pt-BR")} km · {rota.rotulo}
-          </p>
-          <p className="mt-1 text-sm text-tinta-media">
-            Valores por trecho, só ida, em classe econômica.
+            {rota.distanciaKm.toLocaleString("pt-BR")} km, só ida, classe
+            econômica. {rota.rotulo}.
           </p>
 
           <div className="mt-4">
@@ -342,41 +343,8 @@ async function Conteudo({
           <ComoPagar veredito={veredito} />
         </IlhaDeComoPagar>
 
-        {/* 4. CTA do objetivo -- so onde existe meta de milhas a bater.
-            Num trecho sem ponta brasileira o motor nao sabe quantas
-            milhas a passagem custa, entao "criar objetivo" convidaria a
-            perseguir um numero que nao existe. */}
-        {rota.tocaOBrasil ? (
-        <section className="mt-6 painel rounded-[24px] p-5">
-          <h2 className="display mb-1.5 text-xl">
-            Ainda não tem as milhas para {rota.destino.cidade}?
-          </h2>
-          <p className="mb-4 text-sm leading-relaxed text-painel-tinta-fraca">
-            Transforme esta rota num objetivo. O app guarda o seu saldo de hoje
-            como ponto de partida e passa a mostrar quanto você já andou, quanto
-            falta e se no seu ritmo dá tempo.
-          </p>
-          <Link
-            href={`/objetivos?destino=${rota.destino.iata}`}
-            className="inline-flex min-h-12 items-center gap-2 rounded-full bg-painel-tinta px-5 text-sm font-semibold text-painel"
-          >
-            Criar objetivo
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              className="size-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M5 12h13" />
-              <path d="m12 5 7 7-7 7" />
-            </svg>
-          </Link>
-        </section>
-        ) : null}
+        {/* O convite para virar objetivo foi para junto da resposta, no
+            heroi (HeroiDaRota): e ali que a pessoa decide. */}
       </div>
     </div>
   );
