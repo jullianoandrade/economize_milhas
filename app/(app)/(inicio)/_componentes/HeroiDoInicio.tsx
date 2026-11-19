@@ -67,7 +67,7 @@ export function HeroiDoInicio() {
       className="painel relative -mx-4 -mt-5 min-h-[340px] overflow-hidden rounded-b-[34px] px-6 pb-7 pt-5 md:mx-0 md:mt-0 md:min-h-[320px] md:rounded-[32px] md:px-9 md:pt-7"
     >
       <div className="pointer-events-none absolute -right-14 top-12 size-[270px] md:right-8 md:top-1/2 md:size-[300px] md:-translate-y-1/2">
-        <Globo rota={rota} enquadramento="inteiro" />
+        <Globo rota={rota} enquadramento="inteiro" arrastavel />
       </div>
 
       <div className="relative flex items-center justify-between gap-3">

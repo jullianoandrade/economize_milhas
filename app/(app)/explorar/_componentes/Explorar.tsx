@@ -107,7 +107,7 @@ export function Explorar({
           com overflow-hidden na secao, a lista de sugestoes do campo de
           busca seria cortada. Ver tests/arquitetura.test.ts. */}
       <div className="absolute inset-0 overflow-hidden md:rounded-[32px]">
-        <Globo rota={rotaDoGlobo} enquadramento={enquadramento} />
+        <Globo rota={rotaDoGlobo} enquadramento={enquadramento} arrastavel />
       </div>
 
       <div className="vidro absolute inset-x-3 top-3 z-20 rounded-[26px] p-4 md:left-6 md:right-auto md:top-6 md:w-[380px]">

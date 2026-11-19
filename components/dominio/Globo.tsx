@@ -70,10 +70,17 @@ function vistaAlvo(
 export function Globo({
   rota,
   enquadramento,
+  arrastavel = false,
 }: {
   /** Origem e destino; null = globo em espera, girando sobre o Brasil. */
   rota: { origem: LatLon; destino: LatLon; rotulos: [string, string] } | null;
   enquadramento: Enquadramento;
+  /**
+   * A pessoa pode girar o globo arrastando. Com o mouse, nos dois eixos;
+   * no toque, so na horizontal -- o arraste vertical continua rolando a
+   * pagina (touch-action: pan-y), para o globo nunca prender a tela.
+   */
+  arrastavel?: boolean;
 }) {
   const telaRef = useRef<HTMLCanvasElement>(null);
   const pedido = useRef({ rota, enquadramento, versao: 0 });
@@ -86,6 +93,11 @@ export function Globo({
       versao: pedido.current.versao + 1,
     };
   }, [rota, enquadramento]);
+
+  const arrastavelRef = useRef(arrastavel);
+  useEffect(() => {
+    arrastavelRef.current = arrastavel;
+  }, [arrastavel]);
 
   useEffect(() => {
     const tela = telaRef.current;
@@ -108,6 +120,67 @@ export function Globo({
     const fonte = getComputedStyle(document.body).fontFamily;
 
     carregarPontos().then((p) => (pontos = p));
+
+    // ---- Arraste -------------------------------------------------------
+    // Girar o globo com a mao e o tipo de detalhe que faz a pessoa ficar
+    // brincando com a tela. Graus por pixel = 1 radiano / R: arrastar a
+    // largura de um raio gira ~57 graus, o que "acompanha o dedo".
+    let arrastando: { id: number; x: number; y: number; t: number } | null = null;
+    let giroLam = 0; // inercia, em graus por quadro
+    let ultimoToque = -Infinity;
+
+    const dentroDoDisco = (x: number, y: number) =>
+      vista !== null && Math.hypot(x - vista.cx, y - vista.cy) <= vista.R * 1.05;
+
+    const local = (e: PointerEvent) => {
+      const caixa = tela.getBoundingClientRect();
+      return { x: e.clientX - caixa.left, y: e.clientY - caixa.top };
+    };
+
+    const aoApertar = (e: PointerEvent) => {
+      if (!arrastavelRef.current || !vista) return;
+      const { x, y } = local(e);
+      if (!dentroDoDisco(x, y)) return;
+      arrastando = { id: e.pointerId, x, y, t: performance.now() };
+      tween = null; // a mao da pessoa manda; a animacao em curso para
+      giroLam = 0;
+      tela.setPointerCapture(e.pointerId);
+      tela.style.cursor = "grabbing";
+    };
+
+    const aoMover = (e: PointerEvent) => {
+      if (!arrastavelRef.current || !vista) return;
+      const { x, y } = local(e);
+      if (!arrastando || arrastando.id !== e.pointerId) {
+        tela.style.cursor = dentroDoDisco(x, y) ? "grab" : "";
+        return;
+      }
+      const grausPorPixel = 180 / Math.PI / vista.R;
+      const dx = x - arrastando.x;
+      const dy = y - arrastando.y;
+      vista.lam -= dx * grausPorPixel;
+      // no toque, so a horizontal gira: a vertical e da rolagem da pagina
+      if (e.pointerType === "mouse") {
+        vista.phi = Math.max(-75, Math.min(75, vista.phi + dy * grausPorPixel));
+      }
+      const agora = performance.now();
+      const dt = Math.max(1, agora - arrastando.t);
+      giroLam = (-dx * grausPorPixel * 16) / dt; // por quadro de ~16 ms
+      arrastando = { id: e.pointerId, x, y, t: agora };
+    };
+
+    const aoSoltar = (e: PointerEvent) => {
+      if (!arrastando || arrastando.id !== e.pointerId) return;
+      arrastando = null;
+      ultimoToque = performance.now();
+      if (calmo) giroLam = 0;
+      tela.style.cursor = arrastavelRef.current ? "grab" : "";
+    };
+
+    tela.addEventListener("pointerdown", aoApertar);
+    tela.addEventListener("pointermove", aoMover);
+    tela.addEventListener("pointerup", aoSoltar);
+    tela.addEventListener("pointercancel", aoSoltar);
 
     const medir = () => {
       const caixa = tela.getBoundingClientRect();
@@ -230,7 +303,16 @@ export function Globo({
             cy: de.cy + (para.cy - de.cy) * e,
           };
           if (t >= 1) tween = null;
-        } else if (!pedido.current.rota && !calmo) {
+        } else if (!arrastando && Math.abs(giroLam) > 0.01) {
+          // inercia: o globo continua um pouco depois de solto
+          vista.lam += giroLam;
+          giroLam *= 0.94;
+        } else if (
+          !arrastando &&
+          !pedido.current.rota &&
+          !calmo &&
+          agora - ultimoToque > 2500
+        ) {
           vista.lam += 0.03;
         }
         if (arcoAlvo > 0 && agora >= arcoInicio) {
@@ -245,8 +327,18 @@ export function Globo({
     return () => {
       cancelAnimationFrame(quadro);
       observador.disconnect();
+      tela.removeEventListener("pointerdown", aoApertar);
+      tela.removeEventListener("pointermove", aoMover);
+      tela.removeEventListener("pointerup", aoSoltar);
+      tela.removeEventListener("pointercancel", aoSoltar);
     };
   }, []);
 
-  return <canvas ref={telaRef} aria-hidden="true" className="block size-full" />;
+  return (
+    <canvas
+      ref={telaRef}
+      aria-hidden="true"
+      className={`block size-full ${arrastavel ? "pointer-events-auto touch-pan-y" : "pointer-events-none"}`}
+    />
+  );
 }

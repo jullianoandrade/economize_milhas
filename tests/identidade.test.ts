@@ -81,3 +81,13 @@ describe("globals.css e CSS valido", () => {
     ).not.toThrow();
   });
 });
+
+describe("o que se clica mostra a maozinha", () => {
+  it("botoes, links, resumo de <details> e controles ganham cursor: pointer", () => {
+    const css = readFileSync(path.join(raiz, "app", "globals.css"), "utf8");
+    const regra = css.slice(css.indexOf("@layer base {"), css.indexOf("cursor: pointer;"));
+    for (const seletor of ["a[href]", "button:not(:disabled)", "summary", "select:not(:disabled)"]) {
+      expect(regra).toContain(seletor);
+    }
+  });
+});

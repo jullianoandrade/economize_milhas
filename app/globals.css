@@ -269,6 +269,30 @@
    Base
    ============================================================ */
 
+/* Tudo que se clica mostra a maozinha.
+   O Tailwind 4 deixou de por cursor: pointer em <button> (segue o padrao
+   do navegador, que e a seta), e a interface parecia menos clicavel do
+   que era. Fica em @layer base para qualquer utilitario `cursor-*`
+   continuar podendo sobrescrever. */
+@layer base {
+  a[href],
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary,
+  select:not(:disabled),
+  label:has(> input[type="checkbox"]),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  input[type="range"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  select:disabled {
+    cursor: not-allowed;
+  }
+}
+
 html {
   /* Impede o iOS de aumentar a fonte ao girar o aparelho */
   -webkit-text-size-adjust: 100%;
