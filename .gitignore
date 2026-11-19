@@ -45,3 +45,8 @@ next-env.d.ts
 lh*.json
 f_*.json
 *.log
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/

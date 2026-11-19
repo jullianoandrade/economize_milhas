@@ -160,11 +160,20 @@ export const usarPerfil = create<Perfil>()(
         set((estado) => ({
           metas: estado.metas.map((m) => {
             if (m.id !== metaId) return m;
-            // Dois registros no mesmo dia viram um: o ultimo vale.
-            const outros = m.registros.filter((r) => r.em !== registro.em);
+            // Dois registros no mesmo dia viram um: o ultimo vale -- MENOS
+            // o ponto de partida, que nunca e substituido. Sem esta
+            // excecao, registrar o saldo no mesmo dia em que o objetivo
+            // nasceu apagava o marco inicial e o "quanto voce andou"
+            // voltava a zero (achado pelo teste de jornada, 19/11/2026).
+            const [partida, ...depois] = [...m.registros].sort((a, b) =>
+              a.em.localeCompare(b.em),
+            );
+            if (!partida) return { ...m, registros: [registro] };
+            const outros = depois.filter((r) => r.em !== registro.em);
             return {
               ...m,
-              registros: [...outros, registro].sort((a, b) =>
+              // sort estavel: no empate de data, a partida segue primeiro
+              registros: [partida, ...outros, registro].sort((a, b) =>
                 a.em.localeCompare(b.em),
               ),
             };

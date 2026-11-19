@@ -99,6 +99,10 @@ export function Explorar({
       aria-label="Explorar destinos"
       className="painel relative -mx-4 -mt-5 h-[calc(100dvh-1rem)] min-h-[640px] md:mx-0 md:mt-0 md:h-[calc(100dvh-9rem)] md:min-h-[600px] md:rounded-[32px]"
     >
+      {/* Titulo para leitor de tela: a tela e visual (o globo), mas
+          precisa dizer onde a pessoa esta. Achado pelo teste de saude. */}
+      <h1 className="sr-only">Explorar destinos</h1>
+
       {/* O recorte arredondado fica nesta camada, e nao na <section>:
           com overflow-hidden na secao, a lista de sugestoes do campo de
           busca seria cortada. Ver tests/arquitetura.test.ts. */}
