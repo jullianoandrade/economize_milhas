@@ -9,6 +9,7 @@ import {
 } from "@/lib/seguranca/requisicao";
 import { REGRAS } from "@/lib/seguranca/limite";
 import { corpoDoInteresse } from "@/lib/seguranca/esquemas";
+import { registrar } from "@/lib/log";
 
 /**
  * Registra que alguem olhou uma rota.
@@ -77,5 +78,8 @@ export async function POST(requisicao: Request) {
   // Falha aqui nao e problema do visitante: ele veio ver uma rota, nao
   // alimentar nosso sensor. Banco sem a migration aplicada responde 404
   // e a pagina nem fica sabendo.
+  if (error) {
+    registrar("aviso", "banco.falha", { onde: "registrar_interesse", codigo: error.code, mensagem: error.message });
+  }
   return NextResponse.json({ registrado: !error });
 }

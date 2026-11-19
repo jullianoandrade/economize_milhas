@@ -1,4 +1,5 @@
 import "server-only";
+import { registrar } from "@/lib/log";
 
 /**
  * Cliente da Travelpayouts Data API.
@@ -56,15 +57,35 @@ async function buscar<T>(
       next: { revalidate: REVALIDAR_SEGUNDOS },
       headers: { "X-Access-Token": token },
     });
-    if (!resposta.ok) return null;
+    if (!resposta.ok) {
+      registrar("aviso", "provedor.falha", {
+        provedor: "travelpayouts",
+        caminho,
+        status: resposta.status,
+      });
+      return null;
+    }
 
     const corpo = (await resposta.json()) as { success?: boolean; data?: T };
-    if (corpo?.success === false) return null;
+    if (corpo?.success === false) {
+      registrar("aviso", "provedor.falha", {
+        provedor: "travelpayouts",
+        caminho,
+        motivo: "success=false",
+      });
+      return null;
+    }
 
     return (corpo?.data ?? null) as T | null;
-  } catch {
+  } catch (erro) {
     // Rede fora, timeout, resposta malformada: cai no fallback curado.
-    // Nunca derruba a pagina por causa de um provedor externo.
+    // Nunca derruba a pagina por causa de um provedor externo -- mas
+    // deixa o motivo registrado (lib/log.ts).
+    registrar("aviso", "provedor.falha", {
+      provedor: "travelpayouts",
+      caminho,
+      erro,
+    });
     return null;
   }
 }

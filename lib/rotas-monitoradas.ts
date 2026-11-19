@@ -2,6 +2,7 @@ import "server-only";
 
 import { leitor } from "@/lib/supabase";
 import rotasDestaque from "@/data/rotas-destaque.json";
+import { registrar } from "@/lib/log";
 
 /**
  * As rotas que o projeto acompanha de verdade.
@@ -40,6 +41,7 @@ export async function rotasMonitoradas(): Promise<RotaMonitorada[]> {
     .eq("ativa", true)
     .order("prioridade", { ascending: true });
 
+  if (error) registrar("aviso", "banco.falha", { onde: "rotas_monitoradas", codigo: error.code, mensagem: error.message });
   if (error || !Array.isArray(data) || data.length === 0) return SEMENTE;
 
   return data

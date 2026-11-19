@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { relatarErro } from "@/lib/cliente/relatar";
 import Link from "next/link";
 import { Milo } from "@/components/ui/Milo";
 
@@ -33,6 +35,12 @@ export default function ErroDaTela({
     error instanceof Error && "digest" in error
       ? String((error as Error & { digest?: unknown }).digest ?? "")
       : "";
+
+  // A tela de erro mostra o codigo; o relato faz esse codigo existir
+  // tambem no log, com o aparelho (celular/desktop) junto.
+  useEffect(() => {
+    relatarErro("fronteira", error, digest || undefined);
+  }, [error, digest]);
 
   return (
     <section className="rounded-2xl border border-borda bg-superficie p-6 shadow-card">

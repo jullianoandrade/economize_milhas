@@ -3,6 +3,7 @@ import "server-only";
 import { connection } from "next/server";
 import { leitor } from "@/lib/supabase";
 import type { BonusPorPrograma, BonusVigente } from "@/lib/milhas/motor";
+import { registrar } from "@/lib/log";
 
 /**
  * As promocoes de transferencia que estao valendo hoje.
@@ -80,6 +81,7 @@ export async function bonusVigentes(): Promise<BonusPorPrograma> {
     .gte("termina_em", hoje)
     .order("percentual", { ascending: false });
 
+  if (error) registrar("aviso", "banco.falha", { onde: "bonus_transferencia", codigo: error.code, mensagem: error.message });
   if (error || !Array.isArray(data) || data.length === 0) return {};
 
   const linhas: BonusLinha[] = data

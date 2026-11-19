@@ -75,3 +75,18 @@ export function parametrosDe(url: string, nomes: readonly string[]) {
   const p = new URL(url).searchParams;
   return Object.fromEntries(nomes.map((n) => [n, p.get(n)]));
 }
+
+/**
+ * Relato de erro vindo do navegador (/api/erros). Tudo com teto: e uma
+ * porta aberta a qualquer um, entao nada aqui pode virar log gigante.
+ * `pagina` e so o caminho -- a query pode carregar dado da pessoa.
+ */
+export const corpoDoErroDoCliente = z.object({
+  origem: z.enum(["janela", "promessa", "fronteira", "fronteira-global"]),
+  mensagem: z.string().max(500),
+  pagina: z.string().max(200).regex(/^\/[^?#]*$/),
+  dispositivo: z.enum(["celular", "desktop"]),
+  largura: z.number().int().min(0).max(10_000),
+  digest: z.string().max(64).optional(),
+  pilha: z.string().max(1500).optional(),
+});

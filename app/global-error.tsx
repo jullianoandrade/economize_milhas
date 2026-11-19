@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { relatarErro } from "@/lib/cliente/relatar";
 import { MARCA as PRODUTO } from "@/lib/marca";
 
 /**
@@ -38,6 +40,12 @@ export default function ErroGlobal({
     error instanceof Error && "digest" in error
       ? String((error as Error & { digest?: unknown }).digest ?? "")
       : "";
+
+  // A tela de erro mostra o codigo; o relato faz esse codigo existir
+  // tambem no log, com o aparelho (celular/desktop) junto.
+  useEffect(() => {
+    relatarErro("fronteira-global", error, digest || undefined);
+  }, [error, digest]);
 
   return (
     <html lang="pt-BR">

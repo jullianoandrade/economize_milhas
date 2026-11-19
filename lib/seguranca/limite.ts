@@ -97,4 +97,6 @@ export const REGRAS = {
    * o contador medir pessoas interessadas, e nao recarregamentos.
    */
   interessePorPar: { maximo: 1, janelaMs: 6 * 60 * MINUTO },
+  /** Relatos de erro do navegador: uma tela quebrada nao vira enxurrada. */
+  errosDoCliente: { maximo: 10, janelaMs: MINUTO },
 } as const satisfies Record<string, Regra>;

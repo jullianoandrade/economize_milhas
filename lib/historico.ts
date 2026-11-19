@@ -7,6 +7,7 @@ import {
   type Observacao,
 } from "@/lib/tempo/antecedencia";
 import { agruparPorData, type PrecoDeData } from "@/lib/tempo/flexibilidade";
+import { registrar } from "@/lib/log";
 
 /**
  * Leitura do historico proprio de precos.
@@ -118,6 +119,7 @@ export async function observacoesDaRota(
     .eq("destino", destino)
     .limit(LIMITE);
 
+  if (error) registrar("aviso", "banco.falha", { onde: "historico", codigo: error.code, mensagem: error.message });
   if (error || !data) return [];
 
   return data.map((linha) => ({
@@ -207,6 +209,7 @@ export async function observacoesDatadasDaRota(
     .eq("destino", destino)
     .limit(LIMITE);
 
+  if (error) registrar("aviso", "banco.falha", { onde: "historico", codigo: error.code, mensagem: error.message });
   if (error || !data) return [];
 
   return data.map((linha) => ({
@@ -253,6 +256,7 @@ export async function precosMensaisDaRota(
     .eq("destino", destino)
     .limit(LIMITE);
 
+  if (error) registrar("aviso", "banco.falha", { onde: "historico", codigo: error.code, mensagem: error.message });
   if (error || !data) return [];
 
   const menorPorMes = new Map<number, number>();

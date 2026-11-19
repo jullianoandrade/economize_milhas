@@ -3,6 +3,7 @@ import "server-only";
 import { NextResponse } from "next/server";
 import type { z } from "zod";
 import { criarLimitador, type Regra } from "./limite";
+import { registrar } from "@/lib/log";
 
 /**
  * O que toda rota de API faz antes de chegar na regra de negocio:
@@ -32,6 +33,7 @@ export function limitar(
 ): NextResponse | null {
   const r = verificar(`${porta}:${ipDe(requisicao)}`, regra);
   if (r.permitido) return null;
+  registrar("aviso", "limite.excedido", { porta });
   return NextResponse.json(
     { erro: "muitas requisicoes, tente de novo em instantes" },
     { status: 429, headers: { "Retry-After": String(r.tenteEmSegundos) } },

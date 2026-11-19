@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { escritor } from "@/lib/supabase";
 import { precosObservados, temToken } from "@/lib/providers/travelpayouts";
+import { registrar } from "@/lib/log";
 
 /**
  * Coleta diaria de precos.
@@ -171,6 +172,11 @@ export async function GET(requisicao: Request) {
   }
 
   relatorio.duracaoMs = Date.now() - comecou;
+
+  // A coleta diaria e o unico ativo que ninguem vende pronto: se ela
+  // parar ou falhar, tem de aparecer no log, nao so na resposta HTTP
+  // que ninguem le.
+  registrar(relatorio.falhas.length === 0 ? "info" : "aviso", "coleta.concluida", relatorio);
 
   return NextResponse.json({
     ok: relatorio.falhas.length === 0,
