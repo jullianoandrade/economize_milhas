@@ -46,3 +46,19 @@ test("o globo gira arrastando com o mouse", async ({ page, isMobile }) => {
   const depois = await tela.evaluate((c: HTMLCanvasElement) => c.toDataURL());
   expect(depois).not.toBe(antes);
 });
+
+test("nenhuma tela fica mais larga que o celular", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "o estouro lateral so afasta a tela no celular");
+  // Bug real: na rota com data a pagina chegou a 2358px num celular de
+  // 412, e o toque em "Ver passagem" caia no lugar errado.
+  const ida = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  for (const url of ["/", "/explorar", `/rota/GRU/LIS?data=${ida}`, "/rota/GRU/FLN", "/carteira", "/objetivos", "/oportunidades", "/conta", "/conta/viagens", "/aprender"]) {
+    await page.goto(url);
+    await page.waitForLoadState("networkidle");
+    const { largura, tela } = await page.evaluate(() => ({
+      largura: document.documentElement.scrollWidth,
+      tela: document.documentElement.clientWidth,
+    }));
+    expect(largura, `${url} com ${largura}px numa tela de ${tela}px`).toBeLessThanOrEqual(tela);
+  }
+});

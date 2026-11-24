@@ -20,7 +20,7 @@ export function SeloDeFonte({
 }) {
   return fonte === "travelpayouts" ? (
     <SeloDeOrigem origem="real" detalhe={observacao}>
-      busca real de hoje
+      busca real recente
     </SeloDeOrigem>
   ) : (
     <SeloDeOrigem origem="estimado" detalhe={observacao}>

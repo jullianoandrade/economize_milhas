@@ -25,6 +25,11 @@ export type ContextoDaOferta = {
   internacional: boolean;
   destinoIata?: string;
   origemIata?: string;
+  /** Nome da cidade de destino: a busca de hospedagem procura por ele. */
+  destinoCidade?: string;
+  /** Datas da estadia, AAAA-MM-DD. Check-in costuma ser a data de ida. */
+  checkin?: string;
+  checkout?: string;
 };
 
 export function ofertasRelevantes(contexto: ContextoDaOferta): {
@@ -65,8 +70,77 @@ function parametrosDe(
   if (parceiro.tipo === "voo" && contexto.origemIata && contexto.destinoIata) {
     return { origin_iata: contexto.origemIata, destination_iata: contexto.destinoIata };
   }
-  if (parceiro.tipo === "hotel" && contexto.destinoIata) {
-    return { destination: contexto.destinoIata };
+  if (parceiro.tipo === "hotel" && (contexto.destinoCidade || contexto.destinoIata)) {
+    return parametrosDeHospedagem({
+      cidade: contexto.destinoCidade ?? contexto.destinoIata ?? "",
+      checkin: contexto.checkin,
+      checkout: contexto.checkout,
+    });
   }
   return {};
+}
+
+/**
+ * Busca de hospedagem do Booking.com: cidade, datas e ocupacao na URL.
+ * Formato conferido num navegador de verdade (ver a observacao do
+ * parceiro em data/parceiros-comercial.json).
+ */
+function parametrosDeHospedagem(estadia: {
+  cidade: string;
+  checkin?: string;
+  checkout?: string;
+  adultos?: number;
+}): Record<string, string> {
+  const datas: Record<string, string> =
+    estadia.checkin && estadia.checkout && DIA.test(estadia.checkin) && DIA.test(estadia.checkout)
+      ? { checkin: estadia.checkin, checkout: estadia.checkout }
+      : {};
+  return {
+    ss: estadia.cidade,
+    ...datas,
+    group_adults: String(estadia.adultos ?? 2),
+    no_rooms: "1",
+    group_children: "0",
+  };
+}
+
+const DIA = /^\d{4}-\d{2}-\d{2}$/;
+
+export type LinkDeHospedagem = {
+  url: string;
+  /** Quem abre a busca, para o texto do botao. */
+  parceiro: string;
+  /**
+   * Se o link carrega marcacao de afiliado. So isto depende da flag de
+   * monetizacao: o link em si sai sempre, ligada ou desligada -- a
+   * direcao que o app da nao pode depender de quanto ele ganha.
+   */
+  comissionado: boolean;
+};
+
+/**
+ * Hospedagem na cidade de destino, nas datas da viagem.
+ *
+ * Diferente de ofertasRelevantes, nao some com a monetizacao
+ * desligada: quem reservou a passagem precisa de onde ficar, ganhe o app
+ * alguma coisa com isso ou nao.
+ */
+export function linkDeHospedagem(estadia: {
+  cidade: string;
+  checkin?: string;
+  checkout?: string;
+  adultos?: number;
+}): LinkDeHospedagem | null {
+  const cidade = estadia.cidade.trim();
+  if (!cidade) return null;
+  const parceiro = parceiros.find((p) => p.tipo === "hotel");
+  if (!parceiro) return null;
+  const url = montarLink(parceiro, parametrosDeHospedagem({ ...estadia, cidade }));
+  if (!url) return null;
+  const marker = process.env.NEXT_PUBLIC_TRAVELPAYOUTS_MARKER?.trim();
+  return {
+    url,
+    parceiro: parceiro.nome,
+    comissionado: monetizacaoAtiva() && parceiro.parametroDeMarker !== "" && Boolean(marker),
+  };
 }

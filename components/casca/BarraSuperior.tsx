@@ -21,6 +21,7 @@ import { MARCA } from "@/lib/marca";
  */
 export function BarraSuperior() {
   const pathname = usePathname();
+  const contaAtiva = pathname === "/conta" || pathname.startsWith("/conta/");
 
   return (
     <header className="sticky top-0 z-40 hidden border-b border-borda bg-superficie/85 backdrop-blur-md md:block">
@@ -58,8 +59,26 @@ export function BarraSuperior() {
           </ul>
         </nav>
 
-        <div className="ml-auto shrink-0">
+        {/* A conta nao e aba: e o lugar do que e da pessoa, ao lado do
+            tema, como em qualquer app. No celular quem leva ate ela e o
+            avatar do Inicio. */}
+        <div className="ml-auto flex shrink-0 items-center gap-2">
           <AlternadorDeTema />
+          <Link
+            href="/conta"
+            aria-current={contaAtiva ? "page" : undefined}
+            className={`flex min-h-10 items-center gap-2 rounded-full px-3.5 text-sm font-semibold transition-colors ${
+              contaAtiva
+                ? "bg-marca text-marca-contraste"
+                : "text-tinta-media hover:bg-superficie-2 hover:text-tinta"
+            }`}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="size-[18px]" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="8.5" r="3.75" />
+              <path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5" />
+            </svg>
+            Sua conta
+          </Link>
         </div>
       </div>
     </header>

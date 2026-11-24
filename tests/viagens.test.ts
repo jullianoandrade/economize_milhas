@@ -8,6 +8,16 @@ import {
   separarViagens,
   type Viagem,
 } from "@/lib/viagens/modelo";
+import {
+  caminhoDaRota,
+  dataCurta,
+  diasEntre,
+  estadiaDaViagem,
+  limitarNoites,
+  NOITES_PADRAO,
+  proximaViagem,
+  quandoE,
+} from "@/lib/viagens/preparar";
 
 let n = 0;
 const id = () => `v${++n}`;
@@ -79,5 +89,63 @@ describe("minhas viagens", () => {
 
   it("hoje e o dia de Sao Paulo, nao o UTC", () => {
     expect(hojeEmSaoPaulo(new Date("2026-11-25T01:30:00Z"))).toBe("2026-11-24");
+  });
+});
+
+describe("preparar a viagem", () => {
+  const reservada = (ida: string | null, idV = "r1"): Viagem => ({
+    id: idV,
+    origemIata: "GRU",
+    destinoIata: "LIS",
+    ida,
+    precoVistoBRL: 3200,
+    forma: "dinheiro",
+    programaId: null,
+    situacao: "reservada",
+    criadaEm: agora.toISOString(),
+    atualizadaEm: agora.toISOString(),
+  });
+
+  it("check-in e a ida; check-out soma as noites, virando o mes", () => {
+    expect(estadiaDaViagem(reservada("2027-01-30"), 3)).toEqual({
+      checkin: "2027-01-30",
+      checkout: "2027-02-02",
+      noites: 3,
+    });
+  });
+
+  it("noites ficam entre 1 e 30", () => {
+    expect(limitarNoites(0)).toBe(1);
+    expect(limitarNoites(99)).toBe(30);
+    expect(limitarNoites(Number.NaN)).toBe(NOITES_PADRAO);
+  });
+
+  it("sem data de ida nao ha estadia", () => {
+    expect(estadiaDaViagem(reservada(null), 3)).toBeNull();
+  });
+
+  it("a proxima viagem e a reservada mais perto, com os dias que faltam", () => {
+    const p = proximaViagem([reservada("2027-03-10", "a"), reservada("2026-12-06", "b")], agora)!;
+    expect(p.viagem.id).toBe("b");
+    expect(p.emDias).toBe(12);
+    expect(proximaViagem([], agora)).toBeNull();
+  });
+
+  it("fala o tempo como gente", () => {
+    expect(quandoE(0)).toBe("hoje");
+    expect(quandoE(1)).toBe("amanhã");
+    expect(quandoE(12)).toBe("em 12 dias");
+    expect(dataCurta("2026-12-06", "2026-11-24")).toBe("6 dez");
+    expect(dataCurta("2027-03-10", "2026-11-24")).toBe("10 mar 2027");
+  });
+
+  it("volta para a rota com a data", () => {
+    expect(caminhoDaRota(reservada("2027-03-10"))).toBe("/rota/GRU/LIS?data=2027-03-10");
+    expect(caminhoDaRota(reservada(null))).toBe("/rota/GRU/LIS");
+  });
+
+  it("dias entre datas contam o calendario, nao as horas", () => {
+    expect(diasEntre("2026-11-24", "2026-11-24")).toBe(0);
+    expect(diasEntre("2026-11-24", "2027-11-24")).toBe(365);
   });
 });

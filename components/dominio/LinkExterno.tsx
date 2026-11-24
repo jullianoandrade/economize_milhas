@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { MouseEventHandler, ReactNode } from "react";
 
 /**
  * O UNICO emissor de ancora externa do projeto.
@@ -15,7 +15,7 @@ import type { ReactNode } from "react";
  * pede para link pago sem jogar fora o rastreio da rede.
  */
 
-type TipoDeLink = "patrocinado" | "utilidade";
+export type TipoDeLink = "patrocinado" | "utilidade";
 
 const REL: Record<TipoDeLink, string> = {
   patrocinado: "sponsored nofollow noopener",
@@ -34,12 +34,18 @@ export function LinkExterno({
   tipo,
   variante = "primario",
   className = "",
+  onClick,
   children,
 }: {
   href: string;
   tipo: TipoDeLink;
   variante?: keyof typeof ESTILO;
   className?: string;
+  /**
+   * So de dentro de um componente de cliente (ver LinkParaPassagem, que
+   * registra a saida para a passagem). Nunca impede a navegacao.
+   */
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
   children: ReactNode;
 }) {
   return (
@@ -47,6 +53,7 @@ export function LinkExterno({
       href={href}
       target="_blank"
       rel={REL[tipo]}
+      onClick={onClick}
       className={`${ESTILO[variante]} ${className}`}
     >
       {children}

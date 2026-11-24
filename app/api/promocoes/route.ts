@@ -9,6 +9,7 @@ import { bonusVigentes } from "@/lib/transferencias";
 import { limitar } from "@/lib/seguranca/requisicao";
 import { REGRAS } from "@/lib/seguranca/limite";
 import { consultaDasPromocoes, parametrosDe } from "@/lib/seguranca/esquemas";
+import { hojeEmSaoPaulo } from "@/lib/viagens/modelo";
 
 /**
  * Oportunidades a partir da cidade da pessoa.
@@ -29,6 +30,26 @@ const MAXIMO_DE_DESTINOS = 14;
 
 /** Desconto minimo sobre o preco tipico da regiao para contar como oferta. */
 const DESCONTO_MINIMO = 0.1;
+
+/**
+ * A data de partida so segue para a tela se for um dia de verdade, de
+ * hoje em diante. E ela que transforma o cartao em caminho: o toque leva
+ * a /rota/{O}/{D}?data=..., e de la ao bilhete daquele dia. Data passada
+ * ou malformada vira null, e o cartao leva a rota sem data, como antes.
+ */
+function partidaFutura(bruta: string | null, hoje: string): string | null {
+  if (!bruta) return null;
+  const dia = bruta.slice(0, 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dia)) return null;
+  const d = new Date(`${dia}T12:00:00Z`);
+  if (Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== dia) return null;
+  return dia >= hoje ? dia : null;
+}
+
+/** found_at vem sem fuso ("2026-11-20T10:48:36"); so aceita o que e instante. */
+function instante(bruto: string | null): string | null {
+  return bruto && !Number.isNaN(Date.parse(bruto)) ? bruto : null;
+}
 
 export async function GET(requisicao: Request) {
   const bloqueio = limitar(requisicao, "promocoes", REGRAS.consultaExterna);
@@ -83,6 +104,8 @@ export async function GET(requisicao: Request) {
     });
   }
 
+  const hoje = hojeEmSaoPaulo(new Date());
+
   const oportunidades = bruto
     .flatMap((oferta) => {
       // Rotas fora da nossa base de aeroportos sao puladas em silencio:
@@ -120,6 +143,10 @@ export async function GET(requisicao: Request) {
               pais: destino.pais,
             },
             precoBRL: Math.round(oferta.precoBRL),
+            // O dia em que esta tarifa sai e quando ela foi vista. Sem
+            // isso o cartao so informa; com isso ele leva a passagem.
+            partidaEm: partidaFutura(oferta.partidaEm, hoje),
+            encontradoEm: instante(oferta.encontradoEm),
             rotulo: rota.rotulo,
             recomendacao: veredito.recomendacao,
             // O motor ja sabia que alguns destes rendem pouco; a tela e

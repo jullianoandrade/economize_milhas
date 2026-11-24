@@ -12,6 +12,7 @@ import {
   rotacaoDoArraste,
   slerp,
   vetorDe,
+  type Quat,
   type VistaLivre as Vista,
 } from "@/lib/globo/rotacao";
 
@@ -48,6 +49,15 @@ export type Enquadramento = "centro" | "direita" | "acima" | "esquerda" | "intei
 
 const CENTRO_DO_BRASIL: LatLon = [-14, -51];
 const GRAU = Math.PI / 180;
+
+/**
+ * Onde o ultimo globo "continuo" parou. O globo do Inicio e o do Explorar
+ * sao o MESMO objeto na transicao entre as telas (o mini cresce e vira o
+ * grande); como o <canvas> remonta na navegacao, o novo comeca desta
+ * orientacao em vez de voltar ao Brasil -- sem isso, os pontos pulariam
+ * no meio do morph.
+ */
+let orientacaoContinua: Quat | null = null;
 
 let pontosPendentes: Promise<Float32Array> | null = null; // uma carga por sessao
 function carregarPontos(): Promise<Float32Array> {
@@ -111,6 +121,7 @@ export function Globo({
   rota,
   enquadramento,
   arrastavel = false,
+  continuar = false,
 }: {
   /** Origem e destino; null = globo em espera, girando sobre o Brasil. */
   rota: { origem: LatLon; destino: LatLon; rotulos: [string, string] } | null;
@@ -122,6 +133,11 @@ export function Globo({
    * globo nunca prender a tela.
    */
   arrastavel?: boolean;
+  /**
+   * Comeca (sem rota) de onde o ultimo globo continuo parou, e guarda a
+   * propria orientacao para o proximo. Ver `orientacaoContinua`.
+   */
+  continuar?: boolean;
 }) {
   const telaRef = useRef<HTMLCanvasElement>(null);
   const pedido = useRef({ rota, enquadramento, versao: 0 });
@@ -139,6 +155,8 @@ export function Globo({
   useEffect(() => {
     arrastavelRef.current = arrastavel;
   }, [arrastavel]);
+
+  const continuarRef = useRef(continuar);
 
   useEffect(() => {
     const tela = telaRef.current;
@@ -284,6 +302,7 @@ export function Globo({
       }
       giro = [0, 0, 0];
       if (!vista) {
+        if (continuarRef.current && !r && orientacaoContinua) para.q = orientacaoContinua;
         vista = para;
       } else {
         // o slerp gira pelo caminho mais curto e endireita o norte
@@ -419,6 +438,7 @@ export function Globo({
           arco = calmo ? 1 : Math.min(1, suavizar(Math.min(1, (agora - arcoInicio) / 1400)));
         }
         desenhar(vista);
+        if (continuarRef.current) orientacaoContinua = vista.q;
       }
       quadro = requestAnimationFrame(laco);
     };

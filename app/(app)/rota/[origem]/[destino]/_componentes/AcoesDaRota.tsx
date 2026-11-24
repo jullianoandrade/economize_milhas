@@ -1,24 +1,27 @@
 import Link from "next/link";
 import type { Veredito } from "@/lib/milhas/veredito";
 import type { FaseDaJornada } from "@/lib/monetizacao/jornada";
-import { linkDeBuscaDeVoo, monetizacaoAtiva } from "@/lib/monetizacao/links";
-import { LinkExterno } from "@/components/dominio/LinkExterno";
-import { NotaDeTransparencia } from "./NotaDeTransparencia";
+import { LinkParaPassagem } from "@/components/dominio/LinkParaPassagem";
+import { IrParaAPassagem } from "./IrParaAPassagem";
+import type { PassagemVista } from "./passagem";
 
 /**
- * Um botao primario, nunca dois do mesmo peso.
+ * O que fazer com a resposta: um botao primario, nunca dois do mesmo
+ * peso, e os dois caminhos sempre a mao.
  *
- * "Resgatar no {programa}" e risco zero: usa data/programas.json, que ja
- * existe, nao depende da flag de monetizacao e nao precisa de
- * divulgacao -- por isso NotaDeTransparencia so aparece junto do link
- * patrocinado (a busca de preco em dinheiro via Aviasales), nunca junto
- * do botao de resgate.
+ *   resgatar        -> primario "Resgatar no {programa}",
+ *                      secundario "Ver passagem em dinheiro"
+ *   guardar / pagar -> primario "Ver passagem de R$ X em {dia}",
+ *                      secundario "Resgatar no {programa}"
  *
- * Quando o veredito recomenda milhas, o secundario oferece ver o preco
- * em dinheiro mesmo assim: pode nao haver assento de resgate na data
- * escolhida, e sem essa saida a pessoa ficaria numa porta que pode estar
- * fechada. O contrario nao vale -- linkar o programa depois de dizer
- * "pague em dinheiro" seria incoerente com o proprio conselho.
+ * O secundario existe nos dois sentidos. Quando o veredito e milhas,
+ * pode nao haver assento de resgate no dia; quando e dinheiro, quem ja
+ * decidiu usar as milhas (estao vencendo, por exemplo) nao pode ficar
+ * sem porta. O peso visual e que diz o que recomendamos.
+ *
+ * Os links de passagem sao sempre visiveis: monetizacao so decide o
+ * marker e a nota de comissao (ver IrParaAPassagem). Todo clique que leva
+ * a passagem vira viagem "em vista" (LinkParaPassagem).
  */
 export function AcoesDaRota({
   veredito,
@@ -26,66 +29,76 @@ export function AcoesDaRota({
   destinoIata,
   dataEscolhida,
   fase,
+  passagem,
 }: {
   veredito: Veredito;
   origemIata: string;
   destinoIata: string;
   dataEscolhida: string | null;
   fase: FaseDaJornada;
+  passagem: PassagemVista | null;
 }) {
   // A viagem ja passou: nenhuma destas acoes faz sentido mais.
   if (fase === "passou") return null;
 
-  const busca = monetizacaoAtiva()
-    ? linkDeBuscaDeVoo({ origemIata, destinoIata, data: dataEscolhida })
-    : null;
+  const melhor = !veredito.foraDoModelo ? veredito.melhor : null;
+  const precoReferenciaBRL = passagem?.precoBRL ?? veredito.precoDinheiroBRL;
+
+  const resgatar = melhor ? (
+    <LinkParaPassagem
+      href={melhor.programa.site}
+      tipo="utilidade"
+      variante={veredito.rotulo === "resgatar" ? "primario" : "secundario"}
+      saida={{
+        origemIata,
+        destinoIata,
+        ida: passagem?.ida ?? dataEscolhida,
+        precoVistoBRL: precoReferenciaBRL > 0 ? precoReferenciaBRL : null,
+        forma: "milhas",
+        programaId: melhor.programa.id,
+      }}
+    >
+      Resgatar no {melhor.programa.nome}
+    </LinkParaPassagem>
+  ) : null;
+
+  const dinheiro = (variante: "primario" | "secundario") => (
+    <IrParaAPassagem
+      origemIata={origemIata}
+      destinoIata={destinoIata}
+      passagem={passagem}
+      dataEscolhida={dataEscolhida}
+      precoReferenciaBRL={precoReferenciaBRL}
+      variante={variante}
+    />
+  );
 
   // "Guardar" (compensa, mas rende pouco) segue o caminho do dinheiro:
   // a placa manda pagar e guardar, e o botao primario nao pode dizer
   // "Resgatar" logo abaixo.
-  if (!veredito.foraDoModelo && veredito.rotulo === "resgatar" && veredito.melhor) {
+  if (veredito.rotulo === "resgatar" && resgatar) {
     return (
       <div className="mt-4 space-y-3">
-        <LinkExterno
-          href={veredito.melhor.programa.site}
-          tipo="utilidade"
-          variante="primario"
-        >
-          Resgatar no {veredito.melhor.programa.nome}
-        </LinkExterno>
-
-        {busca ? (
-          <div className="text-center">
-            <LinkExterno href={busca.url} tipo="patrocinado" variante="secundario">
-              Ver preços em dinheiro
-            </LinkExterno>
-          </div>
-        ) : null}
-
-        {busca ? <NotaDeTransparencia /> : null}
+        {resgatar}
+        {dinheiro("secundario")}
       </div>
     );
   }
 
   return (
     <div className="mt-4 space-y-3">
-      {busca ? (
-        <>
-          <LinkExterno href={busca.url} tipo="patrocinado" variante="primario">
-            Ver preços atuais
-          </LinkExterno>
-          <NotaDeTransparencia />
-        </>
+      {dinheiro("primario")}
+      {resgatar ? <div className="text-center">{resgatar}</div> : null}
+      {melhor ? (
+        <div className="text-center">
+          <Link
+            href="/oportunidades"
+            className="text-sm font-semibold text-tinta-media underline underline-offset-4"
+          >
+            Suas milhas rendem mais em outro trecho
+          </Link>
+        </div>
       ) : null}
-
-      <div className="text-center">
-        <Link
-          href="/oportunidades"
-          className="text-sm font-semibold text-tinta-media underline underline-offset-4"
-        >
-          Suas milhas rendem mais em outro trecho
-        </Link>
-      </div>
     </div>
   );
 }

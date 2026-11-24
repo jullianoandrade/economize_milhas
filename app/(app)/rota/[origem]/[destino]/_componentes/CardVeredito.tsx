@@ -2,6 +2,8 @@ import type { Veredito } from "@/lib/milhas/veredito";
 import { milhas as fmtMilhas, porcentagem, reais } from "@/lib/format";
 import { SeloDeFonte, SeloDeMilhas } from "./SeloDeFonte";
 import type { Fonte } from "@/lib/providers/travelpayouts";
+import { SeloDeOrigem } from "@/components/ui/SeloDeOrigem";
+import { diaEMes, frescorDoPreco, type PassagemVista } from "./passagem";
 
 /**
  * A resposta, em uma olhada: a placa e as duas linhas que a sustentam.
@@ -20,10 +22,14 @@ export function CardVeredito({
   veredito,
   fonte,
   observacaoDaFonte,
+  passagem = null,
+  dataEscolhida = null,
 }: {
   veredito: Veredito;
   fonte: Fonte;
   observacaoDaFonte: string;
+  passagem?: PassagemVista | null;
+  dataEscolhida?: string | null;
 }) {
   const melhor = veredito.melhor;
   // Um veredito, dito uma vez: a placa le `rotulo` e mais nada. O caso
@@ -88,14 +94,35 @@ export function CardVeredito({
       <ul className="mt-1">
         <li className="border-b border-borda py-3.5">
           <div className="flex items-baseline justify-between gap-3 text-tinta">
-            <span className="text-[15px]">Em dinheiro</span>
+            <span className="text-[15px]">
+              Em dinheiro
+              {passagem ? <>, ida em {diaEMes(passagem.ida)}</> : null}
+            </span>
             <strong className="tabular text-[17px] font-semibold">
               {precoDesconhecido ? "sem preço recente" : reais(veredito.precoDinheiroBRL)}
             </strong>
           </div>
           <div className="mt-2">
-            <SeloDeFonte fonte={fonte} observacao={observacaoDaFonte} />
+            {passagem && fonte === "travelpayouts" ? (
+              <SeloDeOrigem
+                origem={frescorDoPreco(passagem.vistoHaDias).origem}
+                detalhe={observacaoDaFonte}
+              >
+                {frescorDoPreco(passagem.vistoHaDias).texto}
+              </SeloDeOrigem>
+            ) : (
+              <SeloDeFonte fonte={fonte} observacao={observacaoDaFonte} />
+            )}
           </div>
+          {/* Data escolhida sem preco visto para ela: o numero acima e o
+              mais barato da rota em outro dia, e a tela diz isso em vez
+              de deixar parecer que e o daquele dia. */}
+          {dataEscolhida && !passagem?.daDataEscolhida && !precoDesconhecido ? (
+            <p className="mt-2 text-[13px] leading-snug text-tinta-media">
+              Ainda não vimos preço para {diaEMes(dataEscolhida)}; este é o
+              menor da rota em outro dia.
+            </p>
+          ) : null}
         </li>
         {melhor ? (
           <li className="border-b border-borda py-3.5">

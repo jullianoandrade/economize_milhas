@@ -340,6 +340,12 @@ body {
    oportunidades. O snap faz o dedo parar em cima de um item inteiro em
    vez de no meio de dois. */
 .faixa-rolante {
+  /* relative: os textos .sr-only (absolute) dos itens ficam presos aqui.
+     Sem isso, eles se posicionavam por um ancestral FORA da rolagem,
+     escapavam do recorte e esticavam a pagina (2358px num celular de
+     412 na rota com data) -- o navegador afastava a tela e o toque
+     caia no lugar errado. */
+  position: relative;
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x proximal;
@@ -520,3 +526,106 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ==========================================================================
+   VIEW TRANSITIONS: Inicio <-> Explorar
+   --------------------------------------------------------------------------
+   O painel marinho do topo do Inicio e o painel do Explorar sao o mesmo
+   objeto; o mini globo e o globo grande tambem. Os dois pares levam o
+   mesmo nome dos dois lados (<ViewTransition name=... share=...> em
+   HeroiDoInicio.tsx e Explorar.tsx), e aqui so se diz COMO eles andam:
+
+   - o painel e uma caixa marinha solida que estica ate o tamanho novo,
+     com os cantos de baixo arredondados o tempo todo. O conteudo velho
+     sai rapido; o novo aparece ja dentro da caixa, revelado de cima para
+     baixo enquanto ela cresce (a caixa corta);
+   - o globo cresce do canto ate o lugar dele. As caixas casam disco com
+     disco, e o globo novo nasce na orientacao do velho (Globo `continuar`),
+     entao a troca de imagens nao se ve.
+
+   Um movimento so, em resposta ao toque, ~440 ms. Voltar pela aba Inicio
+   faz o mesmo ao contrario (o navegador inverte as caixas). O botao
+   voltar do navegador troca direto: o React faz o popstate sincrono, sem
+   transicao. Navegador sem View Transitions: navegacao normal. "Reduzir
+   movimento": troca instantanea.
+   ========================================================================== */
+
+@keyframes vt-sair {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-entrar {
+  from {
+    opacity: 0;
+  }
+}
+
+::view-transition-group(.painel-explorar),
+::view-transition-group(.globo-explorar) {
+  animation-duration: 440ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+::view-transition-group(.painel-explorar) {
+  background: var(--painel);
+  border-radius: 0 0 34px 34px;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  ::view-transition-group(.painel-explorar) {
+    border-radius: 32px;
+  }
+}
+
+/* O conteudo de cada tela nao se transforma no da outra: o velho sai
+   antes de o painel andar muito, o novo entra quando ele ja tem forma. */
+::view-transition-old(.painel-explorar) {
+  animation: 110ms ease-out both vt-sair;
+}
+
+::view-transition-new(.painel-explorar) {
+  animation: 220ms ease-out 150ms both vt-entrar;
+}
+
+::view-transition-image-pair(.globo-explorar) {
+  isolation: isolate;
+}
+
+::view-transition-old(.globo-explorar),
+::view-transition-new(.globo-explorar) {
+  animation-duration: 440ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* A pilula de abas do celular fica por cima do painel que cresce, parada.
+   Vale quando a <nav> de NavegacaoInferior.tsx levar
+   style={{ viewTransitionName: "navegacao-inferior" }}; sem o nome, ela
+   faz parte da raiz e o painel passa por cima dela durante o morph. */
+::view-transition-group(navegacao-inferior) {
+  z-index: 10;
+  animation: none;
+}
+
+/* Sem crossfade da pilula: as duas imagens meio transparentes deixariam
+   o texto da pagina aparecer por baixo (o desfoque de fundo da pilula nao
+   vai para a captura). A aba ativa troca de uma vez, no toque. */
+::view-transition-old(navegacao-inferior) {
+  display: none;
+}
+
+::view-transition-new(navegacao-inferior) {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-image-pair(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+/* ====================== fim das view transitions ========================= */

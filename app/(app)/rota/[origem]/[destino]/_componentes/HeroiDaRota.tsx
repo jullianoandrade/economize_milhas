@@ -6,6 +6,7 @@ import { CardVeredito } from "./CardVeredito";
 import { ReguaDoResgate } from "@/components/dominio/ReguaDoResgate";
 import { FaixaDeMilhas } from "./FaixaDeMilhas";
 import { AcoesDaRota } from "./AcoesDaRota";
+import type { PassagemVista } from "./passagem";
 
 /**
  * "A resposta": a placa do veredito, o que fazer a respeito e, fechado
@@ -25,6 +26,7 @@ export function HeroiDaRota({
   destinoIata,
   dataEscolhida,
   fase,
+  passagem,
 }: {
   veredito: Veredito;
   fonte: Fonte;
@@ -33,6 +35,8 @@ export function HeroiDaRota({
   destinoIata: string;
   dataEscolhida: string | null;
   fase: FaseDaJornada;
+  /** A passagem concreta que a tela aponta (preco, dia, frescor). */
+  passagem: PassagemVista | null;
 }) {
   return (
     <>
@@ -40,6 +44,8 @@ export function HeroiDaRota({
         veredito={veredito}
         fonte={fonte}
         observacaoDaFonte={observacaoDaFonte}
+        passagem={passagem}
+        dataEscolhida={dataEscolhida}
       />
 
       <AcoesDaRota
@@ -48,6 +54,7 @@ export function HeroiDaRota({
         destinoIata={destinoIata}
         dataEscolhida={dataEscolhida}
         fase={fase}
+        passagem={passagem}
       />
 
       {/* Objetivo so onde existe meta de milhas a bater: num trecho fora

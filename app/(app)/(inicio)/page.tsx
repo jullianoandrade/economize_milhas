@@ -1,4 +1,5 @@
 import { catalogoDaCarteira } from "@/lib/carteira/catalogo";
+import { ProximaViagem } from "@/components/dominio/ProximaViagem";
 import { HeroiDoInicio } from "./_componentes/HeroiDoInicio";
 import { PrimeiraVisita } from "./_componentes/PrimeiraVisita";
 import { ResumoDoInicio } from "./_componentes/ResumoDoInicio";
@@ -28,6 +29,10 @@ export default function Inicio() {
     <>
       <PrimeiraVisita />
       <HeroiDoInicio />
+      {/* Com uma viagem reservada, o Inicio leva a prepara-la. */}
+      <div className="mt-5 empty:hidden md:mt-6">
+        <ProximaViagem />
+      </div>
 
       <div className="mt-5 grid gap-6 md:mt-6 md:grid-cols-2 md:gap-8">
         <div>

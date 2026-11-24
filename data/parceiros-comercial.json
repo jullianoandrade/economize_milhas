@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-10-09",
+  "atualizadoEm": "2026-11-24",
   "aviso": "ARQUIVO COMERCIAL. Lido exclusivamente por lib/monetizacao/parceiros.ts. Nenhum módulo de lib/milhas ou lib/tempo pode importa-lo, e tests/arquitetura.test.ts quebra o build se isso acontecer -- inclusive por caminho indireto, porque o teste exige que este arquivo tenha um único leitor no projeto inteiro. É assim que a promessa de ranking cego à comissão deixa de ser intenção e vira regra verificável.",
   "explicacao": "As URLs aqui são os endereços públicos dos parceiros, sem marker. O marker só é anexado em tempo de execução, e apenas quando NEXT_PUBLIC_MONETIZACAO_ATIVA for true. Com a flag desligada os links saem limpos e nada é declarado, porque não há comissão a declarar.",
   "parceiros": [
@@ -15,15 +15,15 @@
       "observacao": "Comissão baixa: voo é o que traz a pessoa, não o que paga a conta."
     },
     {
-      "id": "travelpayouts-hotel",
-      "nome": "Hospedagem",
+      "id": "travelpayouts-booking",
+      "nome": "Booking.com",
       "tipo": "hotel",
       "rede": "travelpayouts",
-      "url": "https://hotellook.com",
-      "parametroDeMarker": "marker",
-      "comissao": { "modelo": "percentual", "min": 4, "max": 5 },
-      "cookieDias": 30,
-      "observacao": "ENCERRADO: a Travelpayouts fechou o Hotellook em 20/10/2025 (domínio com certificado inválido). Nenhuma tela usa hoje; trocar por outra marca de Hospedagem da Travelpayouts antes de ativar ofertas de hotel."
+      "url": "https://www.booking.com/searchresults.pt-br.html",
+      "parametroDeMarker": "",
+      "comissao": { "modelo": "percentual", "min": 5, "max": 5 },
+      "cookieDias": 1,
+      "observacao": "Booking.com pelo programa da Travelpayouts, no lugar do Hotellook (encerrado pela Travelpayouts em 20/10/2025; os links antigos que ainda funcionam a própria Travelpayouts redireciona para a busca de hotéis do Booking.com). Escolhido em 24/11/2026 porque: (1) a busca aceita cidade, check-in e check-out na URL (ss, checkin e checkout em AAAA-MM-DD, group_adults, no_rooms), conferido num navegador de verdade com Lisboa de 20 a 23/12/2026, que abre em português e em reais; (2) é a marca de hospedagem mais conhecida do público brasileiro; (3) paga 5% sobre a estadia concluída, confirmada de 60 a 90 dias depois do check-out, com cookie de uma sessão só. O rastreio não é um parâmetro na URL do Booking: a Travelpayouts exige o link envelopado em tp.media/r (marker, trs = id do projeto, p = id do programa, u = URL do Booking codificada) ou gerado pela API links/v1/create. Por isso parametroDeMarker fica vazio: com a flag ligada ou desligada o link sai limpo e nada é declarado, até lib/monetizacao/links.ts aprender a envelopar. Também avaliados: Agoda (6%, cookie de 1 dia), Trip.com (até 5%), Expedia (só Reino Unido pela Travelpayouts) e Hostelworld (só albergues)."
     },
     {
       "id": "cartoes-cpa",

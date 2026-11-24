@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Milo } from "@/components/ui/Milo";
 import { SeloDeOrigem } from "@/components/ui/SeloDeOrigem";
-import { reais } from "@/lib/format";
+import { MESES_CURTOS, reais } from "@/lib/format";
 import { TEXTO_CURTO, type RotuloDeVeredito } from "@/lib/milhas/rotulos";
 import { usarPerfil } from "@/store/perfil";
 
@@ -28,7 +28,25 @@ type Oportunidade = {
   precoTipicoBRL: number;
   descontoPct: number;
   veredito: RotuloDeVeredito;
+  /** Dia de ida desta tarifa (AAAA-MM-DD), de hoje em diante; null se a API nao disse. */
+  partidaEm: string | null;
 };
+
+/**
+ * O destino do toque: a rota JA no dia da tarifa, quando a API disse
+ * qual e. Dali a pessoa chega a passagem daquele dia com mais um toque.
+ */
+function hrefDaOferta(origemIata: string, o: Oportunidade): string {
+  const base = `/rota/${origemIata}/${o.destino.iata}`;
+  return o.partidaEm ? `${base}?data=${o.partidaEm}` : base;
+}
+
+/** "2027-03-31" -> "31 mar", sem new Date (nada de fuso no meio). */
+function diaCurto(iso: string): string {
+  const [, mes, dia] = iso.split("-");
+  const m = MESES_CURTOS[Number(mes) - 1];
+  return m && dia ? `${Number(dia)} ${m}` : iso;
+}
 
 type Resposta = {
   origem: { iata: string; cidade: string };
@@ -251,12 +269,13 @@ export function Oportunidades({
             {dados?.oportunidades.map((o) => (
               <li key={o.destino.iata}>
                 <Link
-                  href={`/rota/${dados.origem.iata}/${o.destino.iata}`}
+                  href={hrefDaOferta(dados.origem.iata, o)}
                   className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-0.5 border-b border-borda px-1 py-3.5 transition-colors hover:bg-superficie"
                 >
                   <span className="truncate text-base font-semibold text-tinta">{lugar(o.destino)}</span>
                   <span className="tabular text-right text-base font-bold text-tinta">{reais(o.precoBRL)}</span>
                   <span className="text-sm text-tinta-media">
+                    {o.partidaEm ? <>ida {diaCurto(o.partidaEm)}, </> : null}
                     {o.descontoPct}% abaixo do normal ({reais(o.precoTipicoBRL)})
                   </span>
                   {/* "vale resgatar" e a unica linha que pede acao com

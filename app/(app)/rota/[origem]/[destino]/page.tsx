@@ -38,6 +38,14 @@ import {
 } from "@/lib/tempo/flexibilidade";
 import { montarCalendarioDeAgregado } from "@/lib/tempo/calendario";
 import { diasAte, faseDaJornada } from "@/lib/monetizacao/jornada";
+import {
+  precoMaisBarato,
+  precoNaData,
+  temToken,
+} from "@/lib/providers/travelpayouts";
+import { hojeEmSaoPaulo } from "@/lib/viagens/modelo";
+import { diaEMes, type PassagemVista } from "./_componentes/passagem";
+import { RegistrarBusca } from "./_componentes/RegistrarBusca";
 
 /**
  * Pre-renderiza as rotas de maior valor de busca.
@@ -188,10 +196,37 @@ async function Conteudo({
   // O bonus de transferencia vigente muda o custo da milha e, com ele,
   // o veredito: 100% de bonus corta o CPM pela metade. Buscado junto do
   // preco porque um sem o outro da resposta errada.
-  const [preco, bonus] = await Promise.all([
+  //
+  // Junto, a passagem concreta: com data escolhida, o preco DAQUELE dia;
+  // sem data, o dia da mais barata da rota (a mesma consulta que
+  // precoDoTrecho faz, e o cache de fetch devolve sem ir a rede de novo).
+  const comToken = temToken();
+  const [precoDaRota, bonus, doDia, maisBarata] = await Promise.all([
     precoDoTrecho(rota),
     bonusVigentes(),
+    comToken && dataEscolhida
+      ? precoNaData(rota.origem.iata, rota.destino.iata, dataEscolhida)
+      : Promise.resolve(null),
+    comToken && !dataEscolhida
+      ? precoMaisBarato(rota.origem.iata, rota.destino.iata)
+      : Promise.resolve(null),
   ]);
+
+  const agora = new Date();
+  const hoje = hojeEmSaoPaulo(agora);
+  const passagem = passagemVista(doDia, maisBarata, precoDaRota, hoje, agora);
+
+  // Com o preco do dia, a resposta inteira passa a ser sobre aquele voo:
+  // veredito, placa e botao falam do mesmo numero.
+  const preco =
+    passagem?.daDataEscolhida && dataEscolhida
+      ? {
+          dados: passagem.precoBRL,
+          fonte: "travelpayouts" as const,
+          observacao: `Menor preço de ida visto para ${diaEMes(dataEscolhida)} nas buscas recentes da Travelpayouts. Não é cotação em tempo real: confirme antes de comprar.`,
+        }
+      : precoDaRota;
+
   const veredito = calcularVeredito(rota, preco.dados, {
     bonusVigentes: bonus,
   });
@@ -219,7 +254,7 @@ async function Conteudo({
   // A data do relogio so pode ser lida depois que o trecho ja esta
   // marcado como dinamico; curvaMensal faz isso acima, via connection().
   const diasAteAViagem = dataEscolhida
-    ? diasAte(new Date(`${dataEscolhida}T12:00:00`), new Date())
+    ? diasAte(new Date(`${dataEscolhida}T12:00:00`), agora)
     : null;
 
   // A curva agregada no banco cobre o historico INTEIRO da rota; a
@@ -241,8 +276,10 @@ async function Conteudo({
 
   // Agregado no banco sobre o historico inteiro. A leitura de linha
   // crua sobrevive dentro de precosPorDataDaRota, como degradacao.
+  // So dias que ainda vao acontecer: cada um vira um link para marcar a
+  // data, e um dia que ja passou nao leva a passagem nenhuma.
   const { referenciaBRL, datas } = datasMaisBaratasDeAgregado(
-    porData.dados,
+    porData.dados.filter((d) => d.partidaEm >= hoje),
     porData.medianaDaRotaBRL,
   );
   const outrasOrigens = compararOrigens(rota.origem, preco.dados, alternativas);
@@ -264,6 +301,9 @@ async function Conteudo({
         origem={rota.origem.iata}
         destino={rota.destino.iata}
       />
+      {/* Tambem nao desenha nada: guarda a rota nas buscas recentes de
+          Minhas viagens, neste aparelho. */}
+      <RegistrarBusca origem={rota.origem.iata} destino={rota.destino.iata} />
       {/* 1. O heroi -- "a resposta". Um unico painel escuro: o veredito,
           a regua, a faixa de precificacao dinamica, o arco da rota, o
           ceu do destino e o que fazer a respeito. */}
@@ -335,6 +375,7 @@ async function Conteudo({
             destino={rota.destino.iata}
             dataEscolhida={dataEscolhida}
             fase={fase}
+            passagem={passagem}
           >
             <HeroiDaRota
               veredito={veredito}
@@ -344,6 +385,7 @@ async function Conteudo({
               destinoIata={rota.destino.iata}
               dataEscolhida={dataEscolhida}
               fase={fase}
+              passagem={passagem}
             />
           </IlhaDoVeredito>
 
@@ -386,6 +428,11 @@ async function Conteudo({
           melhoresDatas={datas}
           medianaHistoricaBRL={referenciaBRL}
           janela={janela}
+          origemIata={rota.origem.iata}
+          destinoIata={rota.destino.iata}
+          passagem={passagem}
+          precoReferenciaBRL={veredito.precoDinheiroBRL}
+          viagemPassou={fase === "passou"}
         />
 
         {/* 3. Como pagar: o vencedor expandido, os outros atras de details. */}
@@ -398,6 +445,53 @@ async function Conteudo({
       </div>
     </div>
   );
+}
+
+const DIA_EM_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * A passagem que a tela aponta, ou null quando nao ha uma de verdade.
+ *
+ * Com data: so o preco visto para aquele dia conta. Sem data: o dia da
+ * mais barata, e so se o preco dela for o mesmo que a tela mostra --
+ * senao o botao diria um numero e a placa outro. Dia no passado nunca.
+ */
+function passagemVista(
+  doDia: Awaited<ReturnType<typeof precoNaData>>,
+  maisBarata: Awaited<ReturnType<typeof precoMaisBarato>>,
+  precoDaRota: { dados: number; fonte: string },
+  hoje: string,
+  agora: Date,
+): PassagemVista | null {
+  if (doDia && doDia.precoBRL > 0 && doDia.partidaEm >= hoje) {
+    const visto = doDia.encontradoEm ? Date.parse(doDia.encontradoEm) : NaN;
+    return {
+      precoBRL: Math.round(doDia.precoBRL),
+      ida: doDia.partidaEm,
+      daDataEscolhida: true,
+      vistoHaDias: Number.isNaN(visto)
+        ? null
+        : Math.max(0, Math.floor((agora.getTime() - visto) / DIA_EM_MS)),
+    };
+  }
+
+  const ida = maisBarata?.partidaEm?.slice(0, 10) ?? "";
+  if (
+    maisBarata &&
+    precoDaRota.fonte === "travelpayouts" &&
+    maisBarata.precoBRL === precoDaRota.dados &&
+    /^\d{4}-\d{2}-\d{2}$/.test(ida) &&
+    ida >= hoje
+  ) {
+    return {
+      precoBRL: Math.round(maisBarata.precoBRL),
+      ida,
+      daDataEscolhida: false,
+      vistoHaDias: null,
+    };
+  }
+
+  return null;
 }
 
 function RotaNaoEncontrada({ iata }: { iata: string }) {

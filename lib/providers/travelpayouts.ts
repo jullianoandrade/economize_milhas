@@ -254,6 +254,8 @@ export type DestinoPopular = {
   destinoIata: string;
   precoBRL: number;
   partidaEm: string | null;
+  /** Quando a Travelpayouts viu este preco (found_at); null se nao veio. */
+  encontradoEm: string | null;
 };
 
 /**
@@ -268,7 +270,12 @@ export async function destinosPopulares(
   origem: string,
 ): Promise<DestinoPopular[] | null> {
   const observacoes = await buscar<
-    Array<{ destination: string; value: number; depart_date: string }>
+    Array<{
+      destination: string;
+      value: number;
+      depart_date: string;
+      found_at?: string;
+    }>
   >("/v2/prices/latest", {
     origin: origem,
     period_type: "year",
@@ -290,11 +297,87 @@ export async function destinosPopulares(
         destinoIata: item.destination,
         precoBRL: item.value,
         partidaEm: item.depart_date ?? null,
+        encontradoEm: item.found_at ?? null,
       });
     }
 
     const lista = [...maisBaratoPorDestino.values()];
     return lista.length > 0 ? lista.sort((a, b) => a.precoBRL - b.precoBRL) : null;
+  } catch {
+    return null;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+
+export type PrecoNaData = {
+  precoBRL: number;
+  /** AAAA-MM-DD, a mesma data pedida. */
+  partidaEm: string;
+  /** Quando o preco foi visto (found_at); null quando so o calendario respondeu. */
+  encontradoEm: string | null;
+};
+
+/**
+ * O preco de IDA mais barato visto para UMA data de partida.
+ *
+ * E o que sustenta o "Ver passagem de R$ 150 em 31/mar": a pessoa chega
+ * de uma oferta com data e a tela precisa falar do mesmo voo, nao do
+ * mais barato da rota em qualquer dia.
+ *
+ * Duas consultas em paralelo, porque cada uma sabe uma coisa:
+ *   - /v2/prices/latest (o mesmo endpoint das ofertas do Inicio) traz o
+ *     found_at, e e o numero que a pessoa viu no cartao;
+ *   - /aviasales/v3/prices_for_dates com departure_at do dia cobre a
+ *     data quando o primeiro nao tem observacao para ela.
+ * O de latest vence quando existe, para o numero do cartao e o da rota
+ * baterem.
+ */
+export async function precoNaData(
+  origem: string,
+  destino: string,
+  data: string,
+): Promise<PrecoNaData | null> {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(data)) return null;
+
+  const [observados, doCalendario] = await Promise.all([
+    buscar<RespostaLatest>("/v2/prices/latest", {
+      origin: origem,
+      destination: destino,
+      beginning_of_period: `${data.slice(0, 7)}-01`,
+      period_type: "month",
+      one_way: "true",
+      limit: 100,
+      sorting: "price",
+    }),
+    buscar<RespostaPorDatas>("/aviasales/v3/prices_for_dates", {
+      origin: origem,
+      destination: destino,
+      departure_at: data,
+      one_way: "true",
+      sorting: "price",
+      limit: 10,
+    }),
+  ]);
+
+  try {
+    const doDia = (observados ?? [])
+      .filter((o) => o?.depart_date === data && o.value > 0)
+      .sort((a, b) => a.value - b.value)[0];
+    if (doDia) {
+      return {
+        precoBRL: doDia.value,
+        partidaEm: data,
+        encontradoEm: doDia.found_at ?? null,
+      };
+    }
+
+    const doCal = (doCalendario ?? [])
+      .filter((o) => o?.price > 0 && (o.departure_at ?? "").startsWith(data))
+      .sort((a, b) => a.price - b.price)[0];
+    return doCal
+      ? { precoBRL: doCal.price, partidaEm: data, encontradoEm: null }
+      : null;
   } catch {
     return null;
   }

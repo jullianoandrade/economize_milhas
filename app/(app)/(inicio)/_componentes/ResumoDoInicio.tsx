@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { milhas as fmt, reais } from "@/lib/format";
+import { MESES_CURTOS, milhas as fmt, reais } from "@/lib/format";
 import {
   hojeISO,
   montarCarteira,
@@ -34,7 +34,25 @@ type Oportunidade = {
   precoBRL: number;
   descontoPct: number;
   veredito: RotuloDeVeredito;
+  /** Dia de ida desta tarifa (AAAA-MM-DD), de hoje em diante; null se a API nao disse. */
+  partidaEm: string | null;
 };
+
+/**
+ * O destino do toque: a rota JA no dia da tarifa, quando a API disse
+ * qual e. Dali a pessoa chega a passagem daquele dia com mais um toque.
+ */
+function hrefDaOferta(origemIata: string, o: Oportunidade): string {
+  const base = `/rota/${origemIata}/${o.destino.iata}`;
+  return o.partidaEm ? `${base}?data=${o.partidaEm}` : base;
+}
+
+/** "2027-03-31" -> "31 mar", sem new Date (nada de fuso no meio). */
+function diaCurto(iso: string): string {
+  const [, mes, dia] = iso.split("-");
+  const m = MESES_CURTOS[Number(mes) - 1];
+  return m && dia ? `${Number(dia)} ${m}` : iso;
+}
 
 /** "Praia" sozinho e ambiguo: fora do Brasil, a cidade leva o pais. */
 function lugar(d: Oportunidade["destino"]): string {
@@ -159,7 +177,7 @@ function ValeAPenaAgora() {
           {ordenarPorVeredito(dados.oportunidades).slice(0, 3).map((o) => (
             <li key={o.destino.iata}>
               <Link
-                href={`/rota/${dados.origem.iata}/${o.destino.iata}`}
+                href={hrefDaOferta(dados.origem.iata, o)}
                 className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-0.5 border-b border-borda px-1 py-3"
               >
                 <span className="truncate text-base font-semibold text-tinta">{lugar(o.destino)}</span>
@@ -167,7 +185,10 @@ function ValeAPenaAgora() {
                   <span className="tabular font-bold">{reais(o.precoBRL)}</span>{" "}
                   <span className="text-sm text-tinta-media">em dinheiro</span>
                 </span>
-                <span className="text-sm text-tinta-media">{o.descontoPct}% abaixo do normal</span>
+                <span className="text-sm text-tinta-media">
+                  {o.partidaEm ? <>ida {diaCurto(o.partidaEm)}, </> : null}
+                  {o.descontoPct}% abaixo do normal
+                </span>
                 {/* Mesmo destaque das Oportunidades: so "vale resgatar" e ambar. */}
                 {o.veredito === "resgatar" ? (
                   <span className="justify-self-end rounded-full bg-[#ffb020] px-2.5 py-0.5 text-sm font-semibold text-[#0b1526]">

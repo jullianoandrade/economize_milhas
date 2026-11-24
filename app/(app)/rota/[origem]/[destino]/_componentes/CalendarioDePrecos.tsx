@@ -3,6 +3,8 @@ import type { CalendarioDePrecos as Calendario } from "@/lib/tempo/calendario";
 import { DIAS_MINIMOS_PARA_MOSTRAR } from "@/lib/tempo/calendario";
 import type { DataMaisBarata } from "@/lib/tempo/flexibilidade";
 import { porcentagem, reais } from "@/lib/format";
+import { IrParaAPassagem } from "./IrParaAPassagem";
+import type { PassagemVista } from "./passagem";
 
 /**
  * Preco por dia de partida, em faixa rolante.
@@ -46,6 +48,11 @@ export function CalendarioDePrecos({
   dataEscolhida,
   melhoresDatas = [],
   medianaHistoricaBRL = 0,
+  origemIata,
+  destinoIata,
+  passagem,
+  precoReferenciaBRL,
+  viagemPassou,
 }: {
   calendario: Calendario;
   /** Caminho da rota, para cada dia virar um link que marca a data. */
@@ -54,6 +61,12 @@ export function CalendarioDePrecos({
   /** Melhores dias do histórico INTEIRO, não só da janela de 45 dias acima. */
   melhoresDatas?: DataMaisBarata[];
   medianaHistoricaBRL?: number;
+  origemIata: string;
+  destinoIata: string;
+  /** A passagem do dia escolhido, quando o servidor achou preco para ele. */
+  passagem: PassagemVista | null;
+  precoReferenciaBRL: number;
+  viagemPassou: boolean;
 }) {
   // Poucos dias com preco nao formam curva. Melhor nao desenhar do que
   // desenhar quatro barras soltas e deixar a pessoa concluir qualquer
@@ -106,6 +119,7 @@ export function CalendarioDePrecos({
               key={d.dia}
               href={`${rotaHref}?data=${d.dia}`}
               scroll={false}
+              aria-current={escolhido ? "date" : undefined}
               className={`${LARGURA_DA_COLUNA} flex shrink-0 flex-col items-center gap-1 rounded-2xl border px-1 py-2 transition-colors ${
                 escolhido
                   ? "border-marca bg-marca-fraca"
@@ -154,7 +168,26 @@ export function CalendarioDePrecos({
         })}
       </div>
 
-      <p className="mt-1 text-xs leading-relaxed text-tinta-fraca">
+      {/* O segundo toque: escolhido o dia, a passagem dele fica logo
+          aqui, sem precisar subir ate o topo. O preco do botao e o visto
+          para o dia (o mesmo da resposta no topo), nao a mediana da barra. */}
+      {dataEscolhida && !viagemPassou ? (
+        <div className="mt-2 rounded-2xl border border-borda bg-superficie-2 p-3">
+          <p className="mb-2 text-sm text-tinta">
+            Partida em{" "}
+            <strong className="font-semibold">{porExtenso(dataEscolhida)}</strong>
+          </p>
+          <IrParaAPassagem
+            origemIata={origemIata}
+            destinoIata={destinoIata}
+            passagem={passagem?.daDataEscolhida ? passagem : null}
+            dataEscolhida={dataEscolhida}
+            precoReferenciaBRL={precoReferenciaBRL}
+          />
+        </div>
+      ) : null}
+
+      <p className="mt-2 text-xs leading-relaxed text-tinta-fraca">
         Valores em reais, trecho de ida, do nosso histórico próprio de buscas.
         Mediana da janela: {reais(calendario.medianaBRL)}. Dias sem observação
         não aparecem.
@@ -163,25 +196,38 @@ export function CalendarioDePrecos({
       {melhoresDatas.length > 0 ? (
         <div className="mt-4 border-t border-borda pt-3">
           <h3 className="mb-2 text-sm font-semibold text-tinta">
-            Os dias mais baratos do nosso histórico
+            Os próximos dias mais baratos no nosso histórico
           </h3>
           <ul className="space-y-2">
             {melhoresDatas.map((d) => (
               <li
                 key={d.partidaEm}
-                className="flex items-baseline justify-between gap-3 border-t border-borda pt-2 first:border-0 first:pt-0"
+                className="border-t border-borda first:border-0"
               >
-                <span className="text-sm text-tinta">
-                  {porExtenso(d.partidaEm)}
-                </span>
-                <span className="tabular shrink-0 text-right">
-                  <span className="block text-sm font-semibold text-tinta">
-                    {reais(d.precoBRL)}
+                {/* Cada dia leva a ele mesmo: marca a data e a resposta
+                    inteira passa a ser sobre aquele voo. */}
+                <Link
+                  href={`${rotaHref}?data=${d.partidaEm}`}
+                  scroll={false}
+                  aria-current={d.partidaEm === dataEscolhida ? "date" : undefined}
+                  className={`flex min-h-11 items-center justify-between gap-3 rounded-xl px-2 py-1.5 transition-colors ${
+                    d.partidaEm === dataEscolhida
+                      ? "bg-marca-fraca"
+                      : "hover:bg-superficie-2"
+                  }`}
+                >
+                  <span className="text-sm text-tinta underline decoration-borda underline-offset-4">
+                    {porExtenso(d.partidaEm)}
                   </span>
-                  <span className="block text-[11px] text-dinheiro">
-                    −{reais(d.economiaBRL)} ({porcentagem(d.economiaPct)})
+                  <span className="tabular shrink-0 text-right">
+                    <span className="block text-sm font-semibold text-tinta">
+                      {reais(d.precoBRL)}
+                    </span>
+                    <span className="block text-[11px] text-dinheiro">
+                      −{reais(d.economiaBRL)} ({porcentagem(d.economiaPct)})
+                    </span>
                   </span>
-                </span>
+                </Link>
               </li>
             ))}
           </ul>

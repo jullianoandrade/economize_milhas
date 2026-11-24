@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useState, useSyncExternalStore } from "react";
+import { useCallback, useState, useSyncExternalStore, ViewTransition } from "react";
 import { CampoDeLugar } from "@/components/ui/CampoDeLugar";
 import { Globo, type Enquadramento } from "@/components/dominio/Globo";
-import { LinkExterno } from "@/components/dominio/LinkExterno";
+import { LinkParaPassagem } from "@/components/dominio/LinkParaPassagem";
 import { Milo } from "@/components/ui/Milo";
 import { SeloDeOrigem } from "@/components/ui/SeloDeOrigem";
 import { buscarVeredito, type VerediteDaPessoa } from "@/lib/cliente/veredito";
@@ -22,6 +22,15 @@ import { useLugar } from "@/lib/cliente/lugar";
  *
  * O Milo aparece so na espera, apontando para os destinos. Quando a
  * resposta chega, ele sai: ali quem fala e o numero.
+ *
+ * CHEGADA: o painel marinho do topo do Inicio cresce ate virar este, e o
+ * mini globo cresce ate o globo daqui (view transition com o mesmo nome
+ * dos dois lados; CSS no fim de app/globals.css). Para o globo crescer
+ * no lugar certo, o nome fica numa ANCORA do tamanho do disco em espera
+ * -- e nao no <canvas>, que ocupa o painel inteiro: com o canvas, o
+ * disco pequeno viraria um retangulo esticado. As contas da ancora sao
+ * as de `vistaAlvo` em Globo.tsx ("centro" no celular, "direita" a
+ * partir de md), em unidades de container.
  */
 
 type Estado =
@@ -29,6 +38,23 @@ type Estado =
   | { fase: "carregando"; destino: { iata: string; cidade: string } }
   | { fase: "pronto"; dados: VerediteDaPessoa }
   | { fase: "erro"; destino: { iata: string; cidade: string } };
+
+/**
+ * Mouse e teclado de verdade. So ai a busca ja chega com o cursor: no
+ * celular o foco abriria o teclado por cima do globo, justo o que a
+ * transicao acabou de mostrar -- la a pessoa toca no campo quando quiser.
+ */
+function usePonteiroFino(): boolean {
+  return useSyncExternalStore(
+    (avisar) => {
+      const m = matchMedia("(hover: hover) and (pointer: fine)");
+      m.addEventListener("change", avisar);
+      return () => m.removeEventListener("change", avisar);
+    },
+    () => matchMedia("(hover: hover) and (pointer: fine)").matches,
+    () => false,
+  );
+}
 
 function useTelaLarga(): boolean {
   return useSyncExternalStore(
@@ -54,6 +80,7 @@ export function Explorar({
   const definirOrigem = usarPerfil((s) => s.definirOrigem);
   const [trocandoOrigem, setTrocandoOrigem] = useState(false);
   const larga = useTelaLarga();
+  const ponteiroFino = usePonteiroFino();
   const [estado, setEstado] = useState<Estado>({ fase: "espera" });
   // A chave do campo: trocar a chave limpa o texto digitado ao fechar.
   const [chaveDoCampo, setChaveDoCampo] = useState(0);
@@ -105,97 +132,123 @@ export function Explorar({
       : "centro";
 
   return (
-    <section
-      aria-label="Explorar destinos"
-      className="painel relative -mx-4 -mt-5 h-[calc(100dvh-1rem)] min-h-[640px] rounded-b-[34px] md:mx-0 md:mt-0 md:h-[calc(100dvh-9rem)] md:min-h-[600px] md:rounded-[32px]"
-    >
-      {/* Titulo para leitor de tela: a tela e visual (o globo), mas
-          precisa dizer onde a pessoa esta. Achado pelo teste de saude. */}
-      <h1 className="sr-only">Explorar destinos</h1>
+    <ViewTransition name="painel-explorar" share="painel-explorar" default="none">
+      <section
+        aria-label="Explorar destinos"
+        className="painel relative -mx-4 -mt-5 h-[calc(100dvh-1rem)] min-h-[640px] rounded-b-[34px] md:mx-0 md:mt-0 md:h-[calc(100dvh-9rem)] md:min-h-[600px] md:rounded-[32px]"
+      >
+        {/* Titulo para leitor de tela: a tela e visual (o globo), mas
+            precisa dizer onde a pessoa esta. Achado pelo teste de saude. */}
+        <h1 className="sr-only">Explorar destinos</h1>
 
-      {/* O recorte arredondado fica nesta camada, e nao na <section>:
-          com overflow-hidden na secao, a lista de sugestoes do campo de
-          busca seria cortada. Ver tests/arquitetura.test.ts. */}
-      {/* No celular o bloco marinho termina com os cantos de baixo
-          arredondados, como o heroi do Inicio: sem isso ele acabava
-          num corte reto contra o rodape claro. */}
-      <div className="absolute inset-0 overflow-hidden rounded-b-[34px] md:rounded-[32px]">
-        <Globo rota={rotaDoGlobo} enquadramento={enquadramento} arrastavel />
-      </div>
-
-      <div className="vidro absolute inset-x-3 top-3 z-20 rounded-[26px] p-4 md:left-6 md:right-auto md:top-6 md:w-[380px]">
-        {trocandoOrigem ? (
-          <CampoDeLugar
-            key="origem"
-            rotulo="De onde você sai?"
-            tom="claro"
-            autoFocus
-            aoSelecionar={(lugar) => {
-              definirOrigem(lugar.iata);
-              setTrocandoOrigem(false);
-              setAviso(null);
-              setEstado({ fase: "espera" });
-            }}
-          />
-        ) : (
-          <CampoDeLugar
-            key={chaveDoCampo}
-            rotulo="Para onde você vai?"
-            tom="claro"
-            aoSelecionar={(lugar) => escolher({ iata: lugar.iata, cidade: lugar.cidade })}
-          />
-        )}
-        {aviso && !trocandoOrigem ? (
-          <p role="status" className="mt-2.5 text-sm leading-snug text-painel-tinta">
-            {aviso}
-          </p>
-        ) : null}
-        {/* A origem fica guardada no aparelho porque quase nunca muda:
-            quem mora em Recife nao quer redigitar Recife toda vez. */}
-        <button
-          type="button"
-          onClick={() => setTrocandoOrigem((t) => !t)}
-          className="mt-2.5 min-h-9 text-sm text-painel-tinta-fraca"
-        >
-          {trocandoOrigem ? (
-            "Cancelar"
-          ) : (
-            <>
-              Saindo de <strong className="font-semibold text-painel-tinta">{nomeDaOrigem}</strong>{" "}
-              <span className="underline underline-offset-2">trocar</span>
-            </>
-          )}
-        </button>
-      </div>
-
-      {estado.fase === "espera" ? (
-        <div className="vidro absolute inset-x-3 bottom-24 z-10 rounded-[28px] p-5 md:bottom-6 md:left-6 md:right-auto md:w-[380px]">
-          <Milo pose="apontando" className="pointer-events-none absolute -top-[88px] right-3 w-[100px]" />
-          <p className="max-w-[16rem] text-[17px] leading-snug text-painel-tinta">
-            Escolha um destino e eu comparo milhas com dinheiro.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {/* Todos iguais: nenhum esta escolhido ainda, e o primeiro
-                preenchido parecia pre-selecionado. O atalho igual a
-                origem some -- "Recife saindo de Recife" nao e viagem. */}
-            {atalhos
-              .filter((a) => a.iata !== origem)
-              .map((a) => (
-                <button
-                  key={a.iata}
-                  type="button"
-                  onClick={() => escolher(a)}
-                  className="min-h-11 rounded-full border border-painel-tinta/30 px-4 text-[15px] font-semibold text-painel-tinta transition-colors hover:bg-painel-realce"
-                >
-                  {a.cidade}
-                </button>
-              ))}
-          </div>
+        {/* O recorte arredondado fica nesta camada, e nao na <section>:
+            com overflow-hidden na secao, a lista de sugestoes do campo de
+            busca seria cortada. Ver tests/arquitetura.test.ts. */}
+        {/* No celular o bloco marinho termina com os cantos de baixo
+            arredondados, como o heroi do Inicio: sem isso ele acabava
+            num corte reto contra o rodape claro. */}
+        {/* container-type: a ancora do globo se mede em cqw/cqh, as mesmas
+            proporcoes que o Globo usa para enquadrar o disco. */}
+        <div className="absolute inset-0 overflow-hidden rounded-b-[34px] [container-type:size] md:rounded-[32px]">
+          <ViewTransition name="globo-explorar" share="globo-explorar" default="none">
+            <div
+              className="absolute [--cx:50cqw] [--cy:46cqh] [--r:min(44cqw,30cqh)] md:[--cx:62cqw] md:[--cy:52cqh] md:[--r:min(30cqw,40cqh)]"
+              style={{
+                // a caixa do globo "inteiro" do Inicio: disco = 84% dela
+                width: "calc(var(--r) / 0.42)",
+                height: "calc(var(--r) / 0.42)",
+                left: "calc(var(--cx) - var(--r) / 0.84)",
+                top: "calc(var(--cy) - var(--r) / 0.84)",
+              }}
+            >
+              <div
+                className="absolute h-[100cqh] w-[100cqw]"
+                style={{
+                  left: "calc(var(--r) / 0.84 - var(--cx))",
+                  top: "calc(var(--r) / 0.84 - var(--cy))",
+                }}
+              >
+                <Globo rota={rotaDoGlobo} enquadramento={enquadramento} arrastavel continuar />
+              </div>
+            </div>
+          </ViewTransition>
         </div>
-      ) : (
-        <PainelDeResposta estado={estado} origem={origem} aoFechar={fechar} aoTentar={escolher} />
-      )}
-    </section>
+
+        <div className="vidro absolute inset-x-3 top-3 z-20 rounded-[26px] p-4 md:left-6 md:right-auto md:top-6 md:w-[380px]">
+          {trocandoOrigem ? (
+            <CampoDeLugar
+              key="origem"
+              rotulo="De onde você sai?"
+              tom="claro"
+              autoFocus
+              aoSelecionar={(lugar) => {
+                definirOrigem(lugar.iata);
+                setTrocandoOrigem(false);
+                setAviso(null);
+                setEstado({ fase: "espera" });
+              }}
+            />
+          ) : (
+            <CampoDeLugar
+              key={chaveDoCampo}
+              rotulo="Para onde você vai?"
+              tom="claro"
+              autoFocus={ponteiroFino}
+              aoSelecionar={(lugar) => escolher({ iata: lugar.iata, cidade: lugar.cidade })}
+            />
+          )}
+          {aviso && !trocandoOrigem ? (
+            <p role="status" className="mt-2.5 text-sm leading-snug text-painel-tinta">
+              {aviso}
+            </p>
+          ) : null}
+          {/* A origem fica guardada no aparelho porque quase nunca muda:
+              quem mora em Recife nao quer redigitar Recife toda vez. */}
+          <button
+            type="button"
+            onClick={() => setTrocandoOrigem((t) => !t)}
+            className="mt-2.5 min-h-9 text-sm text-painel-tinta-fraca"
+          >
+            {trocandoOrigem ? (
+              "Cancelar"
+            ) : (
+              <>
+                Saindo de <strong className="font-semibold text-painel-tinta">{nomeDaOrigem}</strong>{" "}
+                <span className="underline underline-offset-2">trocar</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        {estado.fase === "espera" ? (
+          <div className="vidro absolute inset-x-3 bottom-24 z-10 rounded-[28px] p-5 md:bottom-6 md:left-6 md:right-auto md:w-[380px]">
+            <Milo pose="apontando" className="pointer-events-none absolute -top-[88px] right-3 w-[100px]" />
+            <p className="max-w-[16rem] text-[17px] leading-snug text-painel-tinta">
+              Escolha um destino e eu comparo milhas com dinheiro.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {/* Todos iguais: nenhum esta escolhido ainda, e o primeiro
+                  preenchido parecia pre-selecionado. O atalho igual a
+                  origem some -- "Recife saindo de Recife" nao e viagem. */}
+              {atalhos
+                .filter((a) => a.iata !== origem)
+                .map((a) => (
+                  <button
+                    key={a.iata}
+                    type="button"
+                    onClick={() => escolher(a)}
+                    className="min-h-11 rounded-full border border-painel-tinta/30 px-4 text-[15px] font-semibold text-painel-tinta transition-colors hover:bg-painel-realce"
+                  >
+                    {a.cidade}
+                  </button>
+                ))}
+            </div>
+          </div>
+        ) : (
+          <PainelDeResposta estado={estado} origem={origem} aoFechar={fechar} aoTentar={escolher} />
+        )}
+      </section>
+    </ViewTransition>
   );
 }
 
@@ -323,7 +376,7 @@ function Resposta({ dados }: { dados: VerediteDaPessoa }) {
           </div>
           <div className="mt-2">
             {fonte === "travelpayouts" ? (
-              <SeloDeOrigem origem="real" detalhe={observacaoDaFonte}>busca real de hoje</SeloDeOrigem>
+              <SeloDeOrigem origem="real" detalhe={observacaoDaFonte}>busca real recente</SeloDeOrigem>
             ) : (
               <SeloDeOrigem origem="estimado" detalhe={observacaoDaFonte}>preço estimado</SeloDeOrigem>
             )}
@@ -354,9 +407,22 @@ function Resposta({ dados }: { dados: VerediteDaPessoa }) {
           Ver mês, dia e todos os programas
         </Link>
         {resgatar && melhor ? (
-          <LinkExterno href={melhor.programa.site} tipo="utilidade" variante="secundario">
+          // Saida para o resgate: vira viagem "em vista" em Minhas viagens.
+          <LinkParaPassagem
+            href={melhor.programa.site}
+            tipo="utilidade"
+            variante="secundario"
+            saida={{
+              origemIata: rota.origem.iata,
+              destinoIata: rota.destino.iata,
+              ida: null,
+              precoVistoBRL: veredito.precoDinheiroBRL,
+              forma: "milhas",
+              programaId: melhor.programa.id,
+            }}
+          >
             Resgatar no {melhor.programa.nome}
-          </LinkExterno>
+          </LinkParaPassagem>
         ) : null}
       </div>
     </>

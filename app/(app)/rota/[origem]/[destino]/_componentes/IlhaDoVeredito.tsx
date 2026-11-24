@@ -5,6 +5,7 @@ import { usarPerfil, usePerfilHidratado } from "@/store/perfil";
 import { useVereditoPersonalizado } from "@/lib/cliente/veredito";
 import { HeroiDaRota } from "./HeroiDaRota";
 import type { FaseDaJornada } from "@/lib/monetizacao/jornada";
+import type { PassagemVista } from "./passagem";
 
 /**
  * Troca o veredito de mercado pelo da pessoa, depois da hidratação.
@@ -31,12 +32,14 @@ export function IlhaDoVeredito({
   destino,
   dataEscolhida,
   fase,
+  passagem,
   children,
 }: {
   origem: string;
   destino: string;
   dataEscolhida: string | null;
   fase: FaseDaJornada;
+  passagem: PassagemVista | null;
   children: ReactNode;
 }) {
   const hidratado = usePerfilHidratado();
@@ -51,7 +54,11 @@ export function IlhaDoVeredito({
     destino,
   );
 
-  if (!pessoal) return <>{children}</>;
+  // Com data escolhida, o servidor ja respondeu com o preco DAQUELE dia.
+  // /api/veredito so conhece o mais barato da rota em qualquer dia, e
+  // trocar por ele faria a placa falar de um voo e o botao de outro.
+  // Melhor manter o CPM de mercado do que misturar as duas passagens.
+  if (!pessoal || passagem?.daDataEscolhida) return <>{children}</>;
 
   return (
     <HeroiDaRota
@@ -62,6 +69,7 @@ export function IlhaDoVeredito({
       destinoIata={destino}
       dataEscolhida={dataEscolhida}
       fase={fase}
+      passagem={passagem}
     />
   );
 }

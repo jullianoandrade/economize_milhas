@@ -10,6 +10,7 @@ import type { Fonte } from "@/lib/providers/travelpayouts";
 import { CurvaDeMeses } from "./CurvaDeMeses";
 import { CalendarioDePrecos } from "./CalendarioDePrecos";
 import { CardQuandoComprar } from "./CardQuandoComprar";
+import type { PassagemVista } from "./passagem";
 
 /**
  * Três granularidades da mesma pergunta -- "quando ir?" -- num acordeão
@@ -32,6 +33,11 @@ export function BlocoDeQuando({
   melhoresDatas,
   medianaHistoricaBRL,
   janela,
+  origemIata,
+  destinoIata,
+  passagem,
+  precoReferenciaBRL,
+  viagemPassou,
 }: {
   sazonalidade: Sazonalidade | null;
   fonteDaCurva: Fonte;
@@ -44,12 +50,20 @@ export function BlocoDeQuando({
   melhoresDatas: DataMaisBarata[];
   medianaHistoricaBRL: number;
   janela: JanelaDeCompra;
+  origemIata: string;
+  destinoIata: string;
+  passagem: PassagemVista | null;
+  precoReferenciaBRL: number;
+  viagemPassou: boolean;
 }) {
   // O primeiro item com dado de verdade abre por padrao. Sem isto, uma
   // rota sem sazonalidade calculada abriria com os tres fechados.
   const calendarioTemDado = calendario.diasComDado >= DIAS_MINIMOS_PARA_MOSTRAR;
-  const abrirMes = sazonalidade !== null;
-  const abrirDia = !abrirMes && calendarioTemDado;
+  // Quem acabou de tocar num dia do calendario volta com ?data= e precisa
+  // achar o item do dia aberto, com o botao da passagem logo abaixo.
+  const diaEscolhidoNoCalendario = calendarioTemDado && dataEscolhida !== null;
+  const abrirMes = sazonalidade !== null && !diaEscolhidoNoCalendario;
+  const abrirDia = diaEscolhidoNoCalendario || (!abrirMes && calendarioTemDado);
 
   return (
     <section className="mt-4">
@@ -80,6 +94,11 @@ export function BlocoDeQuando({
           dataEscolhida={dataEscolhida}
           melhoresDatas={melhoresDatas}
           medianaHistoricaBRL={medianaHistoricaBRL}
+          origemIata={origemIata}
+          destinoIata={destinoIata}
+          passagem={passagem}
+          precoReferenciaBRL={precoReferenciaBRL}
+          viagemPassou={viagemPassou}
         />
       </ItemDoAcordeao>
 

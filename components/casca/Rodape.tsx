@@ -19,6 +19,13 @@ export function Rodape() {
       <p className="border-t border-borda pt-4 text-center text-xs leading-relaxed text-tinta-fraca">
         Valores em milhas são estimativas.{" "}
         <Link
+          href="/conta"
+          className="underline underline-offset-2 hover:text-marca"
+        >
+          Sua conta
+        </Link>{" "}
+        ·{" "}
+        <Link
           href="/aprender"
           className="underline underline-offset-2 hover:text-marca"
         >

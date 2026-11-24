@@ -26,6 +26,9 @@ export function NavegacaoInferior() {
   return (
     <nav
       aria-label="Navegação principal"
+      // Fica por cima durante a transicao Inicio -> Explorar (ver o bloco
+      // de view transitions no fim de app/globals.css).
+      style={{ viewTransitionName: "navegacao-inferior" }}
       className="safe-bottom fixed inset-x-0 bottom-0 z-50 px-4 pb-3 md:hidden"
     >
       <ul className="mx-auto flex max-w-sm items-center justify-between gap-1 rounded-full border border-borda bg-superficie/95 p-1.5 shadow-flutuante backdrop-blur-md">

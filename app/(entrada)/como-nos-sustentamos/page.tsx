@@ -87,7 +87,9 @@ export default function ComoNosSustentamos() {
                   ? "a definir"
                   : p.comissao.modelo === "cpa"
                     ? `R$ ${p.comissao.min}–${p.comissao.max} por contratação`
-                    : `${porcentagem(p.comissao.min)}–${porcentagem(p.comissao.max)}% do valor`}
+                    : p.comissao.min === p.comissao.max
+                      ? `${porcentagem(p.comissao.max)}% do valor`
+                      : `${porcentagem(p.comissao.min)}–${porcentagem(p.comissao.max)}% do valor`}
               </span>
             </li>
           ))}
