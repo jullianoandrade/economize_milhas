@@ -66,9 +66,13 @@ const APLICAR_TEMA = `try{var t=localStorage.getItem("milhas-tema");if(t!=="clar
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
+    // suppressHydrationWarning: o script APLICAR_TEMA poe data-tema no
+    // <html> antes de o React hidratar (para nao piscar o tema errado).
+    // Vale so para os atributos deste elemento, nao para os filhos.
     <html
       lang="pt-BR"
       className={`${voemilo.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full">
         <script dangerouslySetInnerHTML={{ __html: APLICAR_TEMA }} />

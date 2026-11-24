@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { FaixaDaJornada } from "./_componentes/FaixaDaJornada";
 import { RegistrarInteresse } from "./_componentes/RegistrarInteresse";
 import { SeletorDeData } from "./_componentes/SeletorDeData";
-import { ArcoDaRota } from "./_componentes/ArcoDaRota";
+import { Globo } from "@/components/dominio/Globo";
 import { HeroiDaRota } from "./_componentes/HeroiDaRota";
 import { ComoPagar } from "./_componentes/ComoPagar";
 import { IlhaDoVeredito } from "./_componentes/IlhaDoVeredito";
@@ -268,8 +268,21 @@ async function Conteudo({
             econômica. {rota.rotulo}.
           </p>
 
-          <div className="mt-4">
-            <ArcoDaRota origem={rota.origem} destino={rota.destino} />
+          {/* O mesmo globo de aeroportos do Explorar, aproximado ate o arco
+              ocupar a largura: a rota escolhida la continua aqui. */}
+          <div
+            role="img"
+            aria-label={`Rota de ${rota.origem.cidade} a ${rota.destino.cidade}`}
+            className="relative mt-4 h-[168px] overflow-hidden rounded-2xl"
+          >
+            <Globo
+              enquadramento="rota"
+              rota={{
+                origem: [rota.origem.lat, rota.origem.lon],
+                destino: [rota.destino.lat, rota.destino.lon],
+                rotulos: [rota.origem.iata, rota.destino.iata],
+              }}
+            />
           </div>
           </div>
         </div>

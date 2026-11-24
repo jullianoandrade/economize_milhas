@@ -4,12 +4,14 @@ import { useEffect, useRef } from "react";
 import { grandeCirculo, suavizar, type LatLon } from "@/lib/globo/projecao";
 import {
   deEixoAngulo,
+  girar,
   multiplicar,
   normalizar,
   orientacaoCentradaEm,
   projetarLivre as projetar,
   rotacaoDoArraste,
   slerp,
+  vetorDe,
   type VistaLivre as Vista,
 } from "@/lib/globo/rotacao";
 
@@ -37,8 +39,12 @@ import {
  * As cores sao fixas: o globo e sempre noturno, nos dois temas.
  */
 
-/** "inteiro": o globo cabe todo na caixa, como no topo do Inicio. */
-export type Enquadramento = "centro" | "direita" | "acima" | "esquerda" | "inteiro";
+/**
+ * "inteiro": o globo cabe todo na caixa, como no topo do Inicio.
+ * "rota": aproxima ate o arco ocupar ~60% da largura -- num voo de 500 km
+ * o globo inteiro deixaria o arco com 8 px; aqui ele vira o assunto.
+ */
+export type Enquadramento = "centro" | "direita" | "acima" | "esquerda" | "inteiro" | "rota";
 
 const CENTRO_DO_BRASIL: LatLon = [-14, -51];
 const GRAU = Math.PI / 180;
@@ -60,6 +66,8 @@ function vistaAlvo(
   h: number,
   enq: Enquadramento,
   centro: LatLon,
+  /** Angulo da rota no centro da Terra, em radianos (0 sem rota). */
+  angulo = 0,
 ): Vista {
   const q = orientacaoCentradaEm(centro);
   switch (enq) {
@@ -73,6 +81,14 @@ function vistaAlvo(
       return { q, R: Math.min(w * 0.26, h * 0.36), cx: w * 0.32, cy: h * 0.54 };
     case "inteiro":
       return { q, R: Math.min(w, h) * 0.42, cx: w / 2, cy: h / 2 };
+    case "rota": {
+      const inteiro = Math.min(w, h) * 0.42;
+      const corda = 2 * Math.sin(Math.max(angulo, 0.005) / 2);
+      // o arco sobe acima da corda: desce o centro para ele caber
+      // teto de aproximacao: rota curta fica com arco menor, mas com
+      // aeroportos em volta suficientes para dizer onde no mapa ela esta
+      return { q, R: Math.min(Math.max(inteiro, (w * 0.6) / corda), w * 4), cx: w / 2, cy: h * 0.62 };
+    }
   }
 }
 
@@ -126,6 +142,7 @@ export function Globo({
     let arcoInicio = 0;
     let arcoAlvo = 0;
     let caminho: ((t: number) => LatLon) | null = null;
+    let angulo = 0; // da rota, no centro da Terra
     let quadro = 0;
     const fonte = getComputedStyle(document.body).fontFamily;
 
@@ -215,13 +232,26 @@ export function Globo({
     const reenquadrar = (agora: number) => {
       const { rota: r, enquadramento: enq } = pedido.current;
       let centro = CENTRO_DO_BRASIL;
+      angulo = 0;
       if (r) {
         caminho = grandeCirculo(r.origem, r.destino);
         centro = caminho(0.5);
+        const a = vetorDe(r.origem);
+        const b = vetorDe(r.destino);
+        angulo = Math.acos(Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]));
       } else {
         caminho = null;
       }
-      const para = vistaAlvo(w, h, enq, centro);
+      const para = vistaAlvo(w, h, enq, centro, angulo);
+      if (enq === "rota" && r) {
+        // Deita a rota: gira em torno da linha de visao ate a origem
+        // ficar a esquerda e o destino a direita. Sem eixo preso, o
+        // norte nao precisa ficar para cima -- a rota e o assunto.
+        const o = girar(para.q, vetorDe(r.origem));
+        const d = girar(para.q, vetorDe(r.destino));
+        const inclinacao = Math.atan2(d[2] - o[2], d[1] - o[1]);
+        para.q = normalizar(multiplicar(deEixoAngulo([1, 0, 0], -inclinacao), para.q));
+      }
       giro = [0, 0, 0];
       if (!vista) {
         vista = para;
@@ -251,7 +281,7 @@ export function Globo({
       ctx.lineWidth = 1;
       ctx.stroke();
 
-      const tam = v.R > 120 ? 1.7 : 1.4;
+      const tam = v.R > w ? 2.2 : v.R > 120 ? 1.7 : 1.4;
       for (let i = 0; i < pontos.length; i += 2) {
         const p = projetar(v, [pontos[i], pontos[i + 1]]);
         if (p.frente <= 0) continue;
@@ -263,6 +293,18 @@ export function Globo({
       if (!caminho || !r || arco <= 0) return;
       const N = 90;
       const ate = Math.floor(N * arco);
+      // No enquadramento "rota" o meio da rota fica no centro do disco, e
+      // grande circulo pelo centro projeta como RETA. O arco e tracado na
+      // tela: uma curva entre as duas pontas, subindo 30% da distancia.
+      const naTela = pedido.current.enquadramento === "rota";
+      const a = projetar(v, r.origem);
+      const b = projetar(v, r.destino);
+      const ctl = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 - 0.3 * Math.hypot(b.x - a.x, b.y - a.y) };
+      const pontoDaCurva = (t: number) => {
+        if (!naTela) return projetar(v, caminho!(t), 1 + Math.min(0.16, 0.35 * angulo) * Math.sin(Math.PI * t));
+        const u = 1 - t;
+        return { x: u * u * a.x + 2 * u * t * ctl.x + t * t * b.x, y: u * u * a.y + 2 * u * t * ctl.y + t * t * b.y, frente: 1 };
+      };
       ctx.save();
       ctx.strokeStyle = "#ffb020";
       ctx.lineWidth = 2.4;
@@ -273,7 +315,7 @@ export function Globo({
       let cabeca = projetar(v, r.origem);
       for (let i = 0; i <= ate; i++) {
         const t = i / N;
-        cabeca = projetar(v, caminho(t), 1 + 0.16 * Math.sin(Math.PI * t));
+        cabeca = pontoDaCurva(t);
         if (i === 0) ctx.moveTo(cabeca.x, cabeca.y);
         else ctx.lineTo(cabeca.x, cabeca.y);
       }
@@ -291,8 +333,10 @@ export function Globo({
         ctx.textAlign = lado < 0 ? "right" : "left";
         ctx.fillText(nome, p.x + lado * 10, p.y + 4);
       };
-      marcar(r.origem, r.rotulos[0], -1);
-      if (arco >= 1) marcar(r.destino, r.rotulos[1], 1);
+      // cada rotulo do lado de fora do arco, para nunca cruzar o traco
+      const origemAEsquerda = projetar(v, r.origem).x <= projetar(v, r.destino).x;
+      marcar(r.origem, r.rotulos[0], origemAEsquerda ? -1 : 1);
+      if (arco >= 1) marcar(r.destino, r.rotulos[1], origemAEsquerda ? 1 : -1);
       else {
         ctx.fillStyle = "#ffb020";
         ctx.beginPath();
