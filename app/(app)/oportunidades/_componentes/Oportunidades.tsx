@@ -141,7 +141,7 @@ export function Oportunidades({
               Se puder, espere uma antes de transferir. O bônus muda o custo
               da sua milha.
             </p>
-            <Milo className="pointer-events-none absolute -bottom-3 right-1 w-[128px]" />
+            <Milo pose="esperando" className="pointer-events-none absolute -bottom-3 right-1 w-[128px]" />
           </div>
         )}
 

@@ -77,7 +77,7 @@ export function HeroiDoInicio() {
           aria-label="Como o app funciona"
           className="size-11 overflow-hidden rounded-full border border-painel-tinta/20 bg-painel-realce md:hidden"
         >
-          <Milo variante="rosto" className="size-11" />
+          <Milo pose="rosto" className="size-11" />
         </Link>
       </div>
 

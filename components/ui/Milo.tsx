@@ -1,10 +1,11 @@
 /**
  * Milo, a capivara da VoeMilo.
  *
- * Versao provisoria (17/11/2026), desenhada em SVG a partir das
- * referencias aprovadas: contorno marrom-escuro, pelagem marrom natural,
- * focinho mais claro, cachecol ambar e mochila marinho. A arte final
- * ainda vai ser refinada; quando chegar, muda so este arquivo.
+ * DUAS ARTES. A final vem em poses (public/milo/, registradas em
+ * lib/milo/poses.json pelo scripts/preparar-milo.mjs). Enquanto uma pose
+ * nao chega, aparece no lugar dela o desenho provisorio em SVG deste
+ * arquivo (17/11/2026) -- por isso cada tela ja pede a pose certa, e a
+ * arte entra sem mexer em tela nenhuma.
  *
  * AS CORES SAO FIXAS, e nao tokens de tema, de proposito: o Milo e um
  * personagem, e personagem nao troca de pelagem a noite. O contorno
@@ -17,11 +18,61 @@
  * levada a serio.
  */
 
+import Image from "next/image";
+import poses from "@/lib/milo/poses.json";
+
 const CONTORNO = "#3b2618";
 
-export type VarianteDoMilo = "inteiro" | "rosto";
+/**
+ * apontando: mostra algo a esquerda dele (Explorar, Carteira vazia).
+ * rosto: avatar e selo pequeno. comemorando: meta batida.
+ * esperando: nada no momento, mas vem. pensando: falta a pessoa decidir.
+ */
+export type PoseDoMilo = "apontando" | "rosto" | "comemorando" | "esperando" | "pensando";
+
+type Arte = { arquivo: string; largura: number; altura: number; espelhar: boolean };
+const ARTES: Partial<Record<PoseDoMilo, Arte>> = poses;
 
 export function Milo({
+  pose = "apontando",
+  className = "",
+  rotulo,
+}: {
+  pose?: PoseDoMilo;
+  /** Para o corpo inteiro, de a LARGURA (w-[...]): a altura segue a arte. */
+  className?: string;
+  /** Quando informado, o desenho deixa de ser decorativo. */
+  rotulo?: string;
+}) {
+  const arte = ARTES[pose];
+  if (!arte) {
+    return (
+      <MiloDesenhado
+        variante={pose === "rosto" ? "rosto" : "inteiro"}
+        className={className}
+        rotulo={rotulo}
+      />
+    );
+  }
+  const ajuste = pose === "rosto" ? "object-contain" : "h-auto";
+  return (
+    <Image
+      src={`/milo/${arte.arquivo}`}
+      width={arte.largura}
+      height={arte.altura}
+      alt={rotulo ?? ""}
+      aria-hidden={rotulo === undefined ? true : undefined}
+      unoptimized
+      draggable={false}
+      className={`${className} ${ajuste} ${arte.espelhar ? "-scale-x-100" : ""}`}
+    />
+  );
+}
+
+type VarianteDoMilo = "inteiro" | "rosto";
+
+/** O desenho provisorio, aponta para a esquerda. */
+function MiloDesenhado({
   variante = "inteiro",
   className = "",
   rotulo,

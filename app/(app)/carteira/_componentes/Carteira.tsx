@@ -199,7 +199,7 @@ function CarteiraVazia({
       </p>
 
       <div className="relative mt-6" style={{ height: ALTURA_DO_CARTAO }}>
-        <Milo className="pointer-events-none absolute -top-[86px] right-0 z-10 w-[118px]" />
+        <Milo pose="apontando" className="pointer-events-none absolute -top-[86px] right-0 z-10 w-[118px]" />
         <button
           type="button"
           onClick={() => aoEscolher()}
@@ -296,7 +296,7 @@ function Pilha({
               </span>
               <span className="mt-1 block text-sm font-medium">{l.programa.unidade}</span>
             </span>
-            <Milo variante="rosto" className="pointer-events-none absolute bottom-2 right-3 size-14 opacity-25 mix-blend-luminosity grayscale" />
+            <Milo pose="rosto" className="pointer-events-none absolute bottom-2 right-3 size-14 opacity-25 mix-blend-luminosity grayscale" />
           </button>
         );
       })}

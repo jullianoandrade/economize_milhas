@@ -21,7 +21,7 @@ export default function NaoEncontrado() {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-lg flex-col justify-center px-5 py-10">
       {/* Pagina vazia e um dos lugares do Milo: ele aponta a saida. */}
-      <Milo className="mb-6 w-32" />
+      <Milo pose="pensando" className="mb-6 w-32" />
 
       <h1 className="display text-3xl text-tinta">
         Esta página não existe

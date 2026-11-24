@@ -418,7 +418,7 @@ export function TelaDeObjetivos() {
           {/* O recorte fica numa camada propria, e nao na <section>: ver
               tests/arquitetura.test.ts (lista de sugestoes cortada). */}
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[24px]">
-            <Milo className="absolute -bottom-3 right-1 w-[118px]" />
+            <Milo pose="pensando" className="absolute -bottom-3 right-1 w-[118px]" />
           </div>
         </section>
       ) : null}
@@ -808,7 +808,7 @@ function ObjetivoAtivo({
         {/* Meta batida e conquista: um dos lugares do Milo. */}
         {batida ? (
           <div className="relative mt-4 flex items-center gap-3 rounded-2xl bg-painel-realce p-3 md:max-w-md">
-            <Milo variante="rosto" className="size-12 shrink-0 rounded-full bg-[#dfe6f5]" />
+            <Milo pose="comemorando" className="w-14 shrink-0" />
             <p className="text-[15px] text-painel-tinta">
               Você chegou lá.{" "}
               <Link

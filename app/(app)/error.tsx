@@ -45,7 +45,7 @@ export default function ErroDaTela({
   return (
     <section className="rounded-2xl border border-borda bg-superficie p-6 shadow-card">
       <div className="flex items-center gap-3">
-        <Milo variante="rosto" className="size-12 shrink-0 rounded-full bg-superficie-2" />
+        <Milo pose="rosto" className="size-12 shrink-0 rounded-full bg-superficie-2" />
         <h1 className="display text-2xl text-tinta">Algo quebrou aqui</h1>
       </div>
 
