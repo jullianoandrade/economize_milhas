@@ -7,7 +7,7 @@ import type { Fonte } from "@/lib/providers/travelpayouts";
 /**
  * A resposta, em uma olhada: a placa e as duas linhas que a sustentam.
  *
- * A PLACA e opaca e creme, sempre -- nunca vidro, nunca translucida. E o
+ * A PLACA e opaca e branca, sempre -- nunca vidro, nunca translucida. E o
  * numero que decide, e contraste de numero que decide nao pode depender
  * do que passa atras. Mesma placa da resposta do Explorar, para a
  * pessoa reconhecer a resposta nas duas telas.
@@ -36,7 +36,7 @@ export function CardVeredito({
 
   return (
     <section aria-label="A resposta">
-      <div className="rounded-[22px] bg-[#f2ede0] px-5 pb-5 pt-4 text-[#0e1a2e]">
+      <div className="rounded-[22px] bg-white px-5 pb-5 pt-4 text-[#0b1526]">
         {veredito.foraDoModelo ? (
           // Fora do modelo nao e veredito, e ausencia declarada de
           // veredito: nada de "pague em dinheiro" aqui. Ver

@@ -22,12 +22,12 @@ import { MARCA as PRODUTO } from "@/lib/marca";
  * Next nao aceita metadata nelas. O titulo vai pelo <title> do React.
  */
 
-const FUNDO = "#e6e9ef";
-const SUPERFICIE = "#f6f7fa";
-const TINTA = "#0e1a2e";
-const TINTA_MEDIA = "#3e4a62";
-const MARCA = "#0e1a2e";
-const BORDA = "#d6dbe4";
+const FUNDO = "#f4f6f9";
+const SUPERFICIE = "#ffffff";
+const TINTA = "#0b1526";
+const TINTA_MEDIA = "#3c475c";
+const MARCA = "#0b1526";
+const BORDA = "#dde2ea";
 
 export default function ErroGlobal({
   error,

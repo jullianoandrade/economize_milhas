@@ -113,7 +113,7 @@ export function HeroiDoInicio() {
               aria-label={`${progresso.percentual}% do objetivo`}
               className="mt-3.5 h-1.5 overflow-hidden rounded-full bg-painel-tinta/20"
             >
-              <div className="h-full rounded-full bg-[#f2b33d]" style={{ width: `${progresso.percentual}%` }} />
+              <div className="h-full rounded-full bg-[#ffb020]" style={{ width: `${progresso.percentual}%` }} />
             </div>
             <p className="tabular mt-2 text-[15px] text-painel-tinta">
               {progresso.milhasFaltando === 0

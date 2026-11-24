@@ -29,9 +29,9 @@ export const contentType = "image/png";
 
 /* As mesmas cores do painel escuro do heroi, em valor literal: o
    gerador de imagem nao le o CSS do site. */
-const TINTA = "#f2ede0";
-const TINTA_MEDIA = "#b6bed0";
-const MILHAS = "#f2b33d";
+const TINTA = "#ffffff";
+const TINTA_MEDIA = "#b4bfd4";
+const MILHAS = "#ffb020";
 
 export default async function Imagem({
   params,
@@ -85,7 +85,7 @@ export default async function Imagem({
           justifyContent: "space-between",
           padding: 72,
           backgroundImage:
-            "linear-gradient(140deg, #16304f 0%, #20406f 45%, #3e63a0 100%)",
+            "linear-gradient(140deg, #0b1526 0%, #14233d 55%, #1d2d4d 100%)",
           color: TINTA,
           fontSize: 32,
         }}

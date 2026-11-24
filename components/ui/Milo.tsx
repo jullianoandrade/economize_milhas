@@ -45,7 +45,7 @@ export function Milo({
     >
       <g stroke={CONTORNO} strokeWidth="4" strokeLinejoin="round" strokeLinecap="round">
         {/* mochila, atras do corpo */}
-        <path d="M140 92 C 160 88, 176 98, 176 118 L 176 150 C 176 162, 166 168, 154 166 L 142 164 Z" fill="#22355a" />
+        <path d="M140 92 C 160 88, 176 98, 176 118 L 176 150 C 176 162, 166 168, 154 166 L 142 164 Z" fill="#1d2d4d" />
         {/* orelhas pequenas e encaixadas: orelha grande puxa para urso */}
         <ellipse cx="118" cy="26" rx="9" ry="10" fill="#9a5f34" />
         <ellipse cx="138" cy="33" rx="8" ry="9" fill="#9a5f34" />
@@ -65,11 +65,11 @@ export function Milo({
       <path d="M44 82 q7 5 14 1" fill="none" stroke={CONTORNO} strokeWidth="3.2" strokeLinecap="round" />
       <path d="M86 54 q8 -8 16 0" fill="none" stroke={CONTORNO} strokeWidth="4" strokeLinecap="round" />
       <g stroke={CONTORNO} strokeWidth="4" strokeLinejoin="round">
-        <path d="M60 96 C 86 110, 128 108, 150 90 L 154 104 C 130 122, 86 124, 58 110 Z" fill="#f2b33d" />
-        <path d="M94 112 C 98 128, 96 140, 91 155 L 113 157 C 115 140, 115 126, 112 112 Z" fill="#f2b33d" />
+        <path d="M60 96 C 86 110, 128 108, 150 90 L 154 104 C 130 122, 86 124, 58 110 Z" fill="#ffb020" />
+        <path d="M94 112 C 98 128, 96 140, 91 155 L 113 157 C 115 140, 115 126, 112 112 Z" fill="#ffb020" />
       </g>
       <path d="M93 148 l20 1.5" stroke="#c98f1c" strokeWidth="3" />
-      <path d="M148 98 C 140 116, 136 136, 140 156" fill="none" stroke="#22355a" strokeWidth="7" strokeLinecap="round" />
+      <path d="M148 98 C 140 116, 136 136, 140 156" fill="none" stroke="#1d2d4d" strokeWidth="7" strokeLinecap="round" />
       {/* o braco que aponta: o Milo sempre indica o proximo passo */}
       <g stroke={CONTORNO} strokeWidth="4" strokeLinejoin="round" strokeLinecap="round">
         <path d="M92 116 C 74 108, 56 106, 42 108 C 33 109, 32 126, 42 127 C 58 129, 74 133, 90 138 Z" fill="#b97a47" />

@@ -117,7 +117,7 @@ export function FolhaDaCarteira({
         type="button"
         aria-label="Fechar"
         onClick={() => aoFechar()}
-        className="absolute inset-0 bg-[#0e1a2e]/40"
+        className="absolute inset-0 bg-[#0b1526]/40"
       />
       <form
         role="dialog"

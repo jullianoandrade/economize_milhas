@@ -87,17 +87,17 @@ type Resposta = {
 /**
  * A situacao aparece sobre o painel marinho. Selo escuro com um PONTO de
  * cor, e nao fundo colorido: a cor nunca e a unica pista (o texto diz a
- * situacao) e o texto creme passa contraste em qualquer tema. A versao
+ * situacao) e o texto claro passa contraste em qualquer tema. A versao
  * anterior usava bg-marca-fraca/text-marca, que dentro do painel virava
- * creme sobre claro.
+ * claro sobre claro.
  */
 const APARENCIA_DA_SITUACAO: Record<Situacao, { rotulo: string; ponto: string }> = {
   concluida: { rotulo: "Meta batida", ponto: "#4ade9f" },
   adiantada: { rotulo: "Adiantado", ponto: "#4ade9f" },
-  "no-ritmo": { rotulo: "No ritmo", ponto: "#f2b33d" },
+  "no-ritmo": { rotulo: "No ritmo", ponto: "#ffb020" },
   atrasada: { rotulo: "Atrasado", ponto: "#f87171" },
   parada: { rotulo: "Sem acúmulo", ponto: "#f87171" },
-  "sem-prazo": { rotulo: "Sem data", ponto: "#a9b6d3" },
+  "sem-prazo": { rotulo: "Sem data", ponto: "#a9b8d6" },
 };
 
 /**
@@ -808,7 +808,7 @@ function ObjetivoAtivo({
         {/* Meta batida e conquista: um dos lugares do Milo. */}
         {batida ? (
           <div className="relative mt-4 flex items-center gap-3 rounded-2xl bg-painel-realce p-3 md:max-w-md">
-            <Milo variante="rosto" className="size-12 shrink-0 rounded-full bg-[#f2ede0]" />
+            <Milo variante="rosto" className="size-12 shrink-0 rounded-full bg-[#dfe6f5]" />
             <p className="text-[15px] text-painel-tinta">
               Você chegou lá.{" "}
               <Link

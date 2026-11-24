@@ -20,8 +20,8 @@ export default function manifest(): MetadataRoute.Manifest {
     // de abertura e theme_color a barra do sistema, entao divergir do
     // app faz o PWA piscar de uma cor para outra ao abrir. O
     // theme_color aqui bate com o viewport.themeColor do layout raiz.
-    background_color: "#e6e9ef",
-    theme_color: "#e6e9ef",
+    background_color: "#f4f6f9",
+    theme_color: "#f4f6f9",
     lang: "pt-BR",
     categories: ["travel", "finance"],
     icons: [

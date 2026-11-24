@@ -33,7 +33,7 @@ import { FolhaDaCarteira, type PedidoDeFolha } from "./FolhaDaCarteira";
 const ALTURA_DO_CARTAO = 200;
 const DEGRAU = 64;
 const FRESTA = 14;
-const MATERIAIS = ["cartao-marinho", "cartao-creme", "cartao-azul"] as const;
+const MATERIAIS = ["cartao-marinho", "cartao-ambar", "cartao-gelo"] as const;
 
 export function Carteira({
   catalogo,
@@ -106,7 +106,7 @@ export function Carteira({
                     onClick={() => setFoco(a.programa.id)}
                     className="flex w-full items-center gap-3 rounded-2xl bg-superficie-2 px-4 py-3.5 text-left text-[15px] leading-snug text-tinta"
                   >
-                    <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full bg-[#f2b33d] shadow-[0_0_0_4px_rgb(242_179_61/0.25)]" />
+                    <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full bg-[#ffb020] shadow-[0_0_0_4px_rgb(255_176_32/0.25)]" />
                     <span>
                       <strong className="font-semibold">
                         {fmt(a.quantidade)} {a.programa.unidade} {a.programa.nome}
@@ -287,7 +287,7 @@ function Pilha({
             <span className="relative flex items-start justify-between gap-3">
               <span className="text-lg font-bold">{l.programa.nome}</span>
               {l.desatualizado ? (
-                <span className="rounded-full bg-[#f2ede0] px-2.5 py-1 text-xs font-semibold text-[#0e1a2e]">confira o saldo</span>
+                <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-[#0b1526] shadow-sm">confira o saldo</span>
               ) : null}
             </span>
             <span className="relative">

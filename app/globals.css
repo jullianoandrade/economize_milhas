@@ -3,19 +3,20 @@
 /* ============================================================
    Tokens de design — identidade VoeMilo
 
-   Quatro cores de marca, e so quatro:
-     marinho     #0e1a2e   tinta do dia, fundo da noite, painel
-     creme       #f2ede0   superficie do dia, tinta da noite
-     ambar       #f2b33d   milhas (a noite); acento
-     azul claro  #8098c4   decoracao e texto secundario sobre marinho
+   Paleta "Marinho limpo" (24/11/2026). Quatro cores de marca, e so quatro:
+     marinho     #0b1526   tinta do dia, fundo da noite, painel
+     branco      #ffffff   superficie do dia, tinta sobre o marinho
+     ambar       #ffb020   milhas (a noite); o que pede atencao
+     azul dados  #7fa0ff   marca da noite; grafico, globo, decoracao
+   O gelo (#dfe6f5) e o branco azulado das superficies secundarias.
 
    O que a paleta NAO pode fazer, medido (WCAG AA = 4,5:1):
-     ambar sobre creme      1,59  -- nunca texto, nunca so-cor
-     azul claro sobre creme 2,49  -- idem
-     ambar sobre azul claro 1,57  -- idem
+     ambar sobre branco      1,83  -- nunca texto, nunca so-cor
+     azul dados sobre branco 2,51  -- idem
+     ambar sobre azul dados  1,37  -- idem
    Por isso, no tema claro, enfase e MARINHO: botao, aba ativa, link.
-   Ambar e azul claro so entram como preenchimento com tinta marinha
-   em cima (9,36 e 5,98) ou como decoracao sem informacao.
+   Ambar e azul dados so entram como preenchimento com tinta marinha
+   em cima (9,99 e 7,29) ou como decoracao sem informacao.
 
    Uma regra organiza o arquivo: AS CORES SEMANTICAS MANDAM.
    Ambar e milhas, verde e dinheiro, vermelho e alerta. Os tres carregam
@@ -31,58 +32,64 @@
 
 :root {
   /* Superficies — tela crua */
-  --fundo: #e6e9ef;
-  --superficie: #f6f7fa;
-  --superficie-2: #f2ede0;
-  --borda: #d6dbe4;
+  /* Paleta "Marinho limpo" (24/11/2026): marinho no destaque e nos
+     botoes, ambar so no que pede atencao, branco no resto. O creme
+     saiu; a superficie secundaria e o "gelo", azul quase branco. */
+  --fundo: #f4f6f9;
+  --superficie: #ffffff;
+  --superficie-2: #eef2f8;
+  --borda: #dde2ea;
 
-  /* Texto — azul-cipreste, nao preto */
-  --tinta: #0e1a2e;
-  --tinta-media: #3e4a62;
-  /* O mais claro que ainda passa 4,5:1 sobre o creme da superficie
+  /* Texto — marinho, nao preto */
+  --tinta: #0b1526;
+  --tinta-media: #3c475c;
+  /* O mais claro que ainda passa 4,5:1 sobre o gelo da superficie
      secundaria -- quem quiser clarear, o teste de paleta reprova. */
-  --tinta-fraca: #5a6479;
+  --tinta-fraca: #576278;
 
-  /* Marca — ultramar */
-  --marca: #0e1a2e;
-  --marca-forte: #22355a;
-  --marca-fraca: #e7ebf3;
-  /* So para decoracao: gradiente, ilustracao, traco de fundo.
-     Nunca para texto nem para borda que carregue significado. */
-  --marca-suave: #8098c4;
-  --marca-contraste: #fffdf8;
+  /* Marca — marinho */
+  --marca: #0b1526;
+  --marca-forte: #1d2d4d;
+  --marca-fraca: #e6ebf5;
+  /* O azul dos dados. So para decoracao: grafico, globo, traco de
+     fundo. Nunca para texto sobre claro nem borda que carregue
+     significado. */
+  --marca-suave: #7fa0ff;
+  --marca-contraste: #ffffff;
 
   /* Painel de destaque — o campo noturno do quadro.
      Tokens proprios, e nao "a marca mais escura", porque no modo escuro
      um painel mais escuro que a superficie nao existe: ele precisa ficar
      MAIS claro. Sem esta separacao, o texto branco fixo que estava nos
      componentes caia para 1,70:1 a noite. */
-  --painel: #0e1a2e;
-  --painel-tinta: #f2ede0;
-  --painel-tinta-fraca: #a9b6d3;
-  --painel-realce: #1b2a44;
+  --painel: #0b1526;
+  --painel-tinta: #ffffff;
+  --painel-tinta-fraca: #a9b8d6;
+  --painel-realce: #17253f;
   /* O estado de pressionado vai mais FUNDO, nao mais claro. Alem de ser
      o que o dedo espera, e o que mantem o texto secundario legivel: a
      versao clara deste token reprovava em 4,41 sobre o proprio rotulo
      que ele carrega. */
-  --painel-realce-forte: #070f1c;
+  --painel-realce-forte: #050b16;
   --painel-borda: transparent;
   /* Acao sobre o painel: botao e link de marca dentro dele. Marinho
      sobre marinho some -- foi o que aconteceu com "Resgatar no Smiles"
-     quando a marca do dia virou marinho. Ver a regra .painel abaixo. */
-  --painel-acao: #f2ede0;
-  --painel-acao-forte: #fffdf8;
-  --painel-acao-tinta: #0e1a2e;
+     quando a marca do dia virou marinho. Ver a regra .painel abaixo.
+     Branco puro; o hover desce para o gelo. */
+  --painel-acao: #ffffff;
+  --painel-acao-forte: #dfe6f5;
+  --painel-acao-tinta: #0b1526;
 
-  /* Veredito: milhas (ocre) x dinheiro (verde) */
-  --milhas: #b45309;
+  /* Veredito: milhas (ambar) x dinheiro (verde).
+     O ambar vivo da marca (#ffb020) nao passa como texto sobre branco;
+     de dia "milhas" e o mesmo matiz, escurecido ate ler. */
+  --milhas: #9a5700;
   /* Texto sobre o proprio ambar. De dia o ambar e escuro e pede tinta
-     clara; a noite ele e o amarelo-cromio das estrelas e pede tinta
-     escura. Sem este par, o botao de atualizar meta ficava em 1,3:1
-     a noite. */
-  --milhas-contraste: #fffdf7;
-  --milhas-fundo: #fdf5e6;
-  --milhas-borda: #ecd5a6;
+     clara; a noite ele e o ambar vivo e pede tinta escura. Sem este
+     par, o botao de atualizar meta ficava em 1,3:1 a noite. */
+  --milhas-contraste: #ffffff;
+  --milhas-fundo: #fff5e0;
+  --milhas-borda: #f3d49a;
 
   --dinheiro: #047857;
   --dinheiro-fundo: #e6f3ec;
@@ -101,37 +108,37 @@
      A separacao verde/ambar fica na faixa 6-8 de delta E para protanopia,
      o que torna o rotulo em texto OBRIGATORIO: nenhuma informacao do
      grafico pode depender so da cor. */
-  --grafico-milhas: #b45309;
+  --grafico-milhas: #d98e00;
   --grafico-dinheiro: #047857;
-  --grafico-neutro: #cfc7b3;
+  --grafico-neutro: #cdd5e3;
 
-  /* Elevacao — sombra quente, para nao acinzentar a tela crua */
-  --sombra-card: 0 1px 2px rgb(14 26 46 / 0.04), 0 1px 6px rgb(14 26 46 / 0.04);
+  /* Elevacao — sombra marinho bem fraca, para nao acinzentar o branco */
+  --sombra-card: 0 1px 2px rgb(11 21 38 / 0.04), 0 1px 6px rgb(11 21 38 / 0.05);
   /* A nav flutua sobre o conteudo: precisa de uma sombra que a separe
      de verdade, nao do mesmo realce dos cartoes. */
-  --sombra-flutuante: 0 2px 6px rgb(14 26 46 / 0.06), 0 10px 28px rgb(14 26 46 / 0.12);
+  --sombra-flutuante: 0 2px 6px rgb(11 21 38 / 0.06), 0 10px 28px rgb(11 21 38 / 0.12);
 
-  --gradiente-marca: linear-gradient(180deg, #0e1a2e 0%, #14233c 100%);
+  --gradiente-marca: linear-gradient(180deg, #0b1526 0%, #111e35 100%);
 
   /* O mascote. Cores proprias para ele nao herdar tom de marca por
      acidente quando mudar de contexto. */
-  --mascote-corpo: #fffdf8;
-  --mascote-asa: #8098c4;
-  --mascote-sombra: #33496f;
-  --mascote-tinta: #0e1a2e;
+  --mascote-corpo: #ffffff;
+  --mascote-asa: #7fa0ff;
+  --mascote-sombra: #1d2d4d;
+  --mascote-tinta: #0b1526;
 
   /* Cor da barra de status no aparelho. O script de tema reescreve a
      meta tag; este valor e o de partida. */
-  --barra-do-sistema: #e6e9ef;
+  --barra-do-sistema: #f4f6f9;
 
   /* Vidro: so em controles que flutuam sobre algo vivo (o globo). Numero
      decisivo NUNCA fica sobre vidro -- contraste em superficie
      translucida depende do que passa atras, e o teste de paleta nao
      mede isso. Numero vai numa placa opaca. */
-  --vidro: rgb(246 247 250 / 0.62);
-  --vidro-borda: rgb(14 26 46 / 0.10);
-  --vidro-brilho: inset 0 1px 0 rgb(255 255 255 / 0.5);
-  --vidro-solido: #f6f7fa;
+  --vidro: rgb(255 255 255 / 0.66);
+  --vidro-borda: rgb(11 21 38 / 0.10);
+  --vidro-brilho: inset 0 1px 0 rgb(255 255 255 / 0.6);
+  --vidro-solido: #ffffff;
 
   color-scheme: light;
 }
@@ -147,42 +154,44 @@
    ------------------------------------------------------------ */
 
 :root[data-tema="escuro"] {
-  --fundo: #0e1a2e;
-  --superficie: #132139;
-  --superficie-2: #1a2a44;
-  --borda: #26385a;
+  --fundo: #0b1526;
+  --superficie: #111e35;
+  --superficie-2: #17263f;
+  --borda: #24365a;
 
-  --tinta: #f2ede0;
-  --tinta-media: #b7bfd1;
-  --tinta-fraca: #919cb4;
+  --tinta: #eef2f9;
+  --tinta-media: #b4bfd4;
+  --tinta-fraca: #8f9bb5;
 
-  --marca: #9fb2d8;
-  --marca-forte: #bccbe6;
-  --marca-fraca: #1a2a44;
-  --marca-suave: #8098c4;
-  --marca-contraste: #0e1a2e;
+  /* A noite a marca e o azul dos dados: marinho sobre marinho nao le. */
+  --marca: #7fa0ff;
+  --marca-forte: #a9bdff;
+  --marca-fraca: #17263f;
+  --marca-suave: #7fa0ff;
+  --marca-contraste: #0b1526;
 
   /* Mais claro que a superficie, nao mais escuro: a noite inverte a
-     direcao da elevacao. A separacao fica em 1,52 -- modesta de
-     proposito, porque e a borda que carrega o recorte aqui. */
-  --painel: #1a2a44;
-  --painel-tinta: #f2ede0;
-  --painel-tinta-fraca: #a9b6d3;
+     direcao da elevacao. E a borda que carrega o recorte aqui. */
+  --painel: #17263f;
+  --painel-tinta: #eef2f9;
+  --painel-tinta-fraca: #a9b8d6;
   /* A noite o chip e RECUADO: sobre um painel ja claro, o realce para
-     cima empurrava o texto secundario para 3,97. */
-  --painel-realce: #13223a;
-  --painel-realce-forte: #0e1a2e;
-  --painel-borda: #2c4066;
-  --painel-acao: #9fb2d8;
-  --painel-acao-forte: #bccbe6;
-  --painel-acao-tinta: #0e1a2e;
+     cima empurrava o texto secundario para baixo de 4,5. */
+  --painel-realce: #111e35;
+  --painel-realce-forte: #0b1526;
+  --painel-borda: #2a3e66;
+  /* A acao do painel e clara nos dois temas: o mesmo botao para a
+     mesma decisao, de dia e de noite. */
+  --painel-acao: #eef2f9;
+  --painel-acao-forte: #ffffff;
+  --painel-acao-tinta: #0b1526;
 
-  /* O amarelo-cromio das estrelas. De dia o mesmo papel e do ocre, que
-     e o que sobrevive a um fundo claro. */
-  --milhas: #f2b33d;
-  --milhas-contraste: #2e2410;
-  --milhas-fundo: #2e2410;
-  --milhas-borda: #56410f;
+  /* O ambar vivo da marca. De dia o mesmo papel e do ambar escurecido,
+     que e o que sobrevive a um fundo claro. */
+  --milhas: #ffb020;
+  --milhas-contraste: #2b1d00;
+  --milhas-fundo: #2a2110;
+  --milhas-borda: #5a4310;
 
   --dinheiro: #4ade9f;
   --dinheiro-fundo: #0f2c22;
@@ -192,26 +201,26 @@
   --alerta-fundo: #2d1414;
   --atencao: #fbbf24;
 
-  --grafico-milhas: #c08622;
+  --grafico-milhas: #d99520;
   --grafico-dinheiro: #1f9c6c;
-  --grafico-neutro: #35445e;
+  --grafico-neutro: #2f4064;
 
   --sombra-card: 0 1px 2px rgb(0 0 0 / 0.25);
   --sombra-flutuante: 0 4px 10px rgb(0 0 0 / 0.35), 0 12px 32px rgb(0 0 0 / 0.4);
 
-  --gradiente-marca: linear-gradient(180deg, #1a2a44 0%, #16253d 100%);
+  --gradiente-marca: linear-gradient(180deg, #17263f 0%, #111e35 100%);
 
-  --mascote-corpo: #f2ede0;
-  --mascote-asa: #8098c4;
-  --mascote-sombra: #1a2a44;
-  --mascote-tinta: #0e1a2e;
+  --mascote-corpo: #eef2f9;
+  --mascote-asa: #7fa0ff;
+  --mascote-sombra: #17263f;
+  --mascote-tinta: #0b1526;
 
-  --barra-do-sistema: #0e1a2e;
+  --barra-do-sistema: #0b1526;
 
-  --vidro: rgb(242 237 224 / 0.09);
-  --vidro-borda: rgb(242 237 224 / 0.16);
-  --vidro-brilho: inset 0 1px 0 rgb(242 237 224 / 0.18);
-  --vidro-solido: #16243c;
+  --vidro: rgb(255 255 255 / 0.08);
+  --vidro-borda: rgb(255 255 255 / 0.16);
+  --vidro-brilho: inset 0 1px 0 rgb(255 255 255 / 0.18);
+  --vidro-solido: #142039;
 
   color-scheme: dark;
 }
@@ -401,11 +410,11 @@ body {
      texto marinho sobre fundo marinho. */
   /* Sobre o painel o vidro e sempre noturno, nos dois temas: o globo
      da tela Explorar e um mundo escuro, e vidro claro em cima dele
-     apagaria o texto creme. */
-  --vidro: rgb(242 237 224 / 0.09);
-  --vidro-borda: rgb(242 237 224 / 0.16);
-  --vidro-brilho: inset 0 1px 0 rgb(242 237 224 / 0.18);
-  --vidro-solido: #16243c;
+     apagaria o texto claro. */
+  --vidro: rgb(255 255 255 / 0.08);
+  --vidro-borda: rgb(255 255 255 / 0.16);
+  --vidro-brilho: inset 0 1px 0 rgb(255 255 255 / 0.18);
+  --vidro-solido: #142039;
 }
 
 /* Vidro: so em controles que flutuam sobre algo vivo. Ver --vidro. */
@@ -433,8 +442,8 @@ body {
 /* Os cartoes da Carteira. Objetos fisicos: cores fixas nos dois temas,
    como o Milo. O padrao de circulos finos lembra a guilhoche de cedula
    -- e o detalhe que diz "isto vale dinheiro" sem precisar de icone.
-   Pares de texto medidos: creme sobre marinho 14,9; marinho sobre creme
-   14,9; marinho sobre azul claro 5,98. */
+   Pares de texto medidos: branco sobre marinho 18,2; marinho sobre ambar
+   10,0; marinho sobre gelo 14,6. */
 /* Sem `position` aqui de proposito: esta regra fica fora de @layer e
    venceria o `absolute` do Tailwind que posiciona o cartao na pilha. */
 .cartao-programa {
@@ -443,7 +452,7 @@ body {
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.22),
     inset 0 -1px 0 rgb(0 0 0 / 0.06),
-    0 12px 26px -14px rgb(14 26 46 / 0.55);
+    0 12px 26px -14px rgb(11 21 38 / 0.55);
 }
 .cartao-programa::before {
   content: "";
@@ -451,12 +460,12 @@ body {
   inset: 0;
   pointer-events: none;
 }
-.cartao-marinho { background: #0e1a2e; color: #f2ede0; border: 1px solid rgb(242 237 224 / 0.14); }
-.cartao-marinho::before { background: repeating-radial-gradient(circle at 115% -20%, transparent 0 9px, rgb(242 179 61 / 0.14) 9px 10px); }
-.cartao-creme { background: #f2ede0; color: #0e1a2e; }
-.cartao-creme::before { background: repeating-radial-gradient(circle at -15% 120%, transparent 0 9px, rgb(14 26 46 / 0.07) 9px 10px); }
-.cartao-azul { background: #8098c4; color: #0e1a2e; }
-.cartao-azul::before { background: repeating-radial-gradient(circle at 110% 120%, transparent 0 9px, rgb(14 26 46 / 0.09) 9px 10px); }
+.cartao-marinho { background: #0b1526; color: #ffffff; border: 1px solid rgb(255 255 255 / 0.14); }
+.cartao-marinho::before { background: repeating-radial-gradient(circle at 115% -20%, transparent 0 9px, rgb(255 176 32 / 0.16) 9px 10px); }
+.cartao-ambar { background: #ffb020; color: #0b1526; }
+.cartao-ambar::before { background: repeating-radial-gradient(circle at -15% 120%, transparent 0 9px, rgb(11 21 38 / 0.09) 9px 10px); }
+.cartao-gelo { background: #dfe6f5; color: #0b1526; }
+.cartao-gelo::before { background: repeating-radial-gradient(circle at 110% 120%, transparent 0 9px, rgb(11 21 38 / 0.08) 9px 10px); }
 
 /* Os primeiros @keyframes do projeto (Fase 5 -- movimento). Regra:
    anima RELACOES, nao numeros; anima MUDANCAS, nao chegadas. */

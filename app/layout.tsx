@@ -48,7 +48,7 @@ export const viewport: Viewport = {
   viewportFit: "cover",
   // Sem variante escura enquanto a paleta clara nao estiver decidida.
   // O seletor de paleta reescreve esta meta tag ao trocar.
-  themeColor: "#e6e9ef",
+  themeColor: "#f4f6f9",
 };
 
 /**
@@ -62,7 +62,7 @@ export const viewport: Viewport = {
  * ao botao manual, o que evita manter duas copias da paleta escura no
  * CSS, uma para a media query e outra para o atributo.
  */
-const APLICAR_TEMA = `try{var t=localStorage.getItem("milhas-tema");if(t!=="claro"&&t!=="escuro")t=matchMedia("(prefers-color-scheme: dark)").matches?"escuro":"claro";document.documentElement.setAttribute("data-tema",t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",t==="escuro"?"#0e1a2e":"#e6e9ef")}catch(e){}`;
+const APLICAR_TEMA = `try{var t=localStorage.getItem("milhas-tema");if(t!=="claro"&&t!=="escuro")t=matchMedia("(prefers-color-scheme: dark)").matches?"escuro":"claro";document.documentElement.setAttribute("data-tema",t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",t==="escuro"?"#0b1526":"#f4f6f9")}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

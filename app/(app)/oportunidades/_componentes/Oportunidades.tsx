@@ -121,7 +121,7 @@ export function Oportunidades({
                     até {dia(p.terminaEm)}
                   </span>
                 </span>
-                <span className="tabular text-[28px] font-bold tracking-tight text-[#f2b33d]">
+                <span className="tabular text-[28px] font-bold tracking-tight text-[#ffb020]">
                   +{p.percentual}%
                 </span>
               </li>
@@ -170,7 +170,7 @@ export function Oportunidades({
                     className="relative mt-2.5 h-2.5 rounded-full bg-borda"
                   >
                     <span
-                      className="absolute inset-y-0 left-0 rounded-full bg-[#8098c4]"
+                      className="absolute inset-y-0 left-0 rounded-full bg-[#7fa0ff]"
                       style={{ width: `${(h.maximoPct / escala) * 100}%` }}
                     />
                     <span

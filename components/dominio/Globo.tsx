@@ -237,17 +237,17 @@ export function Globo({
     const desenhar = (v: Vista) => {
       ctx.clearRect(0, 0, w, h);
       const halo = ctx.createRadialGradient(v.cx, v.cy, v.R * 0.7, v.cx, v.cy, v.R * 1.28);
-      halo.addColorStop(0, "rgba(128,152,196,0.12)");
-      halo.addColorStop(1, "rgba(128,152,196,0)");
+      halo.addColorStop(0, "rgba(127,160,255,0.14)");
+      halo.addColorStop(1, "rgba(127,160,255,0)");
       ctx.fillStyle = halo;
       ctx.beginPath();
       ctx.arc(v.cx, v.cy, v.R * 1.28, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = "rgba(22,38,63,0.9)";
+      ctx.fillStyle = "rgba(20,35,61,0.92)";
       ctx.beginPath();
       ctx.arc(v.cx, v.cy, v.R, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = "rgba(128,152,196,0.35)";
+      ctx.strokeStyle = "rgba(127,160,255,0.35)";
       ctx.lineWidth = 1;
       ctx.stroke();
 
@@ -255,7 +255,7 @@ export function Globo({
       for (let i = 0; i < pontos.length; i += 2) {
         const p = projetar(v, [pontos[i], pontos[i + 1]]);
         if (p.frente <= 0) continue;
-        ctx.fillStyle = `rgba(160,180,218,${(0.18 + 0.7 * p.frente).toFixed(2)})`;
+        ctx.fillStyle = `rgba(127,160,255,${(0.18 + 0.7 * p.frente).toFixed(2)})`;
         ctx.fillRect(p.x - tam / 2, p.y - tam / 2, tam, tam);
       }
 
@@ -264,10 +264,10 @@ export function Globo({
       const N = 90;
       const ate = Math.floor(N * arco);
       ctx.save();
-      ctx.strokeStyle = "#f2b33d";
+      ctx.strokeStyle = "#ffb020";
       ctx.lineWidth = 2.4;
       ctx.lineCap = "round";
-      ctx.shadowColor = "rgba(242,179,61,0.55)";
+      ctx.shadowColor = "rgba(255,176,32,0.55)";
       ctx.shadowBlur = 10;
       ctx.beginPath();
       let cabeca = projetar(v, r.origem);
@@ -283,7 +283,7 @@ export function Globo({
       const marcar = (c: LatLon, nome: string, lado: -1 | 1) => {
         const p = projetar(v, c);
         if (p.frente <= 0) return;
-        ctx.fillStyle = "#f2ede0";
+        ctx.fillStyle = "#ffffff";
         ctx.beginPath();
         ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
         ctx.fill();
@@ -294,7 +294,7 @@ export function Globo({
       marcar(r.origem, r.rotulos[0], -1);
       if (arco >= 1) marcar(r.destino, r.rotulos[1], 1);
       else {
-        ctx.fillStyle = "#f2b33d";
+        ctx.fillStyle = "#ffb020";
         ctx.beginPath();
         ctx.arc(cabeca.x, cabeca.y, 4.5, 0, Math.PI * 2);
         ctx.fill();

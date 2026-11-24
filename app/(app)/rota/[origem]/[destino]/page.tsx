@@ -83,21 +83,21 @@ export async function generateMetadata({
  * que invertido.
  */
 const TEMA_DO_HEROI = {
-  "--tinta": "#f2ede0",
-  "--tinta-media": "#b7bfd1",
-  "--tinta-fraca": "#919cb4",
-  "--superficie": "#132139",
-  "--superficie-2": "#1a2a44",
-  "--borda": "#26385a",
-  // A acao do heroi e creme, como a do painel e a do Explorar: o mesmo
+  "--tinta": "#eef2f9",
+  "--tinta-media": "#b4bfd4",
+  "--tinta-fraca": "#8f9bb5",
+  "--superficie": "#111e35",
+  "--superficie-2": "#17263f",
+  "--borda": "#24365a",
+  // A acao do heroi e branca, como a do painel e a do Explorar: o mesmo
   // botao para a mesma decisao nas duas telas.
-  "--marca": "#f2ede0",
-  "--marca-forte": "#fffdf8",
-  "--marca-contraste": "#0e1a2e",
-  "--marca-fraca": "#1a2a44",
-  "--milhas": "#f2b33d",
-  "--milhas-fundo": "#2e2410",
-  "--milhas-borda": "#56410f",
+  "--marca": "#ffffff",
+  "--marca-forte": "#dfe6f5",
+  "--marca-contraste": "#0b1526",
+  "--marca-fraca": "#17263f",
+  "--milhas": "#ffb020",
+  "--milhas-fundo": "#2a2110",
+  "--milhas-borda": "#5a4310",
   "--dinheiro": "#4ade9f",
   "--dinheiro-fundo": "#0f2c22",
   "--dinheiro-borda": "#1f5c44",

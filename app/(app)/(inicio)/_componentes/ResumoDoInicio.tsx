@@ -61,9 +61,9 @@ function CarteiraEAvisos({ catalogo }: { catalogo: ProgramaDaCarteira[] }) {
         className="flex items-center gap-4 rounded-[20px] bg-superficie px-4 py-3.5 text-tinta shadow-card"
       >
         <span aria-hidden="true" className="relative h-10 w-12 shrink-0">
-          <span className="absolute inset-x-0 top-0 h-[26px] rounded-md bg-[#0e1a2e] shadow-sm" />
-          <span className="absolute inset-x-0 top-[7px] h-[26px] rounded-md bg-[#f2ede0] shadow-sm" />
-          <span className="absolute inset-x-0 top-[14px] h-[26px] rounded-md bg-[#8098c4] shadow-sm" />
+          <span className="absolute inset-x-0 top-0 h-[26px] rounded-md bg-[#0b1526] shadow-sm" />
+          <span className="absolute inset-x-0 top-[7px] h-[26px] rounded-md bg-[#ffb020] shadow-sm" />
+          <span className="absolute inset-x-0 top-[14px] h-[26px] rounded-md bg-[#dfe6f5] shadow-sm" />
         </span>
         <span className="min-w-0 flex-1">
           {linhas.length > 0 ? (
@@ -88,7 +88,7 @@ function CarteiraEAvisos({ catalogo }: { catalogo: ProgramaDaCarteira[] }) {
           href="/carteira"
           className="flex items-center gap-3 rounded-[20px] bg-superficie-2 px-4 py-3.5 text-[15px] leading-snug text-tinta"
         >
-          <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full bg-[#f2b33d] shadow-[0_0_0_4px_rgb(242_179_61/0.25)]" />
+          <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full bg-[#ffb020] shadow-[0_0_0_4px_rgb(255_176_32/0.25)]" />
           <span>
             <strong className="font-semibold">
               {fmt(aviso.quantidade)} {aviso.programa.unidade} {aviso.programa.nome}
