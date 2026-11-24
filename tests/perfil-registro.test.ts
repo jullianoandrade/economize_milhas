@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { usarPerfil } from "@/store/perfil";
+import { SALDO_MAXIMO, saldoValido, usarPerfil } from "@/store/perfil";
 import { calcularProgresso, type Meta } from "@/lib/metas/progresso";
 
 /**
@@ -49,5 +49,48 @@ describe("registrar saldo", () => {
       { em: "2026-11-19", saldo: 20000 },
       { em: "2026-12-01", saldo: 24000 },
     ]);
+  });
+});
+
+/**
+ * A tela valida o campo, mas o store e a ultima porta antes do
+ * localStorage: -3000 ja virou "-3.000 de 42.000" e 99999999999 ficou
+ * gravado como historico do objetivo.
+ */
+describe("saldo invalido nao entra", () => {
+  it.each([-3000, 99_999_999_999, 1500.5, Number.NaN, Number.POSITIVE_INFINITY])(
+    "registrarSaldo ignora %s",
+    (saldo) => {
+      const antes = usarPerfil.getState().metas;
+      usarPerfil.getState().registrarSaldo("m1", { em: "2026-12-01", saldo });
+      expect(usarPerfil.getState().metas).toBe(antes);
+    },
+  );
+
+  it("os extremos validos entram", () => {
+    const { registrarSaldo } = usarPerfil.getState();
+    registrarSaldo("m1", { em: "2026-12-01", saldo: 0 });
+    registrarSaldo("m1", { em: "2026-12-02", saldo: SALDO_MAXIMO });
+    expect(usarPerfil.getState().metas[0].registros.map((r) => r.saldo)).toEqual([
+      20000, 0, SALDO_MAXIMO,
+    ]);
+  });
+
+  it("salvarMeta recusa ponto de partida negativo", () => {
+    const antes = usarPerfil.getState().metas;
+    usarPerfil.getState().salvarMeta({
+      ...meta(),
+      id: "m2",
+      destinoIata: "EZE",
+      registros: [{ em: "2026-11-19", saldo: -1 }],
+    });
+    expect(usarPerfil.getState().metas).toBe(antes);
+  });
+
+  it("saldoValido: inteiro de zero ao teto", () => {
+    expect(saldoValido(0)).toBe(true);
+    expect(saldoValido(SALDO_MAXIMO)).toBe(true);
+    expect(saldoValido(SALDO_MAXIMO + 1)).toBe(false);
+    expect(saldoValido("100")).toBe(false);
   });
 });

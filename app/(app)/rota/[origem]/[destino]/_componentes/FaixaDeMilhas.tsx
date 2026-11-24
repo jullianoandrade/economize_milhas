@@ -53,7 +53,10 @@ export function FaixaDeMilhas({
         aria-label={`Nesta data, ${fmtMilhas(atual)} ${unidade}. Ao longo do ano esta rota varia de ${fmtMilhas(min)} a ${fmtMilhas(max)}.`}
         className="relative h-6"
       >
-        <div className="absolute inset-x-0 top-2.5 h-1.5 rounded-full bg-gradient-to-r from-dinheiro-fundo via-superficie-2 to-milhas-fundo" />
+        {/* Trilho neutro: a faixa mostra amplitude, nao bom ou ruim.
+            O degrade verde-creme de antes saia da paleta e sugeria um
+            julgamento que a faixa nao faz. */}
+        <div className="absolute inset-x-0 top-2.5 h-1.5 rounded-full bg-borda" />
         <span
           aria-hidden="true"
           className="entrada-do-marcador absolute top-1.5 size-3.5 -translate-x-1/2 rounded-full border-2 border-superficie bg-marca"

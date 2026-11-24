@@ -61,6 +61,21 @@ function carregarPontos(): Promise<Float32Array> {
   return pontosPendentes;
 }
 
+/** O ponto 20 graus ao lado do meio da rota, na perpendicular, do lado sul. */
+function vistaDeLado(origem: LatLon, destino: LatLon, meio: LatLon): LatLon {
+  const a = vetorDe(origem);
+  const b = vetorDe(destino);
+  const m = vetorDe(meio);
+  let n = [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const tam = Math.hypot(n[0], n[1], n[2]);
+  if (tam < 1e-9) return meio;
+  n = n.map((x) => x / tam);
+  if (n[2] > 0) n = n.map((x) => -x); // o lado sul
+  const d = 20 * GRAU;
+  const c = m.map((x, i) => x * Math.cos(d) + n[i] * Math.sin(d));
+  return [Math.asin(c[2]) / GRAU, Math.atan2(c[1], c[0]) / GRAU];
+}
+
 function vistaAlvo(
   w: number,
   h: number,
@@ -235,7 +250,14 @@ export function Globo({
       angulo = 0;
       if (r) {
         caminho = grandeCirculo(r.origem, r.destino);
-        centro = caminho(0.5);
+        const meio = caminho(0.5);
+        // Fora do enquadramento "rota", o globo olha a rota de LADO: o
+        // centro da vista sai 20 graus do meio dela, na perpendicular.
+        // Grande circulo que passa pelo centro da vista projeta como reta;
+        // visto de lado, vira a curva de um voo -- em qualquer direcao,
+        // inclusive norte-sul. O lado escolhido e o mais ao sul, para o
+        // arco subir na tela.
+        centro = enq === "rota" ? meio : vistaDeLado(r.origem, r.destino, meio);
         const a = vetorDe(r.origem);
         const b = vetorDe(r.destino);
         angulo = Math.acos(Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]));
@@ -243,6 +265,14 @@ export function Globo({
         caminho = null;
       }
       const para = vistaAlvo(w, h, enq, centro, angulo);
+      if (enq !== "rota" && r) {
+        // A vista de lado empurra a rota para fora do centro do quadro;
+        // o disco anda de volta 70% disso, para o arco ficar onde o
+        // enquadramento pediu (e nao embaixo da busca, no celular).
+        const pm = projetar(para, caminho!(0.5));
+        para.cx -= (pm.x - para.cx) * 0.7;
+        para.cy -= (pm.y - para.cy) * 0.7;
+      }
       if (enq === "rota" && r) {
         // Deita a rota: gira em torno da linha de visao ate a origem
         // ficar a esquerda e o destino a direita. Sem eixo preso, o

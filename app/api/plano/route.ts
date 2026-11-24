@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { montarPlano } from "@/lib/milhas/acumulo";
-import { AeroportoDesconhecidoError, classificarRota } from "@/lib/milhas/regioes";
+import {
+  AeroportoDesconhecidoError,
+  classificarRota,
+  MENSAGEM_MESMO_AEROPORTO,
+  MesmoAeroportoError,
+} from "@/lib/milhas/regioes";
 import { calcularVeredito } from "@/lib/milhas/veredito";
 import { precoDoTrecho } from "@/lib/precos";
 import { bonusVigentes } from "@/lib/transferencias";
@@ -36,7 +41,13 @@ export async function POST(requisicao: Request) {
   } catch (erro) {
     if (erro instanceof AeroportoDesconhecidoError) {
       return NextResponse.json(
-        { erro: `nao conheco o aeroporto ${erro.iata}` },
+        { erro: `Não conhecemos o aeroporto ${erro.iata.toUpperCase()}.` },
+        { status: 400 },
+      );
+    }
+    if (erro instanceof MesmoAeroportoError) {
+      return NextResponse.json(
+        { erro: MENSAGEM_MESMO_AEROPORTO },
         { status: 400 },
       );
     }
@@ -68,7 +79,7 @@ export async function POST(requisicao: Request) {
 
   if (!opcao) {
     return NextResponse.json(
-      { erro: "nenhum programa da nossa base atende esta rota" },
+      { erro: "Nenhum programa da nossa base atende esta rota." },
       { status: 422 },
     );
   }

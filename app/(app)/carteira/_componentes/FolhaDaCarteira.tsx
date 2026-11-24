@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { milhas as fmt } from "@/lib/format";
-import type { ProgramaDaCarteira, Saldos } from "@/lib/carteira/modelo";
+import { MAXIMO_DE_SALDO, type ProgramaDaCarteira, type Saldos } from "@/lib/carteira/modelo";
 import { usarCarteira } from "@/store/carteira";
 
 /**
@@ -18,17 +18,30 @@ export type PedidoDeFolha =
   | { modo: "saldo"; programaId: string }
   | { modo: "vencimento"; programaId: string };
 
-const MAXIMO = 100_000_000;
-
 /** "milhas" e feminino, "pontos" e masculino. */
 function quantos(p: ProgramaDaCarteira): string {
   return p.unidade === "milhas" ? "Quantas milhas" : "Quantos pontos";
 }
 
-function lerNumero(texto: string): number {
-  const n = parseInt(texto.replace(/\D/g, ""), 10);
-  return Number.isFinite(n) ? Math.min(n, MAXIMO) : 0;
+/**
+ * O que foi digitado, sem esconder nada: o sinal de menos e o excesso
+ * chegam ate a validacao, que explica o problema. Antes, -500 virava
+ * 500 e um zero a mais era cortado em silencio.
+ */
+function lerNumero(texto: string): { valor: number; negativo: boolean } | null {
+  const digitos = texto.replace(/\D/g, "");
+  if (!digitos) return null;
+  return { valor: parseInt(digitos, 10), negativo: texto.trim().startsWith("-") };
 }
+
+/** Mantem o que a pessoa digitou legivel: "-1.500", "84.000". */
+function formatarDigitado(texto: string): string {
+  const lido = lerNumero(texto);
+  if (!lido) return texto.trim().startsWith("-") ? "-" : "";
+  return `${lido.negativo ? "-" : ""}${fmt(lido.valor)}`;
+}
+
+const FOCAVEIS = 'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])';
 
 export function FolhaDaCarteira({
   pedido,
@@ -48,6 +61,7 @@ export function FolhaDaCarteira({
   const guardarSaldo = usarCarteira((s) => s.guardarSaldo);
   const adicionarVencimento = usarCarteira((s) => s.adicionarVencimento);
   const campoRef = useRef<HTMLInputElement>(null);
+  const folhaRef = useRef<HTMLFormElement>(null);
 
   const disponiveis = catalogo.filter((p) => !saldos[p.id]);
   const [programaId, setProgramaId] = useState<string | undefined>(pedido.programaId);
@@ -68,7 +82,26 @@ export function FolhaDaCarteira({
   useEffect(() => {
     const anterior = document.activeElement as HTMLElement | null;
     const aoTeclar = (e: KeyboardEvent) => {
-      if (e.key === "Escape") fecharRef.current();
+      if (e.key === "Escape") {
+        fecharRef.current();
+        return;
+      }
+      // aria-modal promete que o resto da pagina esta fora de alcance;
+      // sem isto o Tab escapava para o rodape por tras da folha.
+      if (e.key !== "Tab" || !folhaRef.current) return;
+      const focaveis = [...folhaRef.current.querySelectorAll<HTMLElement>(FOCAVEIS)];
+      if (focaveis.length === 0) return;
+      const primeiro = focaveis[0];
+      const ultimo = focaveis[focaveis.length - 1];
+      const ativo = document.activeElement;
+      const dentro = folhaRef.current.contains(ativo);
+      if (e.shiftKey && (ativo === primeiro || !dentro)) {
+        e.preventDefault();
+        ultimo.focus();
+      } else if (!e.shiftKey && (ativo === ultimo || !dentro)) {
+        e.preventDefault();
+        primeiro.focus();
+      }
     };
     window.addEventListener("keydown", aoTeclar);
     return () => {
@@ -94,12 +127,37 @@ export function FolhaDaCarteira({
   function salvar(evento: React.FormEvent) {
     evento.preventDefault();
     if (!programa) return;
-    const n = lerNumero(quantidade);
-    if (n <= 0) {
-      setErro(`Informe ${quantos(programa).toLowerCase()} você tem.`);
+    const lido = lerNumero(quantidade);
+    const unidade = programa.unidade;
+    if (!lido) {
+      setErro(
+        pedido.modo === "vencimento"
+          ? `Informe ${quantos(programa).toLowerCase()} vencem.`
+          : `Informe ${quantos(programa).toLowerCase()} você tem. Se não tem nenhum, digite 0.`,
+      );
+      return;
+    }
+    if (lido.negativo) {
+      setErro(`O número não pode ser negativo. Digite só os ${unidade}, sem o sinal de menos.`);
+      return;
+    }
+    const n = lido.valor;
+    if (n > MAXIMO_DE_SALDO) {
+      setErro(`${fmt(n)} passa de ${fmt(MAXIMO_DE_SALDO)}. Parece um zero a mais: confira no app do ${programa.nome}.`);
       return;
     }
     if (pedido.modo === "vencimento") {
+      if (n === 0) {
+        setErro(`Informe ${quantos(programa).toLowerCase()} vencem: precisa ser mais que 0.`);
+        return;
+      }
+      const saldo = saldos[programa.id]?.quantidade ?? 0;
+      if (n > saldo) {
+        setErro(
+          `Não dá para vencer ${fmt(n)} ${unidade} com um saldo de ${fmt(saldo)}. Confira o número, ou atualize o saldo antes.`,
+        );
+        return;
+      }
       if (!data || data < hoje) {
         setErro("Escolha uma data de hoje em diante.");
         return;
@@ -120,6 +178,7 @@ export function FolhaDaCarteira({
         className="absolute inset-0 bg-[#0b1526]/40"
       />
       <form
+        ref={folhaRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={`${id}-titulo`}
@@ -170,11 +229,12 @@ export function FolhaDaCarteira({
               id={`${id}-qtd`}
               inputMode="numeric"
               autoComplete="off"
+              aria-invalid={erro ? true : undefined}
+              aria-describedby={erro ? `${id}-erro` : undefined}
               value={quantidade}
               onChange={(e) => {
                 setErro(null);
-                const n = lerNumero(e.target.value);
-                setQuantidade(n > 0 ? fmt(n) : "");
+                setQuantidade(formatarDigitado(e.target.value));
               }}
               placeholder="0"
               className="tabular mt-2 h-14 w-full rounded-2xl border border-borda bg-superficie px-4 text-[22px] font-bold text-tinta outline-none focus:border-marca"
@@ -202,7 +262,7 @@ export function FolhaDaCarteira({
             )}
 
             {erro ? (
-              <p role="alert" className="mt-3 text-sm font-semibold text-alerta">
+              <p id={`${id}-erro`} role="alert" className="mt-3 text-sm font-semibold text-alerta">
                 {erro}
               </p>
             ) : null}

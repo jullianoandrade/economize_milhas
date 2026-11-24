@@ -8,7 +8,7 @@ import { LinkExterno } from "@/components/dominio/LinkExterno";
 import { Milo } from "@/components/ui/Milo";
 import { SeloDeOrigem } from "@/components/ui/SeloDeOrigem";
 import { buscarVeredito, type VerediteDaPessoa } from "@/lib/cliente/veredito";
-import { milhas as fmtMilhas, reais } from "@/lib/format";
+import { milhas as fmtMilhas, porcentagem, reais } from "@/lib/format";
 import { usarPerfil, usePerfilHidratado } from "@/store/perfil";
 import { useLugar } from "@/lib/cliente/lugar";
 
@@ -57,6 +57,9 @@ export function Explorar({
   const [estado, setEstado] = useState<Estado>({ fase: "espera" });
   // A chave do campo: trocar a chave limpa o texto digitado ao fechar.
   const [chaveDoCampo, setChaveDoCampo] = useState(0);
+  // Aviso quando a pessoa escolhe como destino a propria origem. Antes
+  // a escolha era ignorada em silencio e parecia que o app travou.
+  const [aviso, setAviso] = useState<string | null>(null);
 
   const origem = hidratado ? origemIata : "GRU";
   const lugarDeOrigem = useLugar(origem);
@@ -64,7 +67,14 @@ export function Explorar({
 
   const escolher = useCallback(
     (destino: { iata: string; cidade: string }) => {
-      if (destino.iata === origem) return;
+      if (destino.iata === origem) {
+        setAviso(
+          `Você já está saindo de ${destino.cidade}. Escolha outro destino.`,
+        );
+        setChaveDoCampo((c) => c + 1);
+        return;
+      }
+      setAviso(null);
       setEstado({ fase: "carregando", destino });
       buscarVeredito(origem, destino.iata, gasto ?? 0, cartaoId)
         .then((dados) => setEstado({ fase: "pronto", dados }))
@@ -97,7 +107,7 @@ export function Explorar({
   return (
     <section
       aria-label="Explorar destinos"
-      className="painel relative -mx-4 -mt-5 h-[calc(100dvh-1rem)] min-h-[640px] md:mx-0 md:mt-0 md:h-[calc(100dvh-9rem)] md:min-h-[600px] md:rounded-[32px]"
+      className="painel relative -mx-4 -mt-5 h-[calc(100dvh-1rem)] min-h-[640px] rounded-b-[34px] md:mx-0 md:mt-0 md:h-[calc(100dvh-9rem)] md:min-h-[600px] md:rounded-[32px]"
     >
       {/* Titulo para leitor de tela: a tela e visual (o globo), mas
           precisa dizer onde a pessoa esta. Achado pelo teste de saude. */}
@@ -106,7 +116,10 @@ export function Explorar({
       {/* O recorte arredondado fica nesta camada, e nao na <section>:
           com overflow-hidden na secao, a lista de sugestoes do campo de
           busca seria cortada. Ver tests/arquitetura.test.ts. */}
-      <div className="absolute inset-0 overflow-hidden md:rounded-[32px]">
+      {/* No celular o bloco marinho termina com os cantos de baixo
+          arredondados, como o heroi do Inicio: sem isso ele acabava
+          num corte reto contra o rodape claro. */}
+      <div className="absolute inset-0 overflow-hidden rounded-b-[34px] md:rounded-[32px]">
         <Globo rota={rotaDoGlobo} enquadramento={enquadramento} arrastavel />
       </div>
 
@@ -120,6 +133,7 @@ export function Explorar({
             aoSelecionar={(lugar) => {
               definirOrigem(lugar.iata);
               setTrocandoOrigem(false);
+              setAviso(null);
               setEstado({ fase: "espera" });
             }}
           />
@@ -131,6 +145,11 @@ export function Explorar({
             aoSelecionar={(lugar) => escolher({ iata: lugar.iata, cidade: lugar.cidade })}
           />
         )}
+        {aviso && !trocandoOrigem ? (
+          <p role="status" className="mt-2.5 text-sm leading-snug text-painel-tinta">
+            {aviso}
+          </p>
+        ) : null}
         {/* A origem fica guardada no aparelho porque quase nunca muda:
             quem mora em Recife nao quer redigitar Recife toda vez. */}
         <button
@@ -156,20 +175,21 @@ export function Explorar({
             Escolha um destino e eu comparo milhas com dinheiro.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
-            {atalhos.map((a, i) => (
-              <button
-                key={a.iata}
-                type="button"
-                onClick={() => escolher(a)}
-                className={`min-h-11 rounded-full px-4 text-[15px] font-semibold transition-colors ${
-                  i === 0
-                    ? "bg-painel-tinta text-painel"
-                    : "border border-painel-tinta/30 text-painel-tinta hover:bg-painel-realce"
-                }`}
-              >
-                {a.cidade}
-              </button>
-            ))}
+            {/* Todos iguais: nenhum esta escolhido ainda, e o primeiro
+                preenchido parecia pre-selecionado. O atalho igual a
+                origem some -- "Recife saindo de Recife" nao e viagem. */}
+            {atalhos
+              .filter((a) => a.iata !== origem)
+              .map((a) => (
+                <button
+                  key={a.iata}
+                  type="button"
+                  onClick={() => escolher(a)}
+                  className="min-h-11 rounded-full border border-painel-tinta/30 px-4 text-[15px] font-semibold text-painel-tinta transition-colors hover:bg-painel-realce"
+                >
+                  {a.cidade}
+                </button>
+              ))}
           </div>
         </div>
       ) : (
@@ -200,7 +220,7 @@ function PainelDeResposta({
       role="region"
       aria-label="Resposta"
       aria-live="polite"
-      className="vidro absolute inset-x-0 bottom-0 z-10 max-h-[64%] overflow-y-auto rounded-t-[30px] px-5 pb-28 pt-5 md:inset-y-6 md:left-auto md:right-6 md:max-h-none md:w-[400px] md:rounded-[28px] md:pb-6"
+      className="vidro absolute inset-x-0 bottom-0 z-10 max-h-[64%] overflow-y-auto rounded-t-[30px] rounded-b-[34px] px-5 pb-28 pt-5 md:bottom-auto md:left-auto md:right-6 md:top-6 md:max-h-[calc(100%-3rem)] md:w-[400px] md:rounded-[28px] md:pb-6"
     >
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-[17px] font-semibold text-painel-tinta">{titulo}</h2>
@@ -244,7 +264,10 @@ function PainelDeResposta({
 function Resposta({ dados }: { dados: VerediteDaPessoa }) {
   const { veredito, fonte, observacaoDaFonte, rota } = dados;
   const melhor = veredito.melhor;
-  const usaMilhas = !veredito.foraDoModelo && veredito.recomendacao === "milhas" && melhor;
+  // O mesmo veredito unico da placa da tela de rota (CardVeredito):
+  // "resgatar", "guardar" ou "pagar", dito uma vez.
+  const rotulo = veredito.foraDoModelo ? null : veredito.rotulo;
+  const resgatar = rotulo === "resgatar" && melhor;
   const detalhes = `/rota/${rota.origem.iata}/${rota.destino.iata}`;
 
   return (
@@ -252,29 +275,40 @@ function Resposta({ dados }: { dados: VerediteDaPessoa }) {
       {/* A placa: opaca, nunca vidro. Numero que decide nao fica sobre
           superficie translucida. */}
       <div className="mt-4 rounded-[22px] bg-painel-tinta px-5 pb-5 pt-4 text-painel">
-        {veredito.foraDoModelo ? (
+        {rotulo === null ? (
           <>
-            <p className="text-[17px] font-semibold">Pague em dinheiro</p>
+            <p className="text-[17px] font-semibold">Ainda não comparamos milhas neste trecho</p>
             <p className="mt-2 text-[15px] leading-relaxed">
-              Este trecho não passa pelo Brasil, e ainda não calculamos milhas
-              para ele.
+              Ele não passa pelo Brasil, e os programas que a VoeMilo acompanha
+              não têm tabela para ele.
             </p>
           </>
-        ) : usaMilhas ? (
+        ) : resgatar ? (
           <>
-            <p className="text-[17px] font-semibold">Vá de milhas e pague</p>
+            <p className="text-[17px] font-semibold">Com milhas você economiza</p>
             <p className="tabular mt-0.5 text-[64px] font-bold leading-none tracking-[-0.045em] [font-variation-settings:'opsz'_96]">
               {reais(veredito.economiaBRL)}
             </p>
-            <p className="mt-1.5 text-[15px]">a menos do que comprando em dinheiro.</p>
+            <p className="mt-1.5 text-[15px] leading-snug">
+              em relação a pagar em dinheiro ({porcentagem(veredito.economiaPct)} da
+              passagem).
+            </p>
           </>
         ) : (
           <>
-            <p className="text-[17px] font-semibold">Pague em dinheiro</p>
+            <p className="text-[17px] font-semibold">
+              {rotulo === "guardar" ? "Pague em dinheiro e guarde as milhas" : "Pague em dinheiro"}
+            </p>
             <p className="tabular mt-0.5 text-[56px] font-bold leading-none tracking-[-0.045em] [font-variation-settings:'opsz'_96]">
               {reais(veredito.precoDinheiroBRL)}
             </p>
-            <p className="mt-1.5 text-[15px]">Usar milhas aqui não compensa.</p>
+            <p className="mt-1.5 text-[15px] leading-snug">
+              {rotulo === "guardar" && melhor
+                ? `Com milhas você economizaria só ${reais(veredito.economiaBRL)}. Elas rendem bem mais numa viagem cara.`
+                : melhor
+                  ? "Usar milhas aqui não compensa."
+                  : "Nenhum programa da nossa base atende este trecho."}
+            </p>
           </>
         )}
       </div>
@@ -312,10 +346,6 @@ function Resposta({ dados }: { dados: VerediteDaPessoa }) {
         ) : null}
       </ul>
 
-      {veredito.ressalva ? (
-        <p className="mt-3 text-sm leading-relaxed text-painel-tinta-fraca">{veredito.ressalva}</p>
-      ) : null}
-
       <div className="mt-5 flex flex-col gap-2.5">
         <Link
           href={detalhes}
@@ -323,7 +353,7 @@ function Resposta({ dados }: { dados: VerediteDaPessoa }) {
         >
           Ver mês, dia e todos os programas
         </Link>
-        {usaMilhas && melhor ? (
+        {resgatar && melhor ? (
           <LinkExterno href={melhor.programa.site} tipo="utilidade" variante="secundario">
             Resgatar no {melhor.programa.nome}
           </LinkExterno>

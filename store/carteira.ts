@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import type { Saldos, Vencimento } from "@/lib/carteira/modelo";
+import { createJSONStorage, persist, type StateStorage } from "zustand/middleware";
+import { MAXIMO_DE_SALDO, sanearSaldos, type Saldos, type Vencimento } from "@/lib/carteira/modelo";
 
 /**
  * A Carteira, guardada so neste aparelho.
@@ -31,6 +31,61 @@ function novoId(): string {
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
 
+/**
+ * localStorage que nao lanca erro.
+ *
+ * JSON quebrado no aparelho fazia o persist rejeitar a hidratacao, e a
+ * Carteira ficava em aria-busy para sempre -- tela em branco sem saida.
+ * Conteudo ilegivel vira "nada guardado"; o proximo salvamento
+ * sobrescreve. Sem localStorage (pre-render no servidor), a referencia
+ * abaixo lanca dentro do createJSONStorage, que entao nao hidrata --
+ * o mesmo comportamento de antes.
+ */
+function armazenamentoSeguro(): StateStorage {
+  const ls = localStorage;
+  return {
+    getItem: (nome) => {
+      try {
+        const bruto = ls.getItem(nome);
+        if (bruto === null) return null;
+        JSON.parse(bruto);
+        return bruto;
+      } catch {
+        return null;
+      }
+    },
+    setItem: (nome, valor) => {
+      try {
+        ls.setItem(nome, valor);
+      } catch {
+        // Cota cheia ou modo privado: a sessao continua, so nao persiste.
+      }
+    },
+    removeItem: (nome) => {
+      try {
+        ls.removeItem(nome);
+      } catch {
+        // idem
+      }
+    },
+  };
+}
+
+/** Estado guardado -> estado confiavel, venha de que versao vier. */
+function lerGuardado(guardado: unknown): { saldos: Saldos } {
+  const saldos =
+    typeof guardado === "object" && guardado !== null && "saldos" in guardado
+      ? (guardado as { saldos: unknown }).saldos
+      : undefined;
+  return { saldos: sanearSaldos(saldos) };
+}
+
+// Se a hidratacao falhar mesmo assim, a tela precisa sair do "carregando":
+// carteira vazia e melhor que tela em branco. O persist nao marca
+// hasHydrated em caso de erro, entao a marca e nossa.
+let hidratacaoFalhou = false;
+const aoFalhar = new Set<() => void>();
+
 export const usarCarteira = create<Carteira>()(
   persist(
     (set) => ({
@@ -42,7 +97,7 @@ export const usarCarteira = create<Carteira>()(
             ...s.saldos,
             [programaId]: {
               vencimentos: s.saldos[programaId]?.vencimentos ?? [],
-              quantidade: Math.max(0, Math.round(quantidade)),
+              quantidade: Math.min(MAXIMO_DE_SALDO, Math.max(0, Math.round(quantidade))),
               atualizadoEm: hoje,
             },
           },
@@ -85,15 +140,36 @@ export const usarCarteira = create<Carteira>()(
           };
         }),
     }),
-    { name: "voemilo-carteira", version: 1 },
+    {
+      name: "voemilo-carteira",
+      version: 1,
+      storage: createJSONStorage(armazenamentoSeguro),
+      // Versao diferente nao e motivo para jogar saldos fora: o formato
+      // e simples, entao o que for aproveitavel e aproveitado.
+      migrate: (guardado) => lerGuardado(guardado) as Carteira,
+      merge: (guardado, atual) => ({ ...atual, ...lerGuardado(guardado) }),
+      onRehydrateStorage: () => (_estado, erro) => {
+        if (erro) {
+          hidratacaoFalhou = true;
+          aoFalhar.forEach((avisar) => avisar());
+        }
+      },
+    },
   ),
 );
 
 /** Ver usePerfilHidratado: o mesmo motivo, a mesma forma. */
 export function useCarteiraHidratada(): boolean {
   return useSyncExternalStore(
-    (aoMudar) => usarCarteira.persist.onFinishHydration(aoMudar),
-    () => usarCarteira.persist.hasHydrated(),
+    (aoMudar) => {
+      const sair = usarCarteira.persist.onFinishHydration(aoMudar);
+      aoFalhar.add(aoMudar);
+      return () => {
+        sair();
+        aoFalhar.delete(aoMudar);
+      };
+    },
+    () => usarCarteira.persist.hasHydrated() || hidratacaoFalhou,
     () => false,
   );
 }

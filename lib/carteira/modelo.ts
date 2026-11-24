@@ -144,3 +144,61 @@ export function haQuanto(data: string, hoje: string): string {
   if (d === 1) return "ontem";
   return `há ${d} dias`;
 }
+
+/**
+ * O maior saldo que a Carteira aceita. Nenhuma pessoa fisica tem cem
+ * milhoes de pontos; acima disso e erro de digitacao (um zero a mais
+ * colado), e a folha diz isso em vez de guardar.
+ */
+export const MAXIMO_DE_SALDO = 100_000_000;
+
+function ehDataISO(v: unknown): v is string {
+  return typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(`${v}T00:00:00Z`));
+}
+
+function ehObjeto(v: unknown): v is Record<string, unknown> {
+  return typeof v === "object" && v !== null && !Array.isArray(v);
+}
+
+function quantidadeValida(v: unknown): number | null {
+  if (typeof v !== "number" || !Number.isFinite(v)) return null;
+  return Math.min(MAXIMO_DE_SALDO, Math.max(0, Math.round(v)));
+}
+
+/**
+ * O que veio do armazenamento, transformado em Saldos confiaveis.
+ *
+ * O localStorage e de quem usa o aparelho: versao antiga do app,
+ * extensao, edicao a mao. Ja aconteceu de um saldo sem `vencimentos`
+ * derrubar a tela inteira ("reading 'map'"). Aqui a regra e:
+ *
+ *   - saldo sem quantidade numerica ou sem data valida sai (nao da
+ *     para mostrar um numero que nao se sabe qual e, nem de quando)
+ *   - quantidade fica entre 0 e MAXIMO_DE_SALDO, inteira
+ *   - `vencimentos` ausente vira lista vazia; vencimento sem data
+ *     valida ou sem quantidade positiva sai; sem id, ganha um
+ *
+ * Nunca lanca erro: no pior caso devolve a carteira vazia.
+ */
+export function sanearSaldos(bruto: unknown): Saldos {
+  if (!ehObjeto(bruto)) return {};
+  const saldos: Saldos = {};
+  for (const [programaId, valor] of Object.entries(bruto)) {
+    if (!ehObjeto(valor)) continue;
+    const quantidade = quantidadeValida(valor.quantidade);
+    if (quantidade === null || !ehDataISO(valor.atualizadoEm)) continue;
+
+    const lista = Array.isArray(valor.vencimentos) ? valor.vencimentos : [];
+    const vencimentos: Vencimento[] = [];
+    lista.forEach((v, i) => {
+      if (!ehObjeto(v) || !ehDataISO(v.data)) return;
+      const q = quantidadeValida(v.quantidade);
+      if (q === null || q <= 0) return;
+      const id = typeof v.id === "string" && v.id ? v.id : `${v.data}-${i}`;
+      vencimentos.push({ id, quantidade: q, data: v.data });
+    });
+
+    saldos[programaId] = { quantidade, atualizadoEm: valor.atualizadoEm, vencimentos };
+  }
+  return saldos;
+}

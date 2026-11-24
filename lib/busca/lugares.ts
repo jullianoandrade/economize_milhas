@@ -138,9 +138,37 @@ function pontuar(item: Indexado, busca: string): number | null {
     return 8;
   }
   if (item.nome.startsWith(busca)) return 9;
-  if (item.cidade.includes(busca)) return 10;
-  if (item.nome.includes(busca)) return 11;
+  // Palavra do meio que comeca com o texto ainda e intencao clara:
+  // "dumont" acha Santos Dumont.
+  if (comecaPalavra(item.cidade, busca)) return 10;
+  if (comecaPalavra(item.nome, busca)) return 11;
+  if (item.cidade.includes(busca)) return 12;
+  // Trecho solto no meio do NOME do aeroporto fica de fora: "rec" dentro
+  // de "Marechal" trazia Cuiaba e Sao Luis para quem buscava Recife.
   return null;
+}
+
+/** Alguma palavra (depois da primeira) comeca com a busca. */
+function comecaPalavra(texto: string, busca: string): boolean {
+  return texto.split(/[\s\-'/()]+/).some((p, i) => i > 0 && p.startsWith(busca));
+}
+
+/**
+ * Ate aqui, casamento exato: codigo, cidade, alias, pais, cidade sem
+ * aeroporto. Abaixo disso e "comeca com" ou trecho.
+ */
+const ULTIMO_PONTO_EXATO = 4;
+
+/**
+ * A faixa vem antes dos pontos. Casamento exato sempre no topo; depois,
+ * para quem ainda esta digitando, o Brasil com voo comercial vem antes
+ * do resto do mundo. "Rec" e Recife para quem usa o app, nao
+ * Recklinghausen -- e dentro de cada faixa os pontos seguem valendo:
+ * comeca-com vence trecho no meio.
+ */
+function faixa(pontos: number, pais: string, conexoes: number): number {
+  if (pontos <= ULTIMO_PONTO_EXATO) return 0;
+  return pais === "BR" && conexoes > 0 ? 1 : 2;
 }
 
 /**
@@ -161,6 +189,7 @@ function pontuarCidade(item: CidadeIndexada, busca: string): number | null {
   if (item.aliases.some((a) => a === busca)) return 4;
   if (item.nome.startsWith(busca)) return 7;
   if (item.aliases.some((a) => a.startsWith(busca))) return 7;
+  if (comecaPalavra(item.nome, busca)) return 10;
   return null;
 }
 
@@ -191,15 +220,18 @@ export const LIMITE_PADRAO = 8;
 /**
  * Procura cidades e aeroportos.
  *
- * A ordem tem DOIS criterios, e nessa ordem importa qual vem primeiro:
+ * A ordem tem QUATRO criterios, e nessa ordem importa qual vem primeiro:
  *
- *   1. qualidade do casamento com o texto digitado (`pontuar`)
- *   2. relevancia do aeroporto (Brasil > destino procurado > resto)
- *   3. conexoes: quantas rotas aereas servem o aeroporto
+ *   1. faixa: casamento exato; depois Brasil com voo; depois o resto
+ *   2. qualidade do casamento com o texto digitado (`pontuar`)
+ *   3. relevancia do aeroporto (Brasil > destino procurado > resto)
+ *   4. conexoes: quantas rotas aereas servem o aeroporto
  *
- * Cada criterio so desempata DENTRO do anterior. Quem casa melhor
- * sempre vence quem e mais procurado -- do contrario a busca deixaria
- * de obedecer ao que a pessoa escreveu, que e pior do que ordenar mal.
+ * Cada criterio so desempata DENTRO do anterior. Casamento exato
+ * sempre vence -- do contrario a busca deixaria de obedecer ao que a
+ * pessoa escreveu, que e pior do que ordenar mal. A faixa do Brasil so
+ * vale para texto ainda incompleto, que e onde a pessoa espera ver a
+ * cidade de onde voa, e nao um vilarejo alemao com as mesmas letras.
  *
  * A relevancia entrou quando a base passou de 268 para ~3.700
  * aeroportos: sem ela, "londres" devolvia London City antes de
@@ -223,6 +255,7 @@ export function procurarLugares(
   if (busca.length < MINIMO_DE_LETRAS) return [];
 
   type Candidato = {
+    faixa: number;
     pontos: number;
     relevancia: number;
     conexoes: number;
@@ -237,6 +270,7 @@ export function procurarLugares(
     if (pontos === null) continue;
 
     candidatos.push({
+      faixa: faixa(pontos, item.aeroporto.pais, item.aeroporto.conexoes),
       pontos,
       relevancia: item.aeroporto.relevancia,
       conexoes: item.aeroporto.conexoes,
@@ -261,11 +295,16 @@ export function procurarLugares(
     if (!aeroporto) continue;
 
     candidatos.push({
+      // A cidade e brasileira e o aeroporto que a serve tem voo: conta
+      // como Brasil, mesmo sem pista propria.
+      faixa: faixa(pontos, item.cidade.pais, aeroporto.conexoes),
       pontos,
       relevancia: aeroporto.relevancia,
       // Entre duas cidades que casam igual, a mais perto do aeroporto
       // vem primeiro: a distancia e o custo real de escolher aquela.
-      conexoes: aeroporto.conexoes - item.cidade.km,
+      // So a distancia -- somar as rotas do aeroporto deixava um hub a
+      // 68 km passar na frente de uma cidade a 55.
+      conexoes: -item.cidade.km,
       ordem: item.nome,
       lugar: {
         iata: aeroporto.iata,
@@ -285,6 +324,7 @@ export function procurarLugares(
   return candidatos
     .sort(
       (a, b) =>
+        a.faixa - b.faixa ||
         a.pontos - b.pontos ||
         b.relevancia - a.relevancia ||
         b.conexoes - a.conexoes ||

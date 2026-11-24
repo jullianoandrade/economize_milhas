@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import {
   AeroportoDesconhecidoError,
   classificarRota,
+  MENSAGEM_MESMO_AEROPORTO,
+  MesmoAeroportoError,
 } from "@/lib/milhas/regioes";
 import { calcularVeredito } from "@/lib/milhas/veredito";
 import { precoDoTrecho } from "@/lib/precos";
@@ -27,7 +29,7 @@ export async function GET(requisicao: Request) {
     parametrosDe(requisicao.url, ["origem", "destino", "gasto", "cartaoId"]),
   );
   if (!consulta.success) {
-    return NextResponse.json({ erro: "rota invalida" }, { status: 400 });
+    return NextResponse.json({ erro: "Rota inválida. Confira os códigos dos aeroportos." }, { status: 400 });
   }
   const { origem, destino, gasto: gastoMensalCartaoBRL, cartaoId } =
     consulta.data;
@@ -38,7 +40,13 @@ export async function GET(requisicao: Request) {
   } catch (erro) {
     if (erro instanceof AeroportoDesconhecidoError) {
       return NextResponse.json(
-        { erro: `nao conheco o aeroporto ${erro.iata}` },
+        { erro: `Não conhecemos o aeroporto ${erro.iata.toUpperCase()}.` },
+        { status: 400 },
+      );
+    }
+    if (erro instanceof MesmoAeroportoError) {
+      return NextResponse.json(
+        { erro: MENSAGEM_MESMO_AEROPORTO },
         { status: 400 },
       );
     }

@@ -1,7 +1,6 @@
 import type { Veredito } from "@/lib/milhas/veredito";
 import { milhas as fmtMilhas, porcentagem, reais } from "@/lib/format";
-import { SeloDeOrigem } from "@/components/ui/SeloDeOrigem";
-import { SeloDeConfianca, SeloDeFonte } from "./SeloDeFonte";
+import { SeloDeFonte, SeloDeMilhas } from "./SeloDeFonte";
 import type { Fonte } from "@/lib/providers/travelpayouts";
 
 /**
@@ -27,8 +26,10 @@ export function CardVeredito({
   observacaoDaFonte: string;
 }) {
   const melhor = veredito.melhor;
-  const usaMilhas =
-    !veredito.foraDoModelo && veredito.recomendacao === "milhas" && melhor !== null;
+  // Um veredito, dito uma vez: a placa le `rotulo` e mais nada. O caso
+  // "compensa, mas rende pouco" e dito AQUI, e nao numa caixa abaixo que
+  // contradizia a placa.
+  const rotulo = veredito.foraDoModelo ? null : veredito.rotulo;
   // Preco zero significa "nao sabemos": rota fora do modelo e sem busca
   // recente. Mostrar "R$ 0" seria pior do que nao mostrar nada. Ver
   // SEM_REFERENCIA em lib/precos.ts.
@@ -37,7 +38,7 @@ export function CardVeredito({
   return (
     <section aria-label="A resposta">
       <div className="rounded-[22px] bg-white px-5 pb-5 pt-4 text-[#0b1526]">
-        {veredito.foraDoModelo ? (
+        {rotulo === null ? (
           // Fora do modelo nao e veredito, e ausencia declarada de
           // veredito: nada de "pague em dinheiro" aqui. Ver
           // docs/fronteira-do-motor.md.
@@ -48,20 +49,22 @@ export function CardVeredito({
               não têm tabela para ele.
             </p>
           </>
-        ) : usaMilhas ? (
+        ) : rotulo === "resgatar" && melhor ? (
           <>
-            <p className="text-[17px] font-semibold">Vá de milhas e pague</p>
+            <p className="text-[17px] font-semibold">Com milhas você economiza</p>
             <p className="tabular mt-0.5 text-[60px] font-bold leading-none tracking-[-0.045em] [font-variation-settings:'opsz'_96]">
               {reais(veredito.economiaBRL)}
             </p>
-            <p className="mt-1.5 text-[15px]">
-              a menos do que em dinheiro ({porcentagem(veredito.economiaPct)} da
+            <p className="mt-1.5 text-[15px] leading-snug">
+              em relação a pagar em dinheiro ({porcentagem(veredito.economiaPct)} da
               passagem).
             </p>
           </>
         ) : (
           <>
-            <p className="text-[17px] font-semibold">Pague em dinheiro</p>
+            <p className="text-[17px] font-semibold">
+              {rotulo === "guardar" ? "Pague em dinheiro e guarde as milhas" : "Pague em dinheiro"}
+            </p>
             {precoDesconhecido ? (
               <p className="mt-2 text-[15px] leading-relaxed">
                 Sem busca recente de preço para este trecho.
@@ -71,8 +74,12 @@ export function CardVeredito({
                 {reais(veredito.precoDinheiroBRL)}
               </p>
             )}
-            <p className="mt-1.5 text-[15px]">
-              {melhor ? "Usar milhas aqui não compensa." : "Nenhum programa da nossa base atende este trecho."}
+            <p className="mt-1.5 text-[15px] leading-snug">
+              {rotulo === "guardar" && melhor
+                ? `Com milhas você economizaria só ${reais(veredito.economiaBRL)}. Elas rendem bem mais numa viagem cara.`
+                : melhor
+                  ? "Usar milhas aqui não compensa."
+                  : "Nenhum programa da nossa base atende este trecho."}
             </p>
           </>
         )}
@@ -98,29 +105,12 @@ export function CardVeredito({
                 {fmtMilhas(melhor.milhas)} + {reais(melhor.taxasBRL)}
               </strong>
             </div>
-            <div className="mt-2 flex flex-wrap gap-2">
-              <SeloDeOrigem
-                origem="estimado"
-                detalhe="Os programas usam precificação dinâmica e não publicam tabela fixa. Confirme no site antes de resgatar."
-              >
-                estimativa, confirme antes
-              </SeloDeOrigem>
-              <SeloDeConfianca confianca={melhor.confianca} />
+            <div className="mt-2">
+              <SeloDeMilhas confianca={melhor.confianca} />
             </div>
           </li>
         ) : null}
       </ul>
-
-      {veredito.ressalva ? (
-        <p className="mt-3 flex gap-2 rounded-xl bg-superficie-2 p-3 text-sm leading-relaxed text-tinta-media">
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-atencao" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
-            <circle cx="12" cy="12" r="9" />
-            <path d="M12 8v5" />
-            <path d="M12 16.5v.01" />
-          </svg>
-          <span>{veredito.ressalva}</span>
-        </p>
-      ) : null}
     </section>
   );
 }

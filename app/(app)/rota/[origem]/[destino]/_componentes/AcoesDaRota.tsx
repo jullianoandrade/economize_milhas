@@ -40,7 +40,10 @@ export function AcoesDaRota({
     ? linkDeBuscaDeVoo({ origemIata, destinoIata, data: dataEscolhida })
     : null;
 
-  if (veredito.recomendacao === "milhas" && veredito.melhor) {
+  // "Guardar" (compensa, mas rende pouco) segue o caminho do dinheiro:
+  // a placa manda pagar e guardar, e o botao primario nao pode dizer
+  // "Resgatar" logo abaixo.
+  if (!veredito.foraDoModelo && veredito.rotulo === "resgatar" && veredito.melhor) {
     return (
       <div className="mt-4 space-y-3">
         <LinkExterno

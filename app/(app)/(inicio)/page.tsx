@@ -17,6 +17,9 @@ import { SeuCusto } from "./_componentes/SeuCusto";
  * Buscar destino saiu daqui e foi para o Explorar, que faz isso melhor
  * (o globo, a resposta na hora). O topo leva ate la.
  *
+ * O aviso de que milhas sao estimativa mora so no rodape (Rodape.tsx):
+ * repetido aqui, a mesma frase aparecia duas vezes na mesma tela.
+ *
  * Em telas grandes, os blocos de baixo dividem duas colunas: o que e da
  * pessoa (carteira, custo) a esquerda, o que e do mercado a direita.
  */
@@ -34,12 +37,6 @@ export default function Inicio() {
           <SeuCusto />
         </div>
       </div>
-
-      <p className="mt-4 text-xs leading-relaxed text-tinta-fraca">
-        Os valores em milhas são estimativas: nenhum programa brasileiro
-        publica tabela fixa nem expõe API. Sempre confirme no site do programa
-        antes de resgatar.
-      </p>
     </>
   );
 }

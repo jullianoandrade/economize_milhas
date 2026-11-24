@@ -1,7 +1,7 @@
 {
   "atualizadoEm": "2026-10-08",
   "cotacaoDolarReferenciaBRL": 5.06,
-  "explicacao": "Cartoes sao a forma mais barata de acumular milhas: voce ganha pontos por um gasto que ja faria. O numero que importa e pontos por dolar. Para estimar o ganho mensal: (gasto mensal em reais / cotacao do dolar) x pontos por dolar. ESTE ARQUIVO NAO CONTEM COMISSAO: dados comerciais ficam em parceiros-comercial.json e o motor nunca os le.",
+  "explicacao": "Cartões são a forma mais barata de acumular milhas: você ganha pontos por um gasto que já faria. O número que importa é pontos por dólar. Para estimar o ganho mensal: (gasto mensal em reais / cotação do dólar) x pontos por dólar. ESTE ARQUIVO NÃO CONTÉM COMISSÃO: dados comerciais ficam em parceiros-comercial.json e o motor nunca os lê.",
   "cartoes": [
     {
       "id": "brb-dux",
@@ -15,7 +15,7 @@
       "programaDestino": "proprio",
       "pontosExpiram": false,
       "confianca": "pesquisado",
-      "observacao": "Maior acumulo por dolar do mercado, mas exige gasto alto para isentar a anuidade."
+      "observacao": "Maior acúmulo por dólar do mercado, mas exige gasto alto para isentar a anuidade."
     },
     {
       "id": "santander-smiles-infinite",
@@ -29,11 +29,11 @@
       "programaDestino": "smiles",
       "pontosExpiram": false,
       "confianca": "parcial",
-      "observacao": "Ate 6,5 pontos por dolar: o teto depende do pacote de relacionamento contratado. Credita direto na Smiles, sem passar por transferencia."
+      "observacao": "Até 6,5 pontos por dólar: o teto depende do pacote de relacionamento contratado. Credita direto na Smiles, sem passar por transferência."
     },
     {
       "id": "caixa-icone-infinite",
-      "nome": "Caixa Icone Visa Infinite",
+      "nome": "Caixa Ícone Visa Infinite",
       "emissor": "Caixa",
       "bandeira": "Visa Infinite",
       "pontosPorDolarNacional": 5,
@@ -47,8 +47,8 @@
     },
     {
       "id": "itau-the-one-black",
-      "nome": "Itau The One Black",
-      "emissor": "Itau",
+      "nome": "Itaú The One Black",
+      "emissor": "Itaú",
       "bandeira": "Mastercard Black",
       "pontosPorDolarNacional": 3,
       "pontosPorDolarInternacional": 3.5,
@@ -71,7 +71,7 @@
       "programaDestino": "proprio",
       "pontosExpiram": false,
       "confianca": "parcial",
-      "observacao": "Divulgado como 1 ponto a cada R$ 2 gastos; convertido pela cotacao de referencia deste arquivo."
+      "observacao": "Divulgado como 1 ponto a cada R$ 2 gastos; convertido pela cotação de referência deste arquivo."
     },
     {
       "id": "nubank-croma",

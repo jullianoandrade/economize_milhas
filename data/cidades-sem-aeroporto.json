@@ -1405,7 +1405,7 @@
    "km": 67
   },
   {
-   "cidade": "Anapolis",
+   "cidade": "Anápolis",
    "aliases": [],
    "pais": "BR",
    "iata": "GYN",
@@ -1925,11 +1925,11 @@
    "km": 31
   },
   {
-   "cidade": "Aragarcas",
+   "cidade": "Aragarças",
    "aliases": [],
    "pais": "BR",
    "iata": "BPG",
-   "cidadeDoAeroporto": "Barra Do Garcas",
+   "cidadeDoAeroporto": "Barra do Garças",
    "km": 17
   },
   {
@@ -2309,7 +2309,7 @@
    "km": 218
   },
   {
-   "cidade": "Aruja",
+   "cidade": "Arujá",
    "aliases": [],
    "pais": "BR",
    "iata": "GRU",
@@ -2449,7 +2449,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "MII",
-   "cidadeDoAeroporto": "Marilia",
+   "cidadeDoAeroporto": "Marília",
    "km": 72
   },
   {
@@ -2923,7 +2923,7 @@
    "km": 70
   },
   {
-   "cidade": "Bage",
+   "cidade": "Bagé",
    "aliases": [],
    "pais": "BR",
    "iata": "PET",
@@ -3495,7 +3495,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "IRZ",
-   "cidadeDoAeroporto": "Santa Isabel Rio Negro",
+   "cidadeDoAeroporto": "Santa Isabel do Rio Negro",
    "km": 238
   },
   {
@@ -3551,7 +3551,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "NSR",
-   "cidadeDoAeroporto": "Sao Raimundo Nonato",
+   "cidadeDoAeroporto": "São Raimundo Nonato",
    "km": 229
   },
   {
@@ -3563,7 +3563,7 @@
    "km": 105
   },
   {
-   "cidade": "Barra Do Corda",
+   "cidade": "Barra do Corda",
    "aliases": [],
    "pais": "BR",
    "iata": "IMP",
@@ -4331,7 +4331,7 @@
    "km": 19
   },
   {
-   "cidade": "Bento Goncalves",
+   "cidade": "Bento Gonçalves",
    "aliases": [],
    "pais": "BR",
    "iata": "CXJ",
@@ -5085,7 +5085,7 @@
    "km": 71
   },
   {
-   "cidade": "Boca Do Acre",
+   "cidade": "Boca do Acre",
    "aliases": [],
    "pais": "BR",
    "iata": "RBR",
@@ -5221,7 +5221,7 @@
    "km": 178
   },
   {
-   "cidade": "Bom Jesus Da Lapa",
+   "cidade": "Bom Jesus da Lapa",
    "aliases": [],
    "pais": "BR",
    "iata": "GNM",
@@ -5589,7 +5589,7 @@
    "km": 40
   },
   {
-   "cidade": "Braganca Paulista",
+   "cidade": "Bragança Paulista",
    "aliases": [],
    "pais": "BR",
    "iata": "SJK",
@@ -6365,7 +6365,7 @@
    "km": 21
   },
   {
-   "cidade": "Buzios",
+   "cidade": "Búzios",
    "aliases": [],
    "pais": "BR",
    "iata": "CFB",
@@ -6405,7 +6405,7 @@
    "km": 99
   },
   {
-   "cidade": "Cacador",
+   "cidade": "Caçador",
    "aliases": [],
    "pais": "BR",
    "iata": "LAJ",
@@ -6413,7 +6413,7 @@
    "km": 128
   },
   {
-   "cidade": "Caceres",
+   "cidade": "Cáceres",
    "aliases": [],
    "pais": "BR",
    "iata": "CGB",
@@ -6425,15 +6425,17 @@
    "aliases": [],
    "pais": "BR",
    "iata": "FEC",
-   "cidadeDoAeroporto": "Feira De Santana",
+   "cidadeDoAeroporto": "Feira de Santana",
    "km": 45
   },
   {
-   "cidade": "Cachoeiro Itapemirim",
-   "aliases": [],
+   "cidade": "Cachoeiro de Itapemirim",
+   "aliases": [
+    "Cachoeiro Itapemirim"
+   ],
    "pais": "BR",
    "iata": "CAW",
-   "cidadeDoAeroporto": "Campos",
+   "cidadeDoAeroporto": "Campos dos Goytacazes",
    "km": 102
   },
   {
@@ -6605,7 +6607,7 @@
    "km": 40
   },
   {
-   "cidade": "Cameta",
+   "cidade": "Cametá",
    "aliases": [],
    "pais": "BR",
    "iata": "BVS",
@@ -6685,7 +6687,7 @@
    "km": 144
   },
   {
-   "cidade": "Campo Mourao",
+   "cidade": "Campo Mourão",
    "aliases": [],
    "pais": "BR",
    "iata": "MGF",
@@ -6697,7 +6699,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "POJ",
-   "cidadeDoAeroporto": "Patos De Minas",
+   "cidadeDoAeroporto": "Patos de Minas",
    "km": 158
   },
   {
@@ -7185,7 +7187,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "SLZ",
-   "cidadeDoAeroporto": "São Luis",
+   "cidadeDoAeroporto": "São Luís",
    "km": 247
   },
   {
@@ -7253,7 +7255,7 @@
    "km": 46
   },
   {
-   "cidade": "Cassilandia",
+   "cidade": "Cassilândia",
    "aliases": [],
    "pais": "BR",
    "iata": "RVD",
@@ -7301,7 +7303,7 @@
    "km": 145
   },
   {
-   "cidade": "Catalao",
+   "cidade": "Catalão",
    "aliases": [],
    "pais": "BR",
    "iata": "CLV",
@@ -8781,7 +8783,7 @@
    "km": 11
   },
   {
-   "cidade": "Conceicao Do Araguaia",
+   "cidade": "Conceição do Araguaia",
    "aliases": [],
    "pais": "BR",
    "iata": "AUX",
@@ -8829,7 +8831,7 @@
    "km": 86
   },
   {
-   "cidade": "Concordia",
+   "cidade": "Concórdia",
    "aliases": [],
    "pais": "BR",
    "iata": "XAP",
@@ -9045,7 +9047,7 @@
    "km": 156
   },
   {
-   "cidade": "Cornelio Procopio",
+   "cidade": "Cornélio Procópio",
    "aliases": [],
    "pais": "BR",
    "iata": "LDB",
@@ -9189,11 +9191,11 @@
    "km": 24
   },
   {
-   "cidade": "Cotriguacu",
+   "cidade": "Cotriguaçu",
    "aliases": [],
    "pais": "BR",
    "iata": "AIR",
-   "cidadeDoAeroporto": "Aripuana",
+   "cidadeDoAeroporto": "Aripuanã",
    "km": 96
   },
   {
@@ -9507,7 +9509,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "GEL",
-   "cidadeDoAeroporto": "Santo Angelo",
+   "cidadeDoAeroporto": "Santo Ângelo",
    "km": 70
   },
   {
@@ -9607,14 +9609,6 @@
    "km": 191
   },
   {
-   "cidade": "Curitiba.",
-   "aliases": [],
-   "pais": "BR",
-   "iata": "CWB",
-   "cidadeDoAeroporto": "Curitiba",
-   "km": 16
-  },
-  {
    "cidade": "Currillo",
    "aliases": [],
    "pais": "CO",
@@ -9627,7 +9621,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "SLZ",
-   "cidadeDoAeroporto": "São Luis",
+   "cidadeDoAeroporto": "São Luís",
    "km": 112
   },
   {
@@ -10431,7 +10425,7 @@
    "km": 134
   },
   {
-   "cidade": "Dianopolis",
+   "cidade": "Dianópolis",
    "aliases": [],
    "pais": "BR",
    "iata": "BRA",
@@ -12497,11 +12491,11 @@
    "km": 59
   },
   {
-   "cidade": "Feijo",
+   "cidade": "Feijó",
    "aliases": [],
    "pais": "BR",
    "iata": "ERN",
-   "cidadeDoAeroporto": "Eirunepe",
+   "cidadeDoAeroporto": "Eirunepé",
    "km": 182
   },
   {
@@ -12815,7 +12809,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "TFF",
-   "cidadeDoAeroporto": "Tefe",
+   "cidadeDoAeroporto": "Tefé",
    "km": 180
   },
   {
@@ -13227,7 +13221,7 @@
    "km": 74
   },
   {
-   "cidade": "Francisco Beltrao",
+   "cidade": "Francisco Beltrão",
    "aliases": [],
    "pais": "BR",
    "iata": "PTO",
@@ -14867,7 +14861,7 @@
    "km": 13
   },
   {
-   "cidade": "Gravatai",
+   "cidade": "Gravataí",
    "aliases": [],
    "pais": "BR",
    "iata": "POA",
@@ -15203,7 +15197,7 @@
    "km": 209
   },
   {
-   "cidade": "Guajara-Mirim",
+   "cidade": "Guajará-Mirim",
    "aliases": [],
    "pais": "BR",
    "iata": "GYA",
@@ -15277,7 +15271,7 @@
    "km": 51
   },
   {
-   "cidade": "Guaratingueta",
+   "cidade": "Guaratinguetá",
    "aliases": [],
    "pais": "BR",
    "iata": "SJK",
@@ -15357,11 +15351,11 @@
    "km": 97
   },
   {
-   "cidade": "Guimaraes",
+   "cidade": "Guimarães",
    "aliases": [],
    "pais": "BR",
    "iata": "SLZ",
-   "cidadeDoAeroporto": "São Luis",
+   "cidadeDoAeroporto": "São Luís",
    "km": 71
   },
   {
@@ -16593,7 +16587,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "GEL",
-   "cidadeDoAeroporto": "Santo Angelo",
+   "cidadeDoAeroporto": "Santo Ângelo",
    "km": 73
   },
   {
@@ -16805,7 +16799,7 @@
    "km": 36
   },
   {
-   "cidade": "Humaita",
+   "cidade": "Humaitá",
    "aliases": [],
    "pais": "BR",
    "iata": "PVH",
@@ -17061,11 +17055,11 @@
    "km": 203
   },
   {
-   "cidade": "Ijui",
+   "cidade": "Ijuí",
    "aliases": [],
    "pais": "BR",
    "iata": "GEL",
-   "cidadeDoAeroporto": "Santo Angelo",
+   "cidadeDoAeroporto": "Santo Ângelo",
    "km": 29
   },
   {
@@ -17145,7 +17139,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "ARU",
-   "cidadeDoAeroporto": "Aracatuba",
+   "cidadeDoAeroporto": "Araçatuba",
    "km": 130
   },
   {
@@ -17477,7 +17471,7 @@
    "km": 71
   },
   {
-   "cidade": "Ipiau",
+   "cidade": "Ipiaú",
    "aliases": [],
    "pais": "BR",
    "iata": "IOS",
@@ -17497,7 +17491,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "TFF",
-   "cidadeDoAeroporto": "Tefe",
+   "cidadeDoAeroporto": "Tefé",
    "km": 140
   },
   {
@@ -17541,7 +17535,7 @@
    "km": 199
   },
   {
-   "cidade": "Irece",
+   "cidade": "Irecê",
    "aliases": [],
    "pais": "BR",
    "iata": "LEC",
@@ -17689,7 +17683,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "MBZ",
-   "cidadeDoAeroporto": "Maues",
+   "cidadeDoAeroporto": "Maués",
    "km": 85
   },
   {
@@ -17697,7 +17691,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "TFL",
-   "cidadeDoAeroporto": "Teofilo Otoni",
+   "cidadeDoAeroporto": "Teófilo Otoni",
    "km": 17
   },
   {
@@ -17705,7 +17699,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "CAW",
-   "cidadeDoAeroporto": "Campos",
+   "cidadeDoAeroporto": "Campos dos Goytacazes",
    "km": 87
   },
   {
@@ -17717,7 +17711,7 @@
    "km": 86
   },
   {
-   "cidade": "Itauba",
+   "cidade": "Itaúba",
    "aliases": [],
    "pais": "BR",
    "iata": "CIZ",
@@ -17741,7 +17735,7 @@
    "km": 41
   },
   {
-   "cidade": "Itubera",
+   "cidade": "Ituberá",
    "aliases": [],
    "pais": "BR",
    "iata": "IOS",
@@ -17929,7 +17923,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "ARU",
-   "cidadeDoAeroporto": "Aracatuba",
+   "cidadeDoAeroporto": "Araçatuba",
    "km": 109
   },
   {
@@ -17973,7 +17967,7 @@
    "km": 45
   },
   {
-   "cidade": "Januaria",
+   "cidade": "Januária",
    "aliases": [],
    "pais": "BR",
    "iata": "MOC",
@@ -18005,7 +17999,7 @@
    "km": 219
   },
   {
-   "cidade": "Jatai",
+   "cidade": "Jataí",
    "aliases": [],
    "pais": "BR",
    "iata": "RVD",
@@ -18077,7 +18071,7 @@
    "km": 40
   },
   {
-   "cidade": "Jequie",
+   "cidade": "Jequié",
    "aliases": [],
    "pais": "BR",
    "iata": "VDC",
@@ -18165,7 +18159,7 @@
    "km": 55
   },
   {
-   "cidade": "Joacaba",
+   "cidade": "Joaçaba",
    "aliases": [],
    "pais": "BR",
    "iata": "XAP",
@@ -18293,11 +18287,11 @@
    "km": 214
   },
   {
-   "cidade": "Juina",
+   "cidade": "Juína",
    "aliases": [],
    "pais": "BR",
    "iata": "AIR",
-   "cidadeDoAeroporto": "Aripuana",
+   "cidadeDoAeroporto": "Aripuanã",
    "km": 149
   },
   {
@@ -18369,7 +18363,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "AIR",
-   "cidadeDoAeroporto": "Aripuana",
+   "cidadeDoAeroporto": "Aripuanã",
    "km": 98
   },
   {
@@ -22537,7 +22531,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "MII",
-   "cidadeDoAeroporto": "Marilia",
+   "cidadeDoAeroporto": "Marília",
    "km": 62
   },
   {
@@ -22621,8 +22615,10 @@
    "km": 48
   },
   {
-   "cidade": "Livramento",
-   "aliases": [],
+   "cidade": "Santana do Livramento",
+   "aliases": [
+    "Livramento"
+   ],
    "pais": "BR",
    "iata": "URG",
    "cidadeDoAeroporto": "Uruguaiana",
@@ -23135,7 +23131,7 @@
    "km": 9
   },
   {
-   "cidade": "Lucas Do Rio Verde",
+   "cidade": "Lucas do Rio Verde",
    "aliases": [],
    "pais": "BR",
    "iata": "SMT",
@@ -23463,7 +23459,7 @@
    "km": 22
   },
   {
-   "cidade": "Macae",
+   "cidade": "Macaé",
    "aliases": [],
    "pais": "BR",
    "iata": "CFB",
@@ -25055,7 +25051,7 @@
    "km": 62
   },
   {
-   "cidade": "Matupa",
+   "cidade": "Matupá",
    "aliases": [],
    "pais": "BR",
    "iata": "AFL",
@@ -25895,8 +25891,10 @@
    "km": 19
   },
   {
-   "cidade": "Miracema Do Norte",
-   "aliases": [],
+   "cidade": "Miracema do Tocantins",
+   "aliases": [
+    "Miracema Do Norte"
+   ],
    "pais": "BR",
    "iata": "PMW",
    "cidadeDoAeroporto": "Palmas",
@@ -27659,7 +27657,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "TFL",
-   "cidadeDoAeroporto": "Teofilo Otoni",
+   "cidadeDoAeroporto": "Teófilo Otoni",
    "km": 124
   },
   {
@@ -28457,7 +28455,7 @@
    "km": 28
   },
   {
-   "cidade": "Niquelandia",
+   "cidade": "Niquelândia",
    "aliases": [],
    "pais": "BR",
    "iata": "BSB",
@@ -28781,7 +28779,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "BPG",
-   "cidadeDoAeroporto": "Barra Do Garcas",
+   "cidadeDoAeroporto": "Barra do Garças",
    "km": 129
   },
   {
@@ -28801,7 +28799,7 @@
    "km": 153
   },
   {
-   "cidade": "Novo Aripuana",
+   "cidade": "Novo Aripuanã",
    "aliases": [],
    "pais": "BR",
    "iata": "RBB",
@@ -29177,7 +29175,7 @@
    "km": 46
   },
   {
-   "cidade": "Obidos",
+   "cidade": "Óbidos",
    "aliases": [],
    "pais": "BR",
    "iata": "TMT",
@@ -29865,7 +29863,7 @@
    "km": 83
   },
   {
-   "cidade": "Oriximina",
+   "cidade": "Oriximiná",
    "aliases": [],
    "pais": "BR",
    "iata": "TMT",
@@ -30109,7 +30107,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "MII",
-   "cidadeDoAeroporto": "Marilia",
+   "cidadeDoAeroporto": "Marília",
    "km": 87
   },
   {
@@ -30667,7 +30665,7 @@
    "km": 235
   },
   {
-   "cidade": "Paranagua",
+   "cidade": "Paranaguá",
    "aliases": [],
    "pais": "BR",
    "iata": "CWB",
@@ -30675,15 +30673,15 @@
    "km": 66
   },
   {
-   "cidade": "Paranaiba",
+   "cidade": "Paranaíba",
    "aliases": [],
    "pais": "BR",
    "iata": "ARU",
-   "cidadeDoAeroporto": "Aracatuba",
+   "cidadeDoAeroporto": "Araçatuba",
    "km": 182
   },
   {
-   "cidade": "Paranavai",
+   "cidade": "Paranavaí",
    "aliases": [],
    "pais": "BR",
    "iata": "MGF",
@@ -31623,7 +31621,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "SLZ",
-   "cidadeDoAeroporto": "São Luis",
+   "cidadeDoAeroporto": "São Luís",
    "km": 94
   },
   {
@@ -31835,7 +31833,7 @@
    "km": 25
   },
   {
-   "cidade": "Pocos De Caldas",
+   "cidade": "Poços de Caldas",
    "aliases": [],
    "pais": "BR",
    "iata": "VAG",
@@ -32483,7 +32481,7 @@
    "km": 186
   },
   {
-   "cidade": "Porto Dos Gauchos",
+   "cidade": "Porto dos Gaúchos",
    "aliases": [],
    "pais": "BR",
    "iata": "OPS",
@@ -33875,11 +33873,11 @@
    "km": 69
   },
   {
-   "cidade": "Redencao",
+   "cidade": "Redenção",
    "aliases": [],
    "pais": "BR",
    "iata": "OIA",
-   "cidadeDoAeroporto": "Ourilandia do Norte       ",
+   "cidadeDoAeroporto": "Ourilândia do Norte",
    "km": 184
   },
   {
@@ -36051,7 +36049,7 @@
    "km": 13
   },
   {
-   "cidade": "Santa Cruz Do Sul",
+   "cidade": "Santa Cruz do Sul",
    "aliases": [],
    "pais": "BR",
    "iata": "RIA",
@@ -36083,7 +36081,7 @@
    "km": 132
   },
   {
-   "cidade": "Santa Fe Do Sul",
+   "cidade": "Santa Fé do Sul",
    "aliases": [],
    "pais": "BR",
    "iata": "SJP",
@@ -36143,7 +36141,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "GEL",
-   "cidadeDoAeroporto": "Santo Angelo",
+   "cidadeDoAeroporto": "Santo Ângelo",
    "km": 55
   },
   {
@@ -36187,7 +36185,7 @@
    "km": 230
   },
   {
-   "cidade": "Santa Vitoria",
+   "cidade": "Santa Vitória",
    "aliases": [],
    "pais": "BR",
    "iata": "RVD",
@@ -36203,7 +36201,7 @@
    "km": 16
   },
   {
-   "cidade": "Santana Do Araguaia",
+   "cidade": "Santana do Araguaia",
    "aliases": [],
    "pais": "BR",
    "iata": "MCZ",
@@ -36267,7 +36265,7 @@
    "km": 142
   },
   {
-   "cidade": "Sao Carlos",
+   "cidade": "São Carlos",
    "aliases": [],
    "pais": "BR",
    "iata": "AQA",
@@ -36275,23 +36273,25 @@
    "km": 34
   },
   {
-   "cidade": "Sao Felix Do Xingu",
+   "cidade": "São Félix do Xingu",
    "aliases": [],
    "pais": "BR",
    "iata": "OIA",
-   "cidadeDoAeroporto": "Ourilandia do Norte       ",
+   "cidadeDoAeroporto": "Ourilândia do Norte",
    "km": 104
   },
   {
-   "cidade": "Sao Joao Del Rei",
-   "aliases": [],
+   "cidade": "São João del-Rei",
+   "aliases": [
+    "Sao Joao Del Rei"
+   ],
    "pais": "BR",
    "iata": "IZA",
    "cidadeDoAeroporto": "Juiz de Fora",
    "km": 120
   },
   {
-   "cidade": "Sao Lourenco",
+   "cidade": "São Lourenço",
    "aliases": [],
    "pais": "BR",
    "iata": "VAG",
@@ -36299,7 +36299,7 @@
    "km": 74
   },
   {
-   "cidade": "Sao Lourenco Do Sul",
+   "cidade": "São Lourenço do Sul",
    "aliases": [],
    "pais": "BR",
    "iata": "PET",
@@ -36307,7 +36307,7 @@
    "km": 46
   },
   {
-   "cidade": "Sao Mateus",
+   "cidade": "São Mateus",
    "aliases": [],
    "pais": "BR",
    "iata": "LHN",
@@ -36315,7 +36315,7 @@
    "km": 77
   },
   {
-   "cidade": "Sao Miguel do Oeste",
+   "cidade": "São Miguel do Oeste",
    "aliases": [],
    "pais": "BR",
    "iata": "XAP",
@@ -36331,7 +36331,7 @@
    "km": 86
   },
   {
-   "cidade": "Sao Paulo de Olivenca",
+   "cidade": "São Paulo de Olivença",
    "aliases": [],
    "pais": "BR",
    "iata": "LET",
@@ -36963,7 +36963,7 @@
    "km": 213
   },
   {
-   "cidade": "Senhor Do Bonfim",
+   "cidade": "Senhor do Bonfim",
    "aliases": [],
    "pais": "BR",
    "iata": "PNZ",
@@ -37015,7 +37015,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "AIR",
-   "cidadeDoAeroporto": "Aripuana",
+   "cidadeDoAeroporto": "Aripuanã",
    "km": 93
   },
   {
@@ -37023,7 +37023,7 @@
    "aliases": [],
    "pais": "BR",
    "iata": "CKS",
-   "cidadeDoAeroporto": "Carajas",
+   "cidadeDoAeroporto": "Parauapebas",
    "km": 43
   },
   {
@@ -39467,7 +39467,7 @@
    "km": 10
   },
   {
-   "cidade": "Sumare",
+   "cidade": "Sumaré",
    "aliases": [],
    "pais": "BR",
    "iata": "VCP",
@@ -40195,7 +40195,7 @@
    "km": 38
   },
   {
-   "cidade": "Tangara da Serra",
+   "cidade": "Tangará da Serra",
    "aliases": [],
    "pais": "BR",
    "iata": "CGB",
@@ -40363,11 +40363,11 @@
    "km": 108
   },
   {
-   "cidade": "Tarauaca",
+   "cidade": "Tarauacá",
    "aliases": [],
    "pais": "BR",
    "iata": "ERN",
-   "cidadeDoAeroporto": "Eirunepe",
+   "cidadeDoAeroporto": "Eirunepé",
    "km": 194
   },
   {
@@ -40611,7 +40611,7 @@
    "km": 17
   },
   {
-   "cidade": "Telemaco Borba",
+   "cidade": "Telêmaco Borba",
    "aliases": [],
    "pais": "BR",
    "iata": "PGZ",
@@ -41931,11 +41931,11 @@
    "km": 154
   },
   {
-   "cidade": "Tucuma",
+   "cidade": "Tucumã",
    "aliases": [],
    "pais": "BR",
    "iata": "OIA",
-   "cidadeDoAeroporto": "Ourilandia do Norte       ",
+   "cidadeDoAeroporto": "Ourilândia do Norte",
    "km": 45
   },
   {
@@ -42603,11 +42603,11 @@
    "km": 67
   },
   {
-   "cidade": "Urubupunga",
+   "cidade": "Urubupungá",
    "aliases": [],
    "pais": "BR",
    "iata": "ARU",
-   "cidadeDoAeroporto": "Aracatuba",
+   "cidadeDoAeroporto": "Araçatuba",
    "km": 125
   },
   {
@@ -42795,7 +42795,7 @@
    "km": 243
   },
   {
-   "cidade": "Valenca",
+   "cidade": "Valença",
    "aliases": [],
    "pais": "BR",
    "iata": "SSA",
@@ -45197,7 +45197,7 @@
    "km": 84
   },
   {
-   "cidade": "Xanxere",
+   "cidade": "Xanxerê",
    "aliases": [],
    "pais": "BR",
    "iata": "XAP",

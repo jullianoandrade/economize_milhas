@@ -44,7 +44,7 @@ export async function GET(requisicao: Request) {
   const aeroporto = consulta.success ? aeroportoPorIata(origem) : undefined;
   if (!aeroporto) {
     return NextResponse.json(
-      { erro: "informe uma origem valida" },
+      { erro: "Informe uma origem válida." },
       { status: 400 },
     );
   }
@@ -75,8 +75,8 @@ export async function GET(requisicao: Request) {
       origem: { iata: aeroporto.iata, cidade: aeroporto.cidade },
       fonte: "estimativa",
       observacao: temToken()
-        ? "Nao encontramos buscas recentes partindo desta cidade."
-        : "Token da Travelpayouts nao configurado.",
+        ? "Não encontramos buscas recentes partindo desta cidade."
+        : "Token da Travelpayouts não configurado.",
       oportunidades: [],
       promocoesDeTransferencia: promocoes,
       bonusVigentes: [],
@@ -158,7 +158,7 @@ export async function GET(requisicao: Request) {
     origem: { iata: aeroporto.iata, cidade: aeroporto.cidade },
     fonte: "travelpayouts",
     observacao:
-      "Precos de buscas recentes. Nao sao cotacao em tempo real: confirme antes de comprar.",
+      "Preços de buscas recentes. Não são cotação em tempo real: confirme antes de comprar.",
     oportunidades,
     promocoesDeTransferencia: promocoes,
     bonusVigentes: transferencias.padraoHistorico.map((p) => ({

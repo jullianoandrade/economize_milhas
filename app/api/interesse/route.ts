@@ -10,6 +10,7 @@ import {
 import { REGRAS } from "@/lib/seguranca/limite";
 import { corpoDoInteresse } from "@/lib/seguranca/esquemas";
 import { registrar } from "@/lib/log";
+import { MENSAGEM_MESMO_AEROPORTO } from "@/lib/milhas/regioes";
 
 /**
  * Registra que alguem olhou uma rota.
@@ -45,6 +46,19 @@ export async function POST(requisicao: Request) {
 
   const leitura = await lerCorpo(requisicao, corpoDoInteresse);
   if (!leitura.ok) return leitura.resposta;
+
+  // Origem igual ao destino nao e rota: classificarRota recusa o par
+  // (MesmoAeroportoError) e avaliarInteresse nao sabe tratar esse caso.
+  // Barrado aqui, antes, como erro de quem chamou.
+  if (
+    leitura.dados.origem.trim().toUpperCase() ===
+    leitura.dados.destino.trim().toUpperCase()
+  ) {
+    return NextResponse.json(
+      { registrado: false, motivo: "mesmo-aeroporto", erro: MENSAGEM_MESMO_AEROPORTO },
+      { status: 400 },
+    );
+  }
 
   const decisao = avaliarInteresse(leitura.dados.origem, leitura.dados.destino);
 

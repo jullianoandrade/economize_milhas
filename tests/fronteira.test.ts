@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { aeroportos } from "@/lib/dados";
-import { classificarRota } from "@/lib/milhas/regioes";
+import { classificarRota, MesmoAeroportoError } from "@/lib/milhas/regioes";
 import { estimarMilhas } from "@/lib/milhas/motor";
 import { calcularVeredito } from "@/lib/milhas/veredito";
 import { calcularSazonalidade } from "@/lib/tempo/sazonalidade";
@@ -92,6 +92,10 @@ describe("fronteira do motor", () => {
     let semFaixa = 0;
 
     for (const a of todos) {
+      // O par de um aeroporto com ele mesmo nao e rota: classificarRota
+      // recusa (MesmoAeroportoError), coberto no teste proprio abaixo.
+      if (a.iata === brasileiro!.iata) continue;
+
       // Contra uma ponta brasileira SEMPRE ha faixa, nos dois sentidos.
       expect(classificarRota(a.iata, brasileiro!.iata).faixa).not.toBeNull();
       expect(classificarRota(brasileiro!.iata, a.iata).faixa).not.toBeNull();
@@ -205,5 +209,14 @@ describe("a fronteira nao estreitou o que ja funcionava", () => {
   it("domestico brasileiro continua separado por distancia", () => {
     expect(rota("GRU", "SDU").faixa).toBe("domestico-curto");
     expect(rota("GRU", "REC").faixa).toMatch(/^domestico-/);
+  });
+});
+
+describe("origem igual ao destino nao e rota", () => {
+  it("classificarRota recusa o mesmo aeroporto, em qualquer caixa", () => {
+    // GRU-GRU virava "0 km" e um veredito inteiro para uma viagem que
+    // nao existe.
+    expect(() => classificarRota("GRU", "GRU")).toThrow(MesmoAeroportoError);
+    expect(() => classificarRota("gru", "GRU")).toThrow(MesmoAeroportoError);
   });
 });

@@ -70,7 +70,11 @@ export function AlternadorDeTema() {
     <button
       type="button"
       onClick={() => aplicar(escuro ? "claro" : "escuro")}
-      aria-pressed={escuro}
+      // O botao diz a ACAO, nao o estado: "Modo claro" com aria-pressed
+      // ligado era lido como "modo claro ativado" justamente no escuro.
+      // Sem aria-pressed, o nome acessivel e o que acontece ao tocar --
+      // e contem o texto visivel, para quem comanda por voz.
+      aria-label={escuro ? "Mudar para modo claro" : "Mudar para modo escuro"}
       className="inline-flex items-center gap-1.5 rounded-full border border-borda px-3 py-1.5 text-xs text-tinta-fraca transition-colors hover:border-marca hover:text-marca"
     >
       {escuro ? (

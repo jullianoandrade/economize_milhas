@@ -52,7 +52,7 @@ export function SeuCusto() {
     <section
       className={`${aberto ? "" : ALTURA} mb-6 rounded-[24px] border border-marca-fraca bg-marca-fraca p-4`}
     >
-      <p className="mb-1 text-xs font-bold uppercase tracking-widest text-marca">
+      <p className="mb-1 text-sm font-semibold text-marca">
         {respondeu ? "Suas milhas" : "Entenda em um minuto"}
       </p>
 

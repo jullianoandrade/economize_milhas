@@ -1,7 +1,7 @@
 {
   "atualizadoEm": "2026-10-09",
-  "aviso": "ARQUIVO COMERCIAL. Lido exclusivamente por lib/monetizacao/parceiros.ts. Nenhum modulo de lib/milhas ou lib/tempo pode importa-lo, e tests/arquitetura.test.ts quebra o build se isso acontecer -- inclusive por caminho indireto, porque o teste exige que este arquivo tenha um unico leitor no projeto inteiro. E assim que a promessa de ranking cego a comissao deixa de ser intencao e vira regra verificavel.",
-  "explicacao": "As URLs aqui sao os enderecos publicos dos parceiros, sem marker. O marker so e anexado em tempo de execucao, e apenas quando NEXT_PUBLIC_MONETIZACAO_ATIVA for true. Com a flag desligada os links saem limpos e nada e declarado, porque nao ha comissao a declarar.",
+  "aviso": "ARQUIVO COMERCIAL. Lido exclusivamente por lib/monetizacao/parceiros.ts. Nenhum módulo de lib/milhas ou lib/tempo pode importa-lo, e tests/arquitetura.test.ts quebra o build se isso acontecer -- inclusive por caminho indireto, porque o teste exige que este arquivo tenha um único leitor no projeto inteiro. É assim que a promessa de ranking cego à comissão deixa de ser intenção e vira regra verificável.",
+  "explicacao": "As URLs aqui são os endereços públicos dos parceiros, sem marker. O marker só é anexado em tempo de execução, e apenas quando NEXT_PUBLIC_MONETIZACAO_ATIVA for true. Com a flag desligada os links saem limpos e nada é declarado, porque não há comissão a declarar.",
   "parceiros": [
     {
       "id": "travelpayouts-voo",
@@ -12,7 +12,7 @@
       "parametroDeMarker": "marker",
       "comissao": { "modelo": "percentual", "min": 1.1, "max": 1.5 },
       "cookieDias": 30,
-      "observacao": "Comissao baixa: voo e o que traz a pessoa, nao o que paga a conta."
+      "observacao": "Comissão baixa: voo é o que traz a pessoa, não o que paga a conta."
     },
     {
       "id": "travelpayouts-hotel",
@@ -23,18 +23,18 @@
       "parametroDeMarker": "marker",
       "comissao": { "modelo": "percentual", "min": 4, "max": 5 },
       "cookieDias": 30,
-      "observacao": "ENCERRADO: a Travelpayouts fechou o Hotellook em 20/10/2025 (dominio com certificado invalido). Nenhuma tela usa hoje; trocar por outra marca de Hospedagem da Travelpayouts antes de ativar ofertas de hotel."
+      "observacao": "ENCERRADO: a Travelpayouts fechou o Hotellook em 20/10/2025 (domínio com certificado inválido). Nenhuma tela usa hoje; trocar por outra marca de Hospedagem da Travelpayouts antes de ativar ofertas de hotel."
     },
     {
       "id": "cartoes-cpa",
-      "nome": "Cartoes de credito",
+      "nome": "Cartões de crédito",
       "tipo": "cartao",
       "rede": "a-definir",
       "url": "",
       "parametroDeMarker": "",
       "comissao": { "modelo": "cpa", "min": 56, "max": 300 },
       "cookieDias": 30,
-      "observacao": "CPA por cartao aprovado, via redes como Rakuten, Lomadee ou Admitad. Maior ticket do conjunto, e justamente o que o plano de acumulo recomenda -- motivo pelo qual o ranking de cartoes nunca pode enxergar este numero."
+      "observacao": "CPA por cartão aprovado, via redes como Rakuten, Lomadee ou Admitad. Maior ticket do conjunto, e justamente o que o plano de acúmulo recomenda -- motivo pelo qual o ranking de cartões nunca pode enxergar este número."
     },
     {
       "id": "seguro-viagem",
@@ -45,7 +45,7 @@
       "parametroDeMarker": "",
       "comissao": { "modelo": "percentual", "min": 0, "max": 0 },
       "cookieDias": 30,
-      "observacao": "Percentual nao publicado pelas plataformas brasileiras; depende de negociacao direta."
+      "observacao": "Percentual não publicado pelas plataformas brasileiras; depende de negociação direta."
     },
     {
       "id": "esim",
@@ -56,18 +56,18 @@
       "parametroDeMarker": "",
       "comissao": { "modelo": "percentual", "min": 10, "max": 20 },
       "cookieDias": 30,
-      "observacao": "Airalo e Holafly pagam 10% de base, negociavel ate 20% em volume."
+      "observacao": "Airalo e Holafly pagam 10% de base, negociável até 20% em volume."
     },
     {
       "id": "cambio",
-      "nome": "Conta global e cambio",
+      "nome": "Conta global e câmbio",
       "tipo": "cambio",
       "rede": "a-definir",
       "url": "",
       "parametroDeMarker": "",
       "comissao": { "modelo": "cpa", "min": 0, "max": 0 },
       "cookieDias": 30,
-      "observacao": "CPA por conta aberta com deposito. Valores variam muito por emissor."
+      "observacao": "CPA por conta aberta com depósito. Valores variam muito por emissor."
     }
   ]
 }

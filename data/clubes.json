@@ -1,6 +1,6 @@
 {
   "atualizadoEm": "2026-10-08",
-  "explicacao": "Clubes sao assinaturas mensais que depositam um pacote fixo de milhas na conta. O custo por milheiro de um clube e simplesmente mensalidade dividida pelas milhas do plano. Compare esse numero com o CPM alvo do programa em cpm-referencia.json antes de assinar.",
+  "explicacao": "Clubes são assinaturas mensais que depositam um pacote fixo de milhas na conta. O custo por milheiro de um clube é simplesmente mensalidade dividida pelas milhas do plano. Compare esse número com o CPM alvo do programa em cpm-referencia.json antes de assinar.",
   "clubes": [
     {
       "id": "clube-smiles",
@@ -9,8 +9,8 @@
       "fonte": "milhasbot.com.br/clube-smiles",
       "confianca": "pesquisado",
       "beneficios": [
-        "Milhas nao expiram enquanto a assinatura estiver ativa",
-        "Bonus extra em transferencias de pontos",
+        "Milhas não expiram enquanto a assinatura estiver ativa",
+        "Bônus extra em transferências de pontos",
         "Descontos em resgates"
       ],
       "planos": [
@@ -28,7 +28,7 @@
       "fonte": "nomadglobal.com/conteudos/clube-de-milhas",
       "confianca": "parcial",
       "beneficios": [
-        "Pontos creditados todo mes",
+        "Pontos creditados todo mês",
         "Validade estendida enquanto assinante"
       ],
       "planos": [
@@ -42,7 +42,7 @@
       "fonte": "nomadglobal.com/conteudos/clube-de-milhas",
       "confianca": "parcial",
       "beneficios": [
-        "Pontos creditados todo mes",
+        "Pontos creditados todo mês",
         "Validade estendida enquanto assinante"
       ],
       "planos": [

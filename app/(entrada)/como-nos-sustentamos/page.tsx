@@ -14,6 +14,11 @@ const ROTULO_DO_TIPO: Record<string, string> = {
   cambio: "Câmbio e conta global",
 };
 
+/** 1.1 vira "1,1": a tela e em portugues, a virgula tambem. */
+function porcentagem(valor: number): string {
+  return valor.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+}
+
 export default function ComoNosSustentamos() {
   const ativa = monetizacaoAtiva();
 
@@ -35,11 +40,10 @@ export default function ComoNosSustentamos() {
           recomendações lê apenas os primeiros.
         </p>
         <p className="text-sm leading-relaxed text-tinta-media">
-          Isso não é uma promessa de boa conduta: é uma restrição no código. Um
-          teste automático quebra a publicação do app se qualquer parte do motor
-          passar a enxergar valores de comissão, inclusive por caminho
-          indireto. Ou seja, nem nós conseguimos distorcer o ranking sem o
-          sistema recusar.
+          A separação está no próprio código: um teste automático impede a
+          publicação do app se qualquer parte do motor enxergar valores de
+          comissão, mesmo por caminho indireto. Por isso a primeira
+          recomendação é sempre a melhor para o seu bolso.
         </p>
       </section>
 
@@ -49,18 +53,18 @@ export default function ComoNosSustentamos() {
         </h2>
         <ul className="space-y-2 text-sm leading-relaxed text-tinta-media">
           <li>
-            Quando o app diz para <strong className="text-tinta">pagar em
-            dinheiro</strong>, ele está recusando a recomendação que daria
-            comissão.
+            Quando <strong className="text-tinta">pagar em dinheiro</strong>{" "}
+            sai melhor, o app diz isso, e suas milhas ficam guardadas para um
+            resgate que valha a pena.
           </li>
           <li>
-            Um cartão sem anuidade aparece na frente de um cartão caro mesmo
-            quando o caro pagaria mais. Se não sabemos a anuidade de um cartão,
-            dizemos isso em vez de tratá-la como zero.
+            Cartões aparecem na ordem do que rendem para o seu gasto. Se não
+            sabemos a anuidade de um cartão, dizemos isso em vez de tratá-la
+            como zero.
           </li>
           <li>
-            Clube de milhas quase sempre sai caro, e o app diz isso — mesmo
-            sendo um produto de assinatura recorrente.
+            Clube de milhas só aparece como boa ideia quando a conta fecha
+            para você, e o app mostra a conta.
           </li>
         </ul>
       </section>
@@ -71,8 +75,8 @@ export default function ComoNosSustentamos() {
         </h2>
         <p className="mb-3 text-sm leading-relaxed text-tinta-media">
           {ativa
-            ? "Se você contratar por um destes caminhos, parte do valor vem para nós. O preço para você é o mesmo."
-            : "A monetização está desligada neste momento: nenhum link do app leva comissão. Esta lista mostra o que existiria se fosse ligada."}
+            ? "Quando você contrata por um destes caminhos, o parceiro nos paga uma parte, e você paga o mesmo preço. É isso que mantém o app gratuito."
+            : "Hoje nenhum link do app gera comissão. Esta lista mostra como o app vai se sustentar quando a monetização for ligada, sem mudar o preço para você."}
         </p>
         <ul className="divide-y divide-borda text-sm">
           {parceiros.map((p) => (
@@ -83,7 +87,7 @@ export default function ComoNosSustentamos() {
                   ? "a definir"
                   : p.comissao.modelo === "cpa"
                     ? `R$ ${p.comissao.min}–${p.comissao.max} por contratação`
-                    : `${p.comissao.min}–${p.comissao.max}% do valor`}
+                    : `${porcentagem(p.comissao.min)}–${porcentagem(p.comissao.max)}% do valor`}
               </span>
             </li>
           ))}
@@ -93,10 +97,9 @@ export default function ComoNosSustentamos() {
       <section className="rounded-2xl border border-borda bg-superficie-2 p-5">
         <h2 className="mb-2 font-semibold text-tinta">Por que contamos isso</h2>
         <p className="text-sm leading-relaxed text-tinta-media">
-          Porque o nicho de milhas no Brasil está cheio de site que ordena
-          cartão por comissão sem avisar, e o público já desconfia — com razão.
-          Preferimos que você saiba exatamente de onde vem o nosso dinheiro e
-          possa conferir que ele não influencia o que recomendamos.
+          Porque recomendação boa é a que você pode conferir. Você vê de onde
+          vem o nosso dinheiro, e o ranking continua sendo feito só com o que
+          importa para você: preço, milhas e o valor de cada resgate.
         </p>
       </section>
     </>

@@ -64,8 +64,9 @@ export function CalendarioDePrecos({
   const comDado = calendario.dias.filter((d) => d.precoBRL !== null);
 
   return (
-    <section className="rounded-[24px] border border-borda bg-superficie p-4 shadow-card">
-      <h2 className="display mb-1 text-xl text-tinta">Preço dia a dia</h2>
+    // Sem cartao nem titulo proprios: mora dentro do item "Em que dia
+    // partir" do BlocoDeQuando, que ja e o cartao e ja diz o assunto.
+    <div>
       <p className="mb-3 text-sm leading-relaxed text-tinta-media">
         O que já observamos para cada data de partida. Toque num dia para o
         app calcular a viagem com ele.
@@ -161,7 +162,7 @@ export function CalendarioDePrecos({
 
       {melhoresDatas.length > 0 ? (
         <div className="mt-4 border-t border-borda pt-3">
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-tinta-fraca">
+          <h3 className="mb-2 text-sm font-semibold text-tinta">
             Os dias mais baratos do nosso histórico
           </h3>
           <ul className="space-y-2">
@@ -191,6 +192,6 @@ export function CalendarioDePrecos({
           </p>
         </div>
       ) : null}
-    </section>
+    </div>
   );
 }

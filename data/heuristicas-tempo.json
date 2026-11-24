@@ -1,6 +1,6 @@
 {
   "atualizadoEm": "2026-10-08",
-  "explicacao": "Ponto de partida para responder 'compro agora ou espero?' e 'qual o melhor mes para ir?'. Sao medias de mercado. Conforme a tabela precos_snapshot no Supabase acumula observacoes reais da rota, o motor troca estas heuristicas pela curva propria daquela rota e avisa na tela qual das duas esta usando.",
+  "explicacao": "Ponto de partida para responder 'compro agora ou espero?' e 'qual o melhor mês para ir?'. São médias de mercado. Conforme a tabela precos_snapshot no Supabase acumula observações reais da rota, o motor troca estas heurísticas pela curva própria daquela rota e avisa na tela qual das duas está usando.",
   "janelaDeCompra": [
     {
       "tipo": "domestico",
@@ -22,10 +22,10 @@
   "diaDaSemanaParaComprar": {
     "melhores": ["terca", "quarta"],
     "economiaTipicaPct": 15,
-    "observacao": "Diferenca menor que a da antecedencia. Nao vale esperar dias so por isso."
+    "observacao": "Diferença menor que a da antecedência. Não vale esperar dias só por isso."
   },
   "sazonalidadeBrasil": {
-    "explicacao": "Indice relativo de preco por mes de EMBARQUE partindo do Brasil. 1,0 e a media do ano. Acima de 1,15 e alta temporada.",
+    "explicacao": "Índice relativo de preço por mês de embarque partindo do Brasil. 1,0 é a média do ano. Acima de 1,15 é alta temporada.",
     "indicePorMes": {
       "1": 1.35,
       "2": 1.05,
@@ -42,9 +42,9 @@
     },
     "altaTemporada": [1, 7, 12],
     "baixaTemporada": [3, 4, 5, 9],
-    "fonte": "Padrao de ferias escolares e feriados no Brasil; confirmado por atarde.com.br e seguroviagem.srv.br"
+    "fonte": "Padrão de férias escolares e feriados no Brasil; confirmado por atarde.com.br e seguroviagem.srv.br"
   },
   "inversaoMilhas": {
-    "explicacao": "A tabela de resgate em milhas e praticamente fixa o ano inteiro, mas o preco em dinheiro dispara na alta temporada. Logo o valor que voce EXTRAI por milheiro sobe junto. Essa e a regra mais lucrativa do app: use milhas em janeiro, julho e dezembro; na baixa temporada pague em dinheiro e guarde as milhas."
+    "explicacao": "A tabela de resgate em milhas é praticamente fixa o ano inteiro, mas o preço em dinheiro dispara na alta temporada. Logo o valor que você extrai por milheiro sobe junto. Essa é a regra mais lucrativa do app: use milhas em janeiro, julho e dezembro; na baixa temporada pague em dinheiro e guarde as milhas."
   }
 }

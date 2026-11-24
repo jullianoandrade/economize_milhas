@@ -2,7 +2,7 @@ import type { OpcaoDeResgate, Qualidade } from "@/lib/milhas/veredito";
 import { milhas, reais, reaisExatos } from "@/lib/format";
 import { FaixaDeMilhas } from "./FaixaDeMilhas";
 import { ReguaDoResgate } from "@/components/dominio/ReguaDoResgate";
-import { SeloDeConfianca } from "./SeloDeFonte";
+import { SeloDeMilhas } from "./SeloDeFonte";
 import { Termo } from "@/components/dominio/Termo";
 
 /**
@@ -33,9 +33,12 @@ export function CardPrograma({
   const qualidade = ESTILO_QUALIDADE[opcao.qualidade];
 
   return (
+    // O vencedor se distingue pela elevacao e pela etiqueta "melhor
+    // opção", e nao por um contorno marinho: a borda escura de 1px pesava
+    // ao lado dos outros cartoes e lia como "selecionado".
     <article
-      className={`rounded-2xl border bg-superficie p-4 shadow-card ${
-        destaque ? "border-marca" : "border-borda"
+      className={`rounded-2xl border border-borda bg-superficie p-4 ${
+        destaque ? "shadow-flutuante" : "shadow-card"
       }`}
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
@@ -45,10 +48,17 @@ export function CardPrograma({
             {opcao.programa.companhia}
           </span>
         </h3>
-        <span
-          className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${qualidade.classe}`}
-        >
-          {qualidade.rotulo}
+        <span className="flex flex-wrap gap-1.5">
+          {destaque ? (
+            <span className="rounded-full bg-marca-fraca px-2 py-0.5 text-[11px] font-semibold text-tinta">
+              melhor opção
+            </span>
+          ) : null}
+          <span
+            className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${qualidade.classe}`}
+          >
+            {qualidade.rotulo}
+          </span>
         </span>
       </header>
 
@@ -146,7 +156,7 @@ export function CardPrograma({
           </div>
         ) : null}
         <div className="mt-2 flex flex-wrap gap-1.5">
-          <SeloDeConfianca confianca={opcao.confianca} />
+          <SeloDeMilhas confianca={opcao.confianca} rotulo="estimativa" />
         </div>
       </footer>
     </article>

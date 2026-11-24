@@ -22,11 +22,11 @@ import {
  */
 
 const SEM_TOKEN =
-  "Estimativa da nossa base, nao cotacao. Configure o token da Travelpayouts para ver preco de busca real.";
+  "Estimativa da nossa base, não cotação. Configure o token da Travelpayouts para ver o preço de busca real.";
 const SEM_RESPOSTA =
-  "Estimativa da nossa base: nao encontramos busca recente para esta rota.";
+  "Estimativa da nossa base: não encontramos busca recente para esta rota.";
 const DA_API =
-  "Menor preco encontrado em buscas recentes. Nao e cotacao em tempo real: confirme antes de comprar.";
+  "Menor preço encontrado em buscas recentes. Não é cotação em tempo real: confirme antes de comprar.";
 /**
  * Trecho fora do modelo e sem busca recente na API. Devolve zero, e a
  * tela trata zero como "nao sabemos" -- a alternativa seria estimar por

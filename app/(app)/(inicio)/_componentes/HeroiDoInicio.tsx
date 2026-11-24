@@ -7,6 +7,7 @@ import { Milo } from "@/components/ui/Milo";
 import { useLugar } from "@/lib/cliente/lugar";
 import { milhas as fmt } from "@/lib/format";
 import { calcularProgresso } from "@/lib/metas/progresso";
+import { useCarteiraHidratada, usarCarteira } from "@/store/carteira";
 import { usarPerfil, usePerfilHidratado } from "@/store/perfil";
 
 /**
@@ -18,6 +19,8 @@ import { usarPerfil, usePerfilHidratado } from "@/store/perfil";
  *   tem objetivo   -> o arco da viagem no globo, quanto ja andou e quanto falta
  *   sem objetivo   -> "Para onde voce vai?", com a porta para o Explorar
  *   primeira vez   -> alem disso, o convite para entender o app em um minuto
+ *                     (so para quem ainda nao tem objetivo nem carteira:
+ *                     quem ja tem um dos dois claramente ja usa o app)
  *
  * O Milo aparece como rosto, ao lado da saudacao: e por ali que se abre
  * a explicacao do app. Ele nao fica perto de numero de decisao.
@@ -47,6 +50,9 @@ export function HeroiDoInicio() {
   const visitou = usarPerfil((p) => p.visitou);
   const marcarVisita = usarPerfil((p) => p.marcarVisita);
   const saudacao = useSaudacao();
+  const carteiraHidratada = useCarteiraHidratada();
+  const temCarteira = usarCarteira((s) => Object.keys(s.saldos).length > 0);
+  const convidar = hidratado && carteiraHidratada && !visitou && metas.length === 0 && !temCarteira;
 
   const meta = hidratado ? (metas[0] ?? null) : null;
   const origem = useLugar(meta?.origemIata ?? null);
@@ -81,7 +87,7 @@ export function HeroiDoInicio() {
         </Link>
       </div>
 
-      {hidratado && !visitou ? (
+      {convidar ? (
         <div className="relative mt-3 inline-flex max-w-full items-center gap-1 rounded-full bg-painel-realce py-1 pl-4 pr-1 text-sm text-painel-tinta">
           <Link href="/boas-vindas" className="py-1.5 underline-offset-2 hover:underline">
             Primeira vez? Entenda o app em um minuto

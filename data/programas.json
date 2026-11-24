@@ -1,6 +1,6 @@
 {
   "atualizadoEm": "2026-10-08",
-  "observacao": "Dados curados manualmente a partir de fontes publicas. Sempre confirme no site do programa antes de resgatar.",
+  "observacao": "Dados curados manualmente a partir de fontes públicas. Sempre confirme no site do programa antes de resgatar.",
   "programas": [
     {
       "id": "smiles",
@@ -9,9 +9,9 @@
       "unidade": "milhas",
       "site": "https://www.smiles.com.br",
       "validadeMeses": 36,
-      "validadeObservacao": "Nao expiram enquanto o Clube Smiles estiver ativo.",
-      "pontoForte": "Boa malha domestica e no Nordeste; bonus de transferencia frequentes.",
-      "pontoFraco": "Taxas de embarque costumam ser mais altas que as da concorrencia."
+      "validadeObservacao": "Não expiram enquanto o Clube Smiles estiver ativo.",
+      "pontoForte": "Boa malha doméstica e no Nordeste; bônus de transferência frequentes.",
+      "pontoFraco": "Taxas de embarque costumam ser mais altas que as da concorrência."
     },
     {
       "id": "latampass",
@@ -20,9 +20,9 @@
       "unidade": "pontos",
       "site": "https://latampass.latam.com",
       "validadeMeses": 36,
-      "validadeObservacao": "Cada voo renova o prazo; nao expiram no nivel Elite.",
-      "pontoForte": "Melhor malha internacional propria e parceiros oneworld.",
-      "pontoFraco": "Tabela de resgate mais cara e bonus de transferencia menores (~25%)."
+      "validadeObservacao": "Cada voo renova o prazo; não expiram no nível Elite.",
+      "pontoForte": "Melhor malha internacional própria e parceiros oneworld.",
+      "pontoFraco": "Tabela de resgate mais cara e bônus de transferência menores (~25%)."
     },
     {
       "id": "tudoazul",
@@ -32,8 +32,8 @@
       "site": "https://www.voeazul.com.br/br/pt/programa-fidelidade",
       "validadeMeses": 36,
       "validadeObservacao": "Validade estendida para assinantes do clube.",
-      "pontoForte": "Resgate domestico mais barato dos tres e boa cobertura de cidades menores.",
-      "pontoFraco": "Depende muito de Campinas (VCP) como conexao."
+      "pontoForte": "Resgate doméstico mais barato dos três e boa cobertura de cidades menores.",
+      "pontoFraco": "Depende muito de Campinas (VCP) como conexão."
     },
     {
       "id": "tapmilesgo",
@@ -54,7 +54,7 @@
       "site": "https://www.iberia.com/br/iberia-club/comprar-voos-avios/",
       "validadeMeses": 36,
       "validadeObservacao": "Avios expiram sem atividade por 36 meses.",
-      "pontoForte": "Tabela por distancia costuma favorecer trechos curtos na Europa.",
+      "pontoForte": "Tabela por distância costuma favorecer trechos curtos na Europa.",
       "pontoFraco": "Taxas de embarque altas em voos operados pela British Airways."
     }
   ]

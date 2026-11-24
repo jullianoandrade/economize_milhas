@@ -41,9 +41,9 @@ export const TEXTO_CURTO: Record<RotuloDeVeredito, string> = {
 
 /** Versao de uma linha, para quando ha espaco para explicar. */
 export const TEXTO_LONGO: Record<RotuloDeVeredito, string> = {
-  resgatar: "boa hora de usar milhas",
-  guardar: "compensa, mas rende pouco — guarde as milhas",
-  pagar: "melhor pagar em dinheiro",
+  resgatar: "Boa hora de usar milhas",
+  guardar: "Compensa, mas rende pouco: guarde as milhas",
+  pagar: "Melhor pagar em dinheiro",
 };
 
 /** Classes de cor por estado, para os tres lugares concordarem. */
@@ -52,3 +52,25 @@ export const COR_DO_ROTULO: Record<RotuloDeVeredito, string> = {
   guardar: "text-tinta-fraca",
   pagar: "text-dinheiro",
 };
+
+/**
+ * Ordem de destaque numa lista de passagens: primeiro o que vale
+ * resgatar, depois o que vale pagar, por ultimo o que rende pouco.
+ *
+ * Existe por causa de outro defeito real: o Inicio pegava as tres
+ * primeiras por desconto, sob o titulo "Vale a pena agora", e as tres
+ * diziam "rende pouco" -- o titulo prometia o contrario do conteudo.
+ */
+const PRIORIDADE: Record<RotuloDeVeredito, number> = {
+  resgatar: 0,
+  pagar: 1,
+  guardar: 2,
+};
+
+/** Ordena pelo veredito sem desfazer a ordem original dentro de cada um. */
+export function ordenarPorVeredito<T extends { veredito: RotuloDeVeredito }>(lista: T[]): T[] {
+  return lista
+    .map((item, i) => ({ item, i }))
+    .sort((a, b) => PRIORIDADE[a.item.veredito] - PRIORIDADE[b.item.veredito] || a.i - b.i)
+    .map(({ item }) => item);
+}

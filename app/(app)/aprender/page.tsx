@@ -43,9 +43,12 @@ export default function Aprender() {
 
         <ul className="grid gap-3 md:grid-cols-2">
           {glossario.quandoNaoUsarMilhas.map((item) => (
+            /* Superficie comum com uma borda fina de ambar a esquerda: o
+               ambar marca "atencao" sem pintar seis cartoes inteiros --
+               o fundo creme da paleta antiga virava marrom no escuro. */
             <li
               key={item.titulo}
-              className="rounded-2xl border border-milhas-borda bg-milhas-fundo p-4"
+              className="rounded-2xl border-l-[3px] border-l-[#ffb020] bg-superficie p-4 shadow-card"
             >
               <h3 className="mb-1 text-sm font-semibold text-tinta">
                 {item.titulo}

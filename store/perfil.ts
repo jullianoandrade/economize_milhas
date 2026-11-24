@@ -65,6 +65,25 @@ export type Perfil = SituacaoDeAcumulo & {
 export const VERSAO_DO_PERFIL = 5;
 
 /**
+ * Teto de saldo que o app aceita: 100 milhoes de milhas.
+ *
+ * Ninguem tem isso num programa so; acima disto e dedo escorregando no
+ * teclado. Sem teto, 99999999999 virava ponto do grafico e progresso de
+ * milhoes por cento -- e /api/plano recusava o calculo.
+ */
+export const SALDO_MAXIMO = 100_000_000;
+
+/** Saldo de milhas aceitavel: inteiro, de zero ao teto. */
+export function saldoValido(saldo: unknown): saldo is number {
+  return (
+    typeof saldo === "number" &&
+    Number.isInteger(saldo) &&
+    saldo >= 0 &&
+    saldo <= SALDO_MAXIMO
+  );
+}
+
+/**
  * Migrar e ACRESCENTAR, nunca substituir.
  *
  * Ha gente com meta salva em producao, e meta guarda um ponto de
@@ -141,44 +160,54 @@ export const usarPerfil = create<Perfil>()(
 
       // Um objetivo por destino: criar o mesmo trecho duas vezes jogaria
       // fora o ponto de partida antigo, que e justamente o dado que nao
-      // da para recuperar depois.
+      // da para recuperar depois. O ponto de partida tambem e saldo, entao
+      // passa pela mesma porta do registrarSaldo.
       salvarMeta: (meta) =>
-        set((estado) => ({
-          metas: [
-            meta,
-            ...estado.metas.filter(
-              (m) =>
-                !(
-                  m.destinoIata === meta.destinoIata &&
-                  m.origemIata === meta.origemIata
-                ),
-            ),
-          ],
-        })),
-
-      registrarSaldo: (metaId, registro) =>
-        set((estado) => ({
-          metas: estado.metas.map((m) => {
-            if (m.id !== metaId) return m;
-            // Dois registros no mesmo dia viram um: o ultimo vale -- MENOS
-            // o ponto de partida, que nunca e substituido. Sem esta
-            // excecao, registrar o saldo no mesmo dia em que o objetivo
-            // nasceu apagava o marco inicial e o "quanto voce andou"
-            // voltava a zero (achado pelo teste de jornada, 19/11/2026).
-            const [partida, ...depois] = [...m.registros].sort((a, b) =>
-              a.em.localeCompare(b.em),
-            );
-            if (!partida) return { ...m, registros: [registro] };
-            const outros = depois.filter((r) => r.em !== registro.em);
-            return {
-              ...m,
-              // sort estavel: no empate de data, a partida segue primeiro
-              registros: [partida, ...outros, registro].sort((a, b) =>
-                a.em.localeCompare(b.em),
+        set((estado) => {
+          if (!meta.registros.every((r) => saldoValido(r.saldo))) return estado;
+          return {
+            metas: [
+              meta,
+              ...estado.metas.filter(
+                (m) =>
+                  !(
+                    m.destinoIata === meta.destinoIata &&
+                    m.origemIata === meta.origemIata
+                  ),
               ),
-            };
-          }),
-        })),
+            ],
+          };
+        }),
+
+      // A tela ja valida o campo, mas o store e a ultima porta antes do
+      // localStorage: um saldo negativo ou absurdo gravado aqui vira
+      // historico permanente do objetivo. Registro invalido e ignorado.
+      registrarSaldo: (metaId, registro) =>
+        set((estado) => {
+          if (!saldoValido(registro.saldo)) return estado;
+          return {
+            metas: estado.metas.map((m) => {
+              if (m.id !== metaId) return m;
+              // Dois registros no mesmo dia viram um: o ultimo vale -- MENOS
+              // o ponto de partida, que nunca e substituido. Sem esta
+              // excecao, registrar o saldo no mesmo dia em que o objetivo
+              // nasceu apagava o marco inicial e o "quanto voce andou"
+              // voltava a zero (achado pelo teste de jornada, 19/11/2026).
+              const [partida, ...depois] = [...m.registros].sort((a, b) =>
+                a.em.localeCompare(b.em),
+              );
+              if (!partida) return { ...m, registros: [registro] };
+              const outros = depois.filter((r) => r.em !== registro.em);
+              return {
+                ...m,
+                // sort estavel: no empate de data, a partida segue primeiro
+                registros: [partida, ...outros, registro].sort((a, b) =>
+                  a.em.localeCompare(b.em),
+                ),
+              };
+            }),
+          };
+        }),
 
       definirDataAlvo: (metaId, dataAlvo) =>
         set((estado) => ({

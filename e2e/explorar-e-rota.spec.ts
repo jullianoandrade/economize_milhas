@@ -14,7 +14,7 @@ test("Explorar: um toque no destino traz a resposta e leva ao detalhe da rota", 
 
   const resposta = page.getByRole("region", { name: "Resposta" });
   await expect(resposta).toContainText("Em dinheiro");
-  await expect(resposta).toContainText(/Vá de milhas e pague|Pague em dinheiro/);
+  await expect(resposta).toContainText(/Com milhas você economiza|Pague em dinheiro|Ainda não comparamos/);
   // todo numero com a origem dita: busca real ou estimativa
   await expect(resposta).toContainText(/busca real de hoje|preço estimado/);
 
@@ -34,7 +34,7 @@ test("Rota: a resposta primeiro, o porque so quando pedido", async ({ page }) =>
   await page.goto("/rota/GRU/LIS");
 
   const placa = page.getByRole("region", { name: "A resposta" });
-  await expect(placa).toContainText(/Vá de milhas e pague|Pague em dinheiro/);
+  await expect(placa).toContainText(/Com milhas você economiza|Pague em dinheiro|Ainda não comparamos/);
   await expect(placa).toContainText("Em dinheiro");
 
   const porque = page.locator("details", { has: page.getByText("Por que essa resposta?") });

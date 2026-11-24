@@ -5,6 +5,7 @@ import {
   COR_DO_ROTULO,
   TEXTO_CURTO,
   TEXTO_LONGO,
+  ordenarPorVeredito,
   rotuloDoVeredito,
   type RotuloDeVeredito,
 } from "@/lib/milhas/rotulos";
@@ -50,6 +51,22 @@ describe("rotuloDoVeredito", () => {
   it("os tres estados usam palavras distintas", () => {
     const textos = Object.values(TEXTO_CURTO);
     expect(new Set(textos).size).toBe(textos.length);
+  });
+});
+
+describe("ordenarPorVeredito", () => {
+  it("poe o que vale resgatar na frente, sem baguncar o resto", () => {
+    // O caso real: as tres primeiras por desconto diziam "rende pouco",
+    // e Praia e Cancun, as que valiam resgate, ficavam fora do Inicio.
+    const lista = [
+      { id: "FLN", veredito: "guardar" as const },
+      { id: "POA", veredito: "guardar" as const },
+      { id: "RAI", veredito: "resgatar" as const },
+      { id: "GIG", veredito: "pagar" as const },
+      { id: "CUN", veredito: "resgatar" as const },
+    ];
+    expect(ordenarPorVeredito(lista).map((o) => o.id)).toEqual(["RAI", "CUN", "GIG", "FLN", "POA"]);
+    expect(lista[0].id).toBe("FLN");
   });
 });
 

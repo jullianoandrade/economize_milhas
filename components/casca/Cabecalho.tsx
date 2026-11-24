@@ -17,7 +17,7 @@ export function Cabecalho({
   return (
     <header className="mb-5">
       {sobrelinha ? (
-        <p className="mb-1 text-xs font-bold uppercase tracking-widest text-marca">
+        <p className="mb-1 text-sm font-semibold text-marca">
           {sobrelinha}
         </p>
       ) : null}

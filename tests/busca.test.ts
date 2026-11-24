@@ -286,3 +286,57 @@ describe("cidade sem aeroporto aponta para quem a serve", () => {
     expect(acima).toEqual([]);
   });
 });
+
+/**
+ * Texto incompleto: o Brasil com voo comercial vem primeiro.
+ *
+ * Veio de revisao: "Rec" listava Recklinghausen, Rechlin, Debrecen e
+ * Dalnerechensk em volta de Recife. Para quem usa o app, quase sempre
+ * parte do Brasil, cidade brasileira com aeroporto atendido e a
+ * resposta mais provavel enquanto ainda se digita.
+ */
+describe("texto incompleto prioriza o Brasil", () => {
+  const ordem = (q: string, n = 8) => procurarLugares(q, n);
+
+  it("'reci' traz Recife primeiro", () => {
+    expect(ordem("reci")[0].iata).toBe("REC");
+  });
+
+  it("'rec' poe Recife antes das cidades estrangeiras", () => {
+    const r = ordem("rec").map((l) => l.cidade);
+    expect(r[0]).toBe("Recife");
+    for (const fora of ["Recklinghausen", "Rechlin", "Debrecen"]) {
+      const i = r.indexOf(fora);
+      if (i >= 0) expect(i).toBeGreaterThan(r.indexOf("Recife"));
+    }
+  });
+
+  it("brasileiros com voo vem antes de qualquer estrangeiro parcial", () => {
+    const r = ordem("flor", 8);
+    const primeiroDeFora = r.findIndex((l) => l.pais !== "BR");
+    const ultimoBr = r.map((l) => l.pais).lastIndexOf("BR");
+    if (primeiroDeFora >= 0) expect(ultimoBr).toBeLessThan(primeiroDeFora);
+    expect(r[0].iata).toBe("FLN");
+  });
+
+  it("comeca-com vence trecho no meio da palavra", () => {
+    // "Debrecen" so tem "rec" no meio; "Reconquista" comeca com ele.
+    const r = ordem("rec", 20).map((l) => l.cidade);
+    const deb = r.indexOf("Debrecen");
+    const rcq = r.indexOf("Reconquista");
+    expect(rcq).toBeGreaterThanOrEqual(0);
+    if (deb >= 0) expect(rcq).toBeLessThan(deb);
+  });
+
+  it("trecho solto no nome do aeroporto nao casa", () => {
+    // "rec" dentro de "Marechal" trazia Cuiaba e Sao Luis.
+    const r = ordem("rec", 20).map((l) => l.iata);
+    expect(r).not.toContain("CGB");
+    expect(r).not.toContain("SLZ");
+  });
+
+  it("casamento exato continua vencendo a faixa do Brasil", () => {
+    expect(primeiro("lisboa")).toBe("LIS");
+    expect(topo("sal", 5).indexOf("SID")).toBeLessThan(topo("sal", 5).indexOf("SSA"));
+  });
+});

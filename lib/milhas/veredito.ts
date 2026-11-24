@@ -8,6 +8,7 @@ import {
   type PerfilDeAcumulo,
 } from "./motor";
 import type { RotaClassificada } from "./regioes";
+import { rotuloDoVeredito, type RotuloDeVeredito } from "./rotulos";
 
 /**
  * A conta que o app existe para fazer.
@@ -74,6 +75,15 @@ export type Veredito = {
    * comemorar a economia.
    */
   ressalva: string | null;
+  /**
+   * O veredito que a tela diz, num estado so: "resgatar", "guardar"
+   * (o resgate compensa na conta, mas rende pouco) ou "pagar".
+   *
+   * Existe porque a tela de rota dizia duas coisas ao mesmo tempo: a
+   * placa anunciava "va de milhas" e, logo abaixo, a ressalva mandava
+   * guardar. Quem desenha a resposta le este campo, e so ele.
+   */
+  rotulo: RotuloDeVeredito;
 };
 
 /**
@@ -181,6 +191,7 @@ export function calcularVeredito(
   const melhor = avaliadas[0] ?? null;
   const economiaBRL = melhor ? melhor.economiaBRL : 0;
   const recomendacao = economiaBRL > 0 ? "milhas" : "dinheiro";
+  const ressalva = ressalvar(rota, melhor, recomendacao, economiaBRL);
 
   return {
     recomendacao,
@@ -191,8 +202,9 @@ export function calcularVeredito(
     economiaBRL,
     economiaPct:
       precoDinheiroBRL > 0 ? (economiaBRL / precoDinheiroBRL) * 100 : 0,
-    explicacao: explicar(rota, precoDinheiroBRL, melhor, recomendacao),
-    ressalva: ressalvar(rota, melhor, recomendacao, economiaBRL),
+    explicacao: explicar(rota, precoDinheiroBRL, melhor, recomendacao, ressalva !== null),
+    ressalva,
+    rotulo: rotuloDoVeredito(recomendacao, ressalva !== null),
   };
 }
 
@@ -219,7 +231,7 @@ function ressalvar(
     `O resgate compensa, mas economiza só ${reais(economiaBRL)}. ` +
     `${demonstrativo} ${melhor.milhas.toLocaleString("pt-BR")} ${melhor.programa.unidade} ` +
     `rendem bem mais ${onde} ou na alta temporada, quando a passagem em dinheiro ` +
-    `dispara e a tabela de milhas quase não muda. Se você não tem pressa, guarde.`
+    `dispara e a tabela de milhas quase não muda. Pague em dinheiro e guarde as milhas.`
   );
 }
 
@@ -228,6 +240,7 @@ function explicar(
   precoDinheiroBRL: number,
   melhor: OpcaoDeResgate | null,
   recomendacao: "milhas" | "dinheiro",
+  rendePouco: boolean,
 ): string {
   const trecho = `${rota.origem.cidade} para ${rota.destino.cidade}`;
 
@@ -258,6 +271,20 @@ function explicar(
       `${extraido} por milheiro, e as suas milhas custam ${custo}. ` +
       `Resgatar aqui gastaria um ativo que vale mais do que esta passagem: ` +
       `guarde as milhas para um trecho caro ou para a alta temporada.`
+    );
+  }
+
+  // Compensa na conta, mas rende pouco: a explicacao diz o mesmo que a
+  // placa ("pague em dinheiro e guarde"), nunca "use milhas".
+  if (rendePouco) {
+    const onde = rota.internacional ? "numa viagem mais longa" : "numa internacional";
+    return (
+      `Pague em dinheiro e guarde as milhas. Resgatar ${trecho} custaria ` +
+      `${milhasFmt} ${melhor.programa.unidade} no ${melhor.programa.nome} mais ` +
+      `${reais(melhor.taxasBRL)} de taxas, e economizaria só ${reais(melhor.economiaBRL)} ` +
+      `numa passagem de ${reais(precoDinheiroBRL)}. Você extrairia ${extraido} por milheiro ` +
+      `numa milha que lhe custa ${custo}: compensa por pouco. As mesmas milhas rendem ` +
+      `bem mais ${onde} ou na alta temporada.`
     );
   }
 

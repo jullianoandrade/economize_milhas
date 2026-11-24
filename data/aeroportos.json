@@ -109,7 +109,7 @@
   },
   {
    "iata": "AAX",
-   "cidade": "Araxa",
+   "cidade": "Araxá",
    "aliases": [],
    "cidadeIata": "AAX",
    "pais": "BR",
@@ -118,7 +118,7 @@
    "conexoes": 9,
    "lat": -19.5681,
    "lon": -46.9292,
-   "nome": "Araxa Airport"
+   "nome": "Aeroporto de Araxá"
   },
   {
    "iata": "AAZ",
@@ -759,7 +759,7 @@
    "conexoes": 6,
    "lat": -9.8725,
    "lon": -56.1048,
-   "nome": "Alta Floresta Airport"
+   "nome": "Aeroporto de Alta Floresta"
   },
   {
    "iata": "AFW",
@@ -1010,7 +1010,7 @@
   },
   {
    "iata": "AIR",
-   "cidade": "Aripuana",
+   "cidade": "Aripuanã",
    "aliases": [],
    "cidadeIata": "AIR",
    "pais": "BR",
@@ -1019,7 +1019,7 @@
    "conexoes": 0,
    "lat": -10.25,
    "lon": -59.3833,
-   "nome": "Aripuana"
+   "nome": "Aeroporto de Aripuanã"
   },
   {
    "iata": "AIT",
@@ -1123,7 +1123,7 @@
    "conexoes": 36,
    "lat": -10.9872,
    "lon": -37.0728,
-   "nome": "Aracaju Airport"
+   "nome": "Aeroporto de Aracaju"
   },
   {
    "iata": "AKA",
@@ -1777,7 +1777,7 @@
    "conexoes": 0,
    "lat": -21.8167,
    "lon": -48.1333,
-   "nome": "Araraquara"
+   "nome": "Aeroporto de Araraquara"
   },
   {
    "iata": "AQG",
@@ -1926,7 +1926,7 @@
   },
   {
    "iata": "ARU",
-   "cidade": "Aracatuba",
+   "cidade": "Araçatuba",
    "aliases": [],
    "cidadeIata": "ARU",
    "pais": "BR",
@@ -1935,7 +1935,7 @@
    "conexoes": 12,
    "lat": -21.1436,
    "lon": -50.4261,
-   "nome": "Aracatuba Airport"
+   "nome": "Aeroporto de Araçatuba"
   },
   {
    "iata": "ARW",
@@ -1961,7 +1961,7 @@
    "conexoes": 0,
    "lat": -4.5686,
    "lon": -37.8047,
-   "nome": "Dragao do Mar Regional Airport"
+   "nome": "Aeroporto Regional Dragão do Mar"
   },
   {
    "iata": "ASB",
@@ -2175,7 +2175,7 @@
    "conexoes": 11,
    "lat": -3.2,
    "lon": -52.2167,
-   "nome": "Altamira Airport"
+   "nome": "Aeroporto de Altamira"
   },
   {
    "iata": "ATQ",
@@ -2372,7 +2372,7 @@
    "conexoes": 12,
    "lat": -7.2,
    "lon": -48.2,
-   "nome": "Araguaina Airport"
+   "nome": "Aeroporto de Araguaína"
   },
   {
    "iata": "AVA",
@@ -2792,7 +2792,7 @@
    "conexoes": 0,
    "lat": -22.3431,
    "lon": -49.0525,
-   "nome": "Bauru"
+   "nome": "Aeroporto de Bauru"
   },
   {
    "iata": "BAV",
@@ -3175,7 +3175,7 @@
    "conexoes": 99,
    "lat": -1.3899,
    "lon": -48.48,
-   "nome": "Val De Cans International Airport"
+   "nome": "Aeroporto Internacional de Belém/Val de Cans"
   },
   {
    "iata": "BEN",
@@ -4673,7 +4673,7 @@
   },
   {
    "iata": "BPG",
-   "cidade": "Barra Do Garcas",
+   "cidade": "Barra do Garças",
    "aliases": [],
    "cidadeIata": "BPG",
    "pais": "BR",
@@ -4682,7 +4682,7 @@
    "conexoes": 0,
    "lat": -15.85,
    "lon": -52.3833,
-   "nome": "Barra Do Garcas"
+   "nome": "Aeroporto de Barra do Garças"
   },
   {
    "iata": "BPL",
@@ -4721,7 +4721,7 @@
    "conexoes": 28,
    "lat": -16.4412,
    "lon": -39.0811,
-   "nome": "Porto Seguro Airport"
+   "nome": "Aeroporto de Porto Seguro"
   },
   {
    "iata": "BPT",
@@ -4877,7 +4877,7 @@
    "conexoes": 16,
    "lat": -12.0731,
    "lon": -45.0083,
-   "nome": "Barreiras Airport"
+   "nome": "Aeroporto de Barreiras"
   },
   {
    "iata": "BRB",
@@ -4890,7 +4890,7 @@
    "conexoes": 0,
    "lat": -2.9106,
    "lon": -57.1111,
-   "nome": "Barreirinhas"
+   "nome": "Aeroporto de Barreirinhas"
   },
   {
    "iata": "BRC",
@@ -5102,7 +5102,7 @@
    "conexoes": 224,
    "lat": -15.8698,
    "lon": -47.9215,
-   "nome": "Brasilia International Airport"
+   "nome": "Aeroporto Internacional de Brasília"
   },
   {
    "iata": "BSC",
@@ -5520,7 +5520,7 @@
    "conexoes": 7,
    "lat": 2.8333,
    "lon": -60.6667,
-   "nome": "Boa Vista Airport"
+   "nome": "Aeroporto Internacional de Boa Vista"
   },
   {
    "iata": "BVC",
@@ -5572,7 +5572,7 @@
    "conexoes": 6,
    "lat": -12.7167,
    "lon": -60.1167,
-   "nome": "Vilhena Airport"
+   "nome": "Aeroporto de Vilhena"
   },
   {
    "iata": "BVJ",
@@ -5598,7 +5598,7 @@
    "conexoes": 1,
    "lat": -1.6667,
    "lon": -50.4667,
-   "nome": "Breves"
+   "nome": "Aeroporto de Breves"
   },
   {
    "iata": "BWA",
@@ -5767,7 +5767,7 @@
    "conexoes": 4,
    "lat": -21.2294,
    "lon": -56.4561,
-   "nome": "Bonito Airport"
+   "nome": "Aeroporto de Bonito"
   },
   {
    "iata": "BZE",
@@ -5925,7 +5925,7 @@
    "conexoes": 16,
    "lat": -24.95,
    "lon": -53.4667,
-   "nome": "Cascavel Airport"
+   "nome": "Aeroporto de Cascavel"
   },
   {
    "iata": "CAE",
@@ -6068,12 +6068,14 @@
    "conexoes": 0,
    "lat": -8.25,
    "lon": -35.9167,
-   "nome": "Caruaru"
+   "nome": "Aeroporto de Caruaru"
   },
   {
    "iata": "CAW",
-   "cidade": "Campos",
-   "aliases": [],
+   "cidade": "Campos dos Goytacazes",
+   "aliases": [
+    "Campos"
+   ],
    "cidadeIata": "CAW",
    "pais": "BR",
    "regiao": "brasil",
@@ -6081,7 +6083,7 @@
    "conexoes": 15,
    "lat": -21.75,
    "lon": -41.3,
-   "nome": "Bartolomeu Lisandro Airport"
+   "nome": "Aeroporto Bartolomeu Lisandro"
   },
   {
    "iata": "CAY",
@@ -6549,7 +6551,7 @@
    "conexoes": 4,
    "lat": -22.925,
    "lon": -42.0786,
-   "nome": "Cabo Frio International Airport"
+   "nome": "Aeroporto Internacional de Cabo Frio"
   },
   {
    "iata": "CFE",
@@ -6655,7 +6657,7 @@
    "conexoes": 82,
    "lat": -15.6517,
    "lon": -56.1203,
-   "nome": "Marechal Rondon International Airport"
+   "nome": "Aeroporto Internacional Marechal Rondon"
   },
   {
    "iata": "CGD",
@@ -6683,7 +6685,7 @@
    "conexoes": 109,
    "lat": -23.6269,
    "lon": -46.6596,
-   "nome": "Sao Paulo/Congonhas Airport"
+   "nome": "Aeroporto de Congonhas"
   },
   {
    "iata": "CGI",
@@ -6791,7 +6793,7 @@
    "conexoes": 47,
    "lat": -20.457,
    "lon": -54.6689,
-   "nome": "Campo Grande International Airport"
+   "nome": "Aeroporto Internacional de Campo Grande"
   },
   {
    "iata": "CGY",
@@ -7092,7 +7094,7 @@
    "conexoes": 3,
    "lat": -4.0833,
    "lon": -63.1333,
-   "nome": "Coari"
+   "nome": "Aeroporto de Coari"
   },
   {
    "iata": "CJA",
@@ -7252,8 +7254,10 @@
   },
   {
    "iata": "CKS",
-   "cidade": "Carajas",
-   "aliases": [],
+   "cidade": "Parauapebas",
+   "aliases": [
+    "Carajas"
+   ],
    "cidadeIata": "CKS",
    "pais": "BR",
    "regiao": "brasil",
@@ -7261,7 +7265,7 @@
    "conexoes": 22,
    "lat": -6.1147,
    "lon": -50.0019,
-   "nome": "Carajas Airport"
+   "nome": "Aeroporto de Carajás"
   },
   {
    "iata": "CKY",
@@ -7391,7 +7395,7 @@
    "conexoes": 4,
    "lat": -17.75,
    "lon": -48.6333,
-   "nome": "Caldas Novas"
+   "nome": "Aeroporto de Caldas Novas"
   },
   {
    "iata": "CLY",
@@ -7447,7 +7451,7 @@
   },
   {
    "iata": "CMG",
-   "cidade": "Corumba",
+   "cidade": "Corumbá",
    "aliases": [],
    "cidadeIata": "CMG",
    "pais": "BR",
@@ -7456,7 +7460,7 @@
    "conexoes": 4,
    "lat": -19.0111,
    "lon": -57.6722,
-   "nome": "Corumba Internacional Airport"
+   "nome": "Aeroporto Internacional de Corumbá"
   },
   {
    "iata": "CMH",
@@ -7547,7 +7551,7 @@
    "conexoes": 150,
    "lat": -19.6324,
    "lon": -43.9632,
-   "nome": "Tancredo Neves International Airport"
+   "nome": "Aeroporto Internacional de Confins"
   },
   {
    "iata": "CNJ",
@@ -7863,7 +7867,7 @@
    "conexoes": 3,
    "lat": -7.2667,
    "lon": -35.9,
-   "nome": "Joao Suassuna Airport"
+   "nome": "Aeroporto João Suassuna"
   },
   {
    "iata": "CPX",
@@ -8439,7 +8443,7 @@
    "conexoes": 103,
    "lat": -25.5322,
    "lon": -49.1765,
-   "nome": "Afonso Pena International Airport"
+   "nome": "Aeroporto Internacional Afonso Pena"
   },
   {
    "iata": "CWC",
@@ -8519,7 +8523,7 @@
    "conexoes": 7,
    "lat": -29.1667,
    "lon": -51.1833,
-   "nome": "Hugo Cantergiani Regional Airport"
+   "nome": "Aeroporto Regional Hugo Cantergiani"
   },
   {
    "iata": "CXR",
@@ -8705,7 +8709,7 @@
   },
   {
    "iata": "CZS",
-   "cidade": "Cruzeiro Do Sul",
+   "cidade": "Cruzeiro do Sul",
    "aliases": [],
    "cidadeIata": "CZS",
    "pais": "BR",
@@ -8714,7 +8718,7 @@
    "conexoes": 2,
    "lat": -7.5833,
    "lon": -72.7833,
-   "nome": "Campo Internacional Airport"
+   "nome": "Aeroporto Internacional de Cruzeiro do Sul"
   },
   {
    "iata": "CZU",
@@ -9383,7 +9387,7 @@
   },
   {
    "iata": "DIQ",
-   "cidade": "Divinopolis",
+   "cidade": "Divinópolis",
    "aliases": [],
    "cidadeIata": "DIQ",
    "pais": "BR",
@@ -9392,7 +9396,7 @@
    "conexoes": 0,
    "lat": -20.1814,
    "lon": -44.8694,
-   "nome": "Divinopolis"
+   "nome": "Aeroporto de Divinópolis"
   },
   {
    "iata": "DIR",
@@ -9903,7 +9907,7 @@
    "conexoes": 8,
    "lat": -22.2028,
    "lon": -54.9256,
-   "nome": "Dourados Airport"
+   "nome": "Aeroporto de Dourados"
   },
   {
    "iata": "DOY",
@@ -11330,7 +11334,7 @@
   },
   {
    "iata": "ERN",
-   "cidade": "Eirunepe",
+   "cidade": "Eirunepé",
    "aliases": [],
    "cidadeIata": "ERN",
    "pais": "BR",
@@ -11339,7 +11343,7 @@
    "conexoes": 4,
    "lat": -6.5833,
    "lon": -69.8833,
-   "nome": "Eirunepe"
+   "nome": "Aeroporto de Eirunepé"
   },
   {
    "iata": "ERS",
@@ -11947,7 +11951,7 @@
   },
   {
    "iata": "FEC",
-   "cidade": "Feira De Santana",
+   "cidade": "Feira de Santana",
    "aliases": [],
    "cidadeIata": "FEC",
    "pais": "BR",
@@ -11956,7 +11960,7 @@
    "conexoes": 0,
    "lat": -12.2025,
    "lon": -38.9061,
-   "nome": "Feira De Santana"
+   "nome": "Aeroporto de Feira de Santana"
   },
   {
    "iata": "FEG",
@@ -11973,7 +11977,7 @@
   },
   {
    "iata": "FEN",
-   "cidade": "Fernando De Noronha",
+   "cidade": "Fernando de Noronha",
    "aliases": [],
    "cidadeIata": "FEN",
    "pais": "BR",
@@ -11982,7 +11986,7 @@
    "conexoes": 6,
    "lat": -3.85,
    "lon": -32.4167,
-   "nome": "Fernando De Noronha Airport"
+   "nome": "Aeroporto de Fernando de Noronha"
   },
   {
    "iata": "FEZ",
@@ -12166,7 +12170,7 @@
    "conexoes": 54,
    "lat": -27.6644,
    "lon": -48.5452,
-   "nome": "Hercilio Luz International Airport"
+   "nome": "Aeroporto Internacional Hercílio Luz"
   },
   {
    "iata": "FLO",
@@ -12430,7 +12434,7 @@
    "conexoes": 79,
    "lat": -3.7791,
    "lon": -38.5408,
-   "nome": "Pinto Martins Airport"
+   "nome": "Aeroporto Internacional Pinto Martins"
   },
   {
    "iata": "FPO",
@@ -13188,7 +13192,7 @@
   },
   {
    "iata": "GEL",
-   "cidade": "Santo Angelo",
+   "cidade": "Santo Ângelo",
    "aliases": [],
    "cidadeIata": "GEL",
    "pais": "BR",
@@ -13197,7 +13201,7 @@
    "conexoes": 8,
    "lat": -28.2811,
    "lon": -54.1681,
-   "nome": "Sepe Tiaraju"
+   "nome": "Aeroporto Sepé Tiaraju"
   },
   {
    "iata": "GEO",
@@ -13444,7 +13448,7 @@
    "conexoes": 216,
    "lat": -22.8147,
    "lon": -43.2465,
-   "nome": "Galeao Antonio Carlos Jobim International Airport"
+   "nome": "Aeroporto Internacional do Galeão/Tom Jobim"
   },
   {
    "iata": "GIL",
@@ -13771,7 +13775,7 @@
    "conexoes": 2,
    "lat": -14.3,
    "lon": -42.7833,
-   "nome": "Guanambi"
+   "nome": "Aeroporto de Guanambi"
   },
   {
    "iata": "GNS",
@@ -14009,7 +14013,7 @@
    "conexoes": 2,
    "lat": -25.3333,
    "lon": -51.5,
-   "nome": "Tancredo Thomaz Faria"
+   "nome": "Aeroporto Tancredo Thomaz de Faria"
   },
   {
    "iata": "GPI",
@@ -14154,7 +14158,7 @@
    "conexoes": 415,
    "lat": -23.4257,
    "lon": -46.4819,
-   "nome": "Sao Paulo-Guarulhos International Airport"
+   "nome": "Aeroporto Internacional de Guarulhos"
   },
   {
    "iata": "GRV",
@@ -14455,7 +14459,7 @@
    "conexoes": 8,
    "lat": -18.8503,
    "lon": -41.9333,
-   "nome": "Governador Valadares Airport"
+   "nome": "Aeroporto de Governador Valadares"
   },
   {
    "iata": "GWD",
@@ -14574,7 +14578,7 @@
    "conexoes": 66,
    "lat": -16.6326,
    "lon": -49.2266,
-   "nome": "Santa Genoveva Airport"
+   "nome": "Aeroporto Santa Genoveva"
   },
   {
    "iata": "GYS",
@@ -16841,7 +16845,7 @@
    "conexoes": 23,
    "lat": -25.5979,
    "lon": -54.4888,
-   "nome": "Cataratas International Airport"
+   "nome": "Aeroporto Internacional das Cataratas"
   },
   {
    "iata": "IIL",
@@ -17088,7 +17092,7 @@
    "conexoes": 14,
    "lat": -5.5319,
    "lon": -47.4806,
-   "nome": "Imperatriz Airport"
+   "nome": "Aeroporto de Imperatriz"
   },
   {
    "iata": "IMT",
@@ -17311,7 +17315,7 @@
    "conexoes": 23,
    "lat": -14.8139,
    "lon": -39.03,
-   "nome": "Ilheus/Bahia-Jorge Amado Airport"
+   "nome": "Aeroporto Jorge Amado"
   },
   {
    "iata": "IPC",
@@ -17376,7 +17380,7 @@
    "conexoes": 12,
    "lat": -19.5,
    "lon": -42.5333,
-   "nome": "Usiminas Airport"
+   "nome": "Aeroporto da Usiminas"
   },
   {
    "iata": "IPT",
@@ -17549,8 +17553,10 @@
   },
   {
    "iata": "IRZ",
-   "cidade": "Santa Isabel Rio Negro",
-   "aliases": [],
+   "cidade": "Santa Isabel do Rio Negro",
+   "aliases": [
+    "Santa Isabel Rio Negro"
+   ],
    "cidadeIata": "IRZ",
    "pais": "BR",
    "regiao": "brasil",
@@ -17558,7 +17564,7 @@
    "conexoes": 4,
    "lat": -0.3803,
    "lon": -64.996,
-   "nome": "Tapuruquara"
+   "nome": "Aeroporto de Tapuruquara"
   },
   {
    "iata": "ISA",
@@ -17690,7 +17696,7 @@
    "conexoes": 10,
    "lat": -4.2833,
    "lon": -55.9833,
-   "nome": "Itaituba"
+   "nome": "Aeroporto de Itaituba"
   },
   {
    "iata": "ITH",
@@ -18093,7 +18099,7 @@
    "conexoes": 2,
    "lat": -21.5131,
    "lon": -43.1731,
-   "nome": "Zona da Mata Regional Airport"
+   "nome": "Aeroporto Regional da Zona da Mata"
   },
   {
    "iata": "IZO",
@@ -18290,7 +18296,7 @@
    "conexoes": 16,
    "lat": -7.2,
    "lon": -39.3167,
-   "nome": "Orlando Bezerra de Menezes Airport"
+   "nome": "Aeroporto Orlando Bezerra de Menezes"
   },
   {
    "iata": "JDZ",
@@ -18617,7 +18623,7 @@
    "conexoes": 0,
    "lat": -2.9067,
    "lon": -40.3581,
-   "nome": "Jericoacoara"
+   "nome": "Aeroporto de Jericoacoara"
   },
   {
    "iata": "JJG",
@@ -18630,7 +18636,7 @@
    "conexoes": 0,
    "lat": -28.6753,
    "lon": -49.0603,
-   "nome": "Humberto Bortoluzzi"
+   "nome": "Aeroporto Humberto Ghizzo Bortoluzzi"
   },
   {
    "iata": "JJM",
@@ -18747,7 +18753,7 @@
    "conexoes": 0,
    "lat": -20.2597,
    "lon": -42.1839,
-   "nome": "Elias Breder Airport"
+   "nome": "Aeroporto Elias Breder"
   },
   {
    "iata": "JMJ",
@@ -18920,7 +18926,7 @@
    "conexoes": 14,
    "lat": -26.2333,
    "lon": -48.7833,
-   "nome": "Joinville-Lauro Carneiro de Loyola Airport"
+   "nome": "Aeroporto Lauro Carneiro de Loyola"
   },
   {
    "iata": "JOK",
@@ -18961,11 +18967,11 @@
    "conexoes": 25,
    "lat": -7.1454,
    "lon": -34.9482,
-   "nome": "Presidente Castro Pinto International Airport"
+   "nome": "Aeroporto Internacional Presidente Castro Pinto"
   },
   {
    "iata": "JPR",
-   "cidade": "Ji-Parana",
+   "cidade": "Ji-Paraná",
    "aliases": [],
    "cidadeIata": "JPR",
    "pais": "BR",
@@ -18974,7 +18980,7 @@
    "conexoes": 8,
    "lat": -10.8706,
    "lon": -61.8467,
-   "nome": "Ji-Parana Airport"
+   "nome": "Aeroporto de Ji-Paraná"
   },
   {
    "iata": "JQA",
@@ -19145,7 +19151,7 @@
    "conexoes": 19,
    "lat": -22.166,
    "lon": -49.0723,
-   "nome": "Bauru-Arealva Airport"
+   "nome": "Aeroporto de Bauru-Arealva"
   },
   {
    "iata": "JTR",
@@ -22063,7 +22069,7 @@
    "conexoes": 0,
    "lat": -27.8,
    "lon": -50.3167,
-   "nome": "Correia Pinto Airport"
+   "nome": "Aeroporto Correia Pinto"
   },
   {
    "iata": "LAL",
@@ -22316,7 +22322,7 @@
   },
   {
    "iata": "LBR",
-   "cidade": "Labrea",
+   "cidade": "Lábrea",
    "aliases": [],
    "cidadeIata": "LBR",
    "pais": "BR",
@@ -22325,7 +22331,7 @@
    "conexoes": 6,
    "lat": -7.25,
    "lon": -64.85,
-   "nome": "Labrea"
+   "nome": "Aeroporto de Lábrea"
   },
   {
    "iata": "LBS",
@@ -22498,7 +22504,7 @@
    "conexoes": 36,
    "lat": -23.3285,
    "lon": -51.1377,
-   "nome": "Londrina Airport"
+   "nome": "Aeroporto de Londrina"
   },
   {
    "iata": "LDE",
@@ -22630,7 +22636,7 @@
    "conexoes": 2,
    "lat": -12.48,
    "lon": -41.2811,
-   "nome": "Coronel Horacio de Mattos Airport"
+   "nome": "Aeroporto Coronel Horácio de Mattos"
   },
   {
    "iata": "LED",
@@ -22922,7 +22928,7 @@
    "conexoes": 0,
    "lat": -19.3894,
    "lon": -40.0678,
-   "nome": "Linhares Regional Airport"
+   "nome": "Aeroporto Regional de Linhares"
   },
   {
    "iata": "LHR",
@@ -24468,7 +24474,7 @@
    "conexoes": 25,
    "lat": -5.3667,
    "lon": -49.1667,
-   "nome": "Maraba Airport"
+   "nome": "Aeroporto de Marabá"
   },
   {
    "iata": "MAD",
@@ -24574,7 +24580,7 @@
    "conexoes": 91,
    "lat": -3.0313,
    "lon": -60.0461,
-   "nome": "Eduardo Gomes International Airport"
+   "nome": "Aeroporto Internacional Eduardo Gomes"
   },
   {
    "iata": "MAQ",
@@ -24760,7 +24766,7 @@
   },
   {
    "iata": "MBZ",
-   "cidade": "Maues",
+   "cidade": "Maués",
    "aliases": [],
    "cidadeIata": "MBZ",
    "pais": "BR",
@@ -24769,7 +24775,7 @@
    "conexoes": 1,
    "lat": -3.4,
    "lon": -57.7,
-   "nome": "Maues"
+   "nome": "Aeroporto de Maués"
   },
   {
    "iata": "MCE",
@@ -24849,7 +24855,7 @@
    "conexoes": 9,
    "lat": 0.0499,
    "lon": -51.0684,
-   "nome": "Macapa International Airport"
+   "nome": "Aeroporto Internacional de Macapá"
   },
   {
    "iata": "MCT",
@@ -24929,7 +24935,7 @@
    "conexoes": 29,
    "lat": -9.5125,
    "lon": -35.8004,
-   "nome": "Maceio-Zumbi dos Palmares International Airport"
+   "nome": "Aeroporto Internacional Zumbi dos Palmares"
   },
   {
    "iata": "MDC",
@@ -25189,7 +25195,7 @@
    "conexoes": 5,
    "lat": -0.8833,
    "lon": -52.5833,
-   "nome": "Monte Dourado"
+   "nome": "Aeroporto de Monte Dourado"
   },
   {
    "iata": "MEX",
@@ -25323,7 +25329,7 @@
    "conexoes": 33,
    "lat": -23.3836,
    "lon": -51.9333,
-   "nome": "Regional De Maringa"
+   "nome": "Aeroporto Regional de Maringá"
   },
   {
    "iata": "MGH",
@@ -25561,7 +25567,7 @@
   },
   {
    "iata": "MII",
-   "cidade": "Marilia",
+   "cidade": "Marília",
    "aliases": [],
    "cidadeIata": "MII",
    "pais": "BR",
@@ -25570,7 +25576,7 @@
    "conexoes": 9,
    "lat": -22.2,
    "lon": -49.9333,
-   "nome": "Dr Gastao Vidigal Airport"
+   "nome": "Aeroporto Dr. Gastão Vidigal"
   },
   {
    "iata": "MIM",
@@ -26239,7 +26245,7 @@
   },
   {
    "iata": "MNX",
-   "cidade": "Manicore",
+   "cidade": "Manicoré",
    "aliases": [],
    "cidadeIata": "MNX",
    "pais": "BR",
@@ -26248,7 +26254,7 @@
    "conexoes": 2,
    "lat": -5.8167,
    "lon": -61.2833,
-   "nome": "Manicore"
+   "nome": "Aeroporto de Manicoré"
   },
   {
    "iata": "MOB",
@@ -26274,7 +26280,7 @@
    "conexoes": 12,
    "lat": -16.7078,
    "lon": -43.8172,
-   "nome": "Montes Claros Airport"
+   "nome": "Aeroporto de Montes Claros"
   },
   {
    "iata": "MOD",
@@ -27092,7 +27098,7 @@
    "conexoes": 0,
    "lat": -5.1667,
    "lon": -37.25,
-   "nome": "Dixsept Rosado"
+   "nome": "Aeroporto Dix-Sept Rosado"
   },
   {
    "iata": "MVP",
@@ -27694,7 +27700,7 @@
    "conexoes": 33,
    "lat": -5.9168,
    "lon": -35.2502,
-   "nome": "Sao Goncalo do Amarante-Governador Aluizio Alves Intl Airport"
+   "nome": "Aeroporto Internacional de São Gonçalo do Amarante"
   },
   {
    "iata": "NAV",
@@ -28720,7 +28726,7 @@
   },
   {
    "iata": "NSR",
-   "cidade": "Sao Raimundo Nonato",
+   "cidade": "São Raimundo Nonato",
    "aliases": [],
    "cidadeIata": "NSR",
    "pais": "BR",
@@ -28729,7 +28735,7 @@
    "conexoes": 0,
    "lat": -9.0833,
    "lon": -42.6447,
-   "nome": "Serra da Capivara Airport"
+   "nome": "Aeroporto Serra da Capivara"
   },
   {
    "iata": "NST",
@@ -28991,7 +28997,7 @@
    "conexoes": 22,
    "lat": -26.8667,
    "lon": -48.6333,
-   "nome": "Navegantes Airport"
+   "nome": "Aeroporto de Navegantes"
   },
   {
    "iata": "NWI",
@@ -29201,7 +29207,7 @@
    "conexoes": 10,
    "lat": -11.4339,
    "lon": -61.4825,
-   "nome": "Cacoal Airport"
+   "nome": "Aeroporto de Cacoal"
   },
   {
    "iata": "OAX",
@@ -29517,7 +29523,7 @@
   },
   {
    "iata": "OIA",
-   "cidade": "Ourilandia do Norte       ",
+   "cidade": "Ourilândia do Norte",
    "aliases": [],
    "cidadeIata": "OIA",
    "pais": "BR",
@@ -29526,7 +29532,7 @@
    "conexoes": 3,
    "lat": -6.7613,
    "lon": -51.049,
-   "nome": "Ourilandia"
+   "nome": "Aeroporto de Ourilândia do Norte"
   },
   {
    "iata": "OIR",
@@ -29994,7 +30000,7 @@
    "conexoes": 10,
    "lat": -11.8786,
    "lon": -55.5816,
-   "nome": "Sinop Airport"
+   "nome": "Aeroporto de Sinop"
   },
   {
    "iata": "OQN",
@@ -30609,7 +30615,7 @@
    "conexoes": 0,
    "lat": -9.3978,
    "lon": -38.2222,
-   "nome": "Paulo Afonso Airport"
+   "nome": "Aeroporto de Paulo Afonso"
   },
   {
    "iata": "PAZ",
@@ -31040,7 +31046,7 @@
    "conexoes": 7,
    "lat": -31.7181,
    "lon": -52.3244,
-   "nome": "Pelotas–João Simões Lopes Neto International Airport"
+   "nome": "Aeroporto Internacional João Simões Lopes Neto"
   },
   {
    "iata": "PEV",
@@ -31107,7 +31113,7 @@
    "conexoes": 14,
    "lat": -28.25,
    "lon": -52.3333,
-   "nome": "Passo Fundo Airport"
+   "nome": "Aeroporto de Passo Fundo"
   },
   {
    "iata": "PFO",
@@ -31237,7 +31243,7 @@
    "conexoes": 0,
    "lat": -25.0833,
    "lon": -50.15,
-   "nome": "Comte Antonio Amilton Beraldo Airport"
+   "nome": "Aeroporto Comandante Antonio Amilton Beraldo"
   },
   {
    "iata": "PHB",
@@ -31252,7 +31258,7 @@
    "conexoes": 0,
    "lat": -2.8917,
    "lon": -41.7383,
-   "nome": "Santos Dumont"
+   "nome": "Aeroporto Internacional de Parnaíba"
   },
   {
    "iata": "PHC",
@@ -31434,7 +31440,7 @@
    "conexoes": 2,
    "lat": -2.6692,
    "lon": -56.77,
-   "nome": "Parintins"
+   "nome": "Aeroporto de Parintins"
   },
   {
    "iata": "PIO",
@@ -31800,7 +31806,7 @@
    "conexoes": 33,
    "lat": -19.75,
    "lon": -43.75,
-   "nome": "Belo Horizonte Airport"
+   "nome": "Aeroporto da Pampulha"
   },
   {
    "iata": "PLV",
@@ -31895,7 +31901,7 @@
   },
   {
    "iata": "PMG",
-   "cidade": "Ponta Pora",
+   "cidade": "Ponta Porã",
    "aliases": [],
    "cidadeIata": "PMG",
    "pais": "BR",
@@ -31904,7 +31910,7 @@
    "conexoes": 0,
    "lat": -22.55,
    "lon": -55.7,
-   "nome": "Ponta Pora International"
+   "nome": "Aeroporto Internacional de Ponta Porã"
   },
   {
    "iata": "PMI",
@@ -31984,7 +31990,7 @@
    "conexoes": 10,
    "lat": -10.2417,
    "lon": -48.3528,
-   "nome": "Palmas Airport"
+   "nome": "Aeroporto de Palmas"
   },
   {
    "iata": "PMY",
@@ -32153,7 +32159,7 @@
    "conexoes": 9,
    "lat": -9.3933,
    "lon": -40.4906,
-   "nome": "Petrolina International Airport"
+   "nome": "Aeroporto Internacional de Petrolina"
   },
   {
    "iata": "POA",
@@ -32166,7 +32172,7 @@
    "conexoes": 101,
    "lat": -29.9896,
    "lon": -51.1771,
-   "nome": "Salgado Filho International Airport"
+   "nome": "Aeroporto Internacional Salgado Filho"
   },
   {
    "iata": "POG",
@@ -32183,7 +32189,7 @@
   },
   {
    "iata": "POJ",
-   "cidade": "Patos De Minas",
+   "cidade": "Patos de Minas",
    "aliases": [],
    "cidadeIata": "POJ",
    "pais": "BR",
@@ -32192,7 +32198,7 @@
    "conexoes": 2,
    "lat": -18.6717,
    "lon": -46.4908,
-   "nome": "Patos De Minas"
+   "nome": "Aeroporto de Patos de Minas"
   },
   {
    "iata": "POL",
@@ -32296,7 +32302,7 @@
    "conexoes": 10,
    "lat": -22.1,
    "lon": -51.45,
-   "nome": "A. De Barros Airport"
+   "nome": "Aeroporto Adhemar de Barros"
   },
   {
    "iata": "PPG",
@@ -32727,7 +32733,7 @@
    "conexoes": 0,
    "lat": -26.2167,
    "lon": -52.6667,
-   "nome": "Pato Branco"
+   "nome": "Aeroporto de Pato Branco"
   },
   {
    "iata": "PTP",
@@ -32753,7 +32759,7 @@
    "conexoes": 0,
    "lat": -1.7389,
    "lon": -52.2444,
-   "nome": "Porto de Moz"
+   "nome": "Aeroporto de Porto de Moz"
   },
   {
    "iata": "PTU",
@@ -32965,7 +32971,7 @@
    "conexoes": 40,
    "lat": -8.7143,
    "lon": -63.8983,
-   "nome": "Porto Velho International Airport"
+   "nome": "Aeroporto Internacional de Porto Velho"
   },
   {
    "iata": "PVK",
@@ -33411,7 +33417,7 @@
    "conexoes": 40,
    "lat": -21.1358,
    "lon": -47.7733,
-   "nome": "Dr. Leite Lopes State Airport"
+   "nome": "Aeroporto Leite Lopes"
   },
   {
    "iata": "RAP",
@@ -33476,7 +33482,7 @@
    "conexoes": 2,
    "lat": -4.4,
    "lon": -59.5833,
-   "nome": "Borba"
+   "nome": "Aeroporto de Borba"
   },
   {
    "iata": "RBQ",
@@ -33502,7 +33508,7 @@
    "conexoes": 10,
    "lat": -9.9667,
    "lon": -67.8,
-   "nome": "Pres. Medici Airport"
+   "nome": "Aeroporto Internacional Plácido de Castro"
   },
   {
    "iata": "RBY",
@@ -33671,7 +33677,7 @@
    "conexoes": 88,
    "lat": -8.1315,
    "lon": -34.9179,
-   "nome": "Guararapes-Gilberto Freyre International Airport"
+   "nome": "Aeroporto Internacional dos Guararapes/Gilberto Freyre"
   },
   {
    "iata": "REG",
@@ -33946,7 +33952,7 @@
    "conexoes": 18,
    "lat": -29.7106,
    "lon": -53.6875,
-   "nome": "Santa Maria Airport"
+   "nome": "Aeroporto de Santa Maria"
   },
   {
    "iata": "RIB",
@@ -34442,7 +34448,7 @@
    "conexoes": 16,
    "lat": -16.4333,
    "lon": -54.7167,
-   "nome": "Rondonopolis Airport"
+   "nome": "Aeroporto de Rondonópolis"
   },
   {
    "iata": "ROP",
@@ -34572,7 +34578,7 @@
    "conexoes": 0,
    "lat": -22.9875,
    "lon": -43.37,
-   "nome": "Jacarepaguá Airport"
+   "nome": "Aeroporto de Jacarepaguá"
   },
   {
    "iata": "RRK",
@@ -34717,7 +34723,7 @@
    "conexoes": 0,
    "lat": -23.5521,
    "lon": -46.6472,
-   "nome": "Campo de Marte Airport"
+   "nome": "Aeroporto Campo de Marte"
   },
   {
    "iata": "RTG",
@@ -34808,7 +34814,7 @@
    "conexoes": 6,
    "lat": -17.7167,
    "lon": -50.9333,
-   "nome": "Rio Verde Airport"
+   "nome": "Aeroporto de Rio Verde"
   },
   {
    "iata": "RVE",
@@ -35564,7 +35570,7 @@
    "conexoes": 78,
    "lat": -22.9115,
    "lon": -43.1671,
-   "nome": "Santos Dumont Airport"
+   "nome": "Aeroporto Santos Dumont"
   },
   {
    "iata": "SDW",
@@ -35683,7 +35689,7 @@
    "conexoes": 0,
    "lat": -7.9833,
    "lon": -38.3,
-   "nome": "Santa Magalhaes"
+   "nome": "Aeroporto Santa Magalhães"
   },
   {
    "iata": "SEU",
@@ -36306,11 +36312,11 @@
    "conexoes": 10,
    "lat": -23.1833,
    "lon": -46.1167,
-   "nome": "Sao Jose Dos Campos"
+   "nome": "Aeroporto de São José dos Campos"
   },
   {
    "iata": "SJL",
-   "cidade": "São Gabriel",
+   "cidade": "São Gabriel da Cachoeira",
    "aliases": [
     "Sao Gabriel"
    ],
@@ -36321,7 +36327,7 @@
    "conexoes": 7,
    "lat": -0.1483,
    "lon": -66.9856,
-   "nome": "Da Cachoeira"
+   "nome": "Aeroporto de São Gabriel da Cachoeira"
   },
   {
    "iata": "SJO",
@@ -36351,7 +36357,7 @@
    "conexoes": 18,
    "lat": -20.8167,
    "lon": -49.4167,
-   "nome": "Sao Jose do Rio Preto Airport"
+   "nome": "Aeroporto de São José do Rio Preto"
   },
   {
    "iata": "SJT",
@@ -36736,7 +36742,7 @@
   },
   {
    "iata": "SLZ",
-   "cidade": "São Luis",
+   "cidade": "São Luís",
    "aliases": [],
    "cidadeIata": "SLZ",
    "pais": "BR",
@@ -36745,7 +36751,7 @@
    "conexoes": 40,
    "lat": -2.5833,
    "lon": -44.2367,
-   "nome": "Marechal Cunha Machado International Airport"
+   "nome": "Aeroporto Internacional Marechal Cunha Machado"
   },
   {
    "iata": "SMA",
@@ -36849,7 +36855,7 @@
    "conexoes": 0,
    "lat": -12.545,
    "lon": -55.7108,
-   "nome": "Sorriso Airport"
+   "nome": "Aeroporto de Sorriso"
   },
   {
    "iata": "SMX",
@@ -37330,7 +37336,7 @@
    "conexoes": 140,
    "lat": -12.914,
    "lon": -38.3352,
-   "nome": "Deputado Luis Eduardo Magalhaes International Airport"
+   "nome": "Aeroporto Internacional Deputado Luís Eduardo Magalhães"
   },
   {
    "iata": "SSG",
@@ -37449,7 +37455,7 @@
    "conexoes": 33,
    "lat": -2.4249,
    "lon": -54.7864,
-   "nome": "Santarem-Maestro Wilson Fonseca Airport"
+   "nome": "Aeroporto Maestro Wilson Fonseca"
   },
   {
    "iata": "STN",
@@ -38577,7 +38583,7 @@
    "conexoes": 6,
    "lat": -4.2333,
    "lon": -69.9333,
-   "nome": "Tabatinga International Airport"
+   "nome": "Aeroporto Internacional de Tabatinga"
   },
   {
    "iata": "TBU",
@@ -38880,7 +38886,7 @@
   },
   {
    "iata": "TFF",
-   "cidade": "Tefe",
+   "cidade": "Tefé",
    "aliases": [],
    "cidadeIata": "TFF",
    "pais": "BR",
@@ -38889,11 +38895,11 @@
    "conexoes": 12,
    "lat": -3.3667,
    "lon": -64.7,
-   "nome": "Tefe Airport"
+   "nome": "Aeroporto de Tefé"
   },
   {
    "iata": "TFL",
-   "cidade": "Teofilo Otoni",
+   "cidade": "Teófilo Otoni",
    "aliases": [],
    "cidadeIata": "TFL",
    "pais": "BR",
@@ -38902,7 +38908,7 @@
    "conexoes": 0,
    "lat": -17.85,
    "lon": -41.5,
-   "nome": "Teofilo Otoni"
+   "nome": "Aeroporto de Teófilo Otoni"
   },
   {
    "iata": "TFN",
@@ -39123,7 +39129,7 @@
    "conexoes": 28,
    "lat": -5.0633,
    "lon": -42.8211,
-   "nome": "Teresina Airport"
+   "nome": "Aeroporto de Teresina"
   },
   {
    "iata": "THL",
@@ -39868,7 +39874,7 @@
    "conexoes": 8,
    "lat": -1.9167,
    "lon": -55.5833,
-   "nome": "Trombetas"
+   "nome": "Aeroporto de Porto Trombetas"
   },
   {
    "iata": "TMU",
@@ -40686,7 +40692,7 @@
   },
   {
    "iata": "TUR",
-   "cidade": "Tucurui",
+   "cidade": "Tucuruí",
    "aliases": [],
    "cidadeIata": "TUR",
    "pais": "BR",
@@ -40695,7 +40701,7 @@
    "conexoes": 8,
    "lat": -3.7,
    "lon": -49.7333,
-   "nome": "Tucurui"
+   "nome": "Aeroporto de Tucuruí"
   },
   {
    "iata": "TUS",
@@ -40851,7 +40857,7 @@
    "conexoes": 0,
    "lat": -7.1333,
    "lon": -37.1833,
-   "nome": "Teixeira de Freitas Airport"
+   "nome": "Aeroporto de Teixeira de Freitas"
   },
   {
    "iata": "TXG",
@@ -41046,7 +41052,7 @@
    "conexoes": 8,
    "lat": -19.7764,
    "lon": -47.9583,
-   "nome": "Uberaba Airport"
+   "nome": "Aeroporto de Uberaba"
   },
   {
    "iata": "UBJ",
@@ -41126,7 +41132,7 @@
    "conexoes": 37,
    "lat": -18.9,
    "lon": -48.2333,
-   "nome": "Uberlandia-Ten. Cel. Av. Cesar Bombonato Airport"
+   "nome": "Aeroporto Ten. Cel. Aviador César Bombonato"
   },
   {
    "iata": "UDJ",
@@ -41503,7 +41509,7 @@
    "conexoes": 0,
    "lat": -23.7983,
    "lon": -53.3133,
-   "nome": "Ernesto Geisel"
+   "nome": "Aeroporto Ernesto Geisel"
   },
   {
    "iata": "UNA",
@@ -41516,7 +41522,7 @@
    "conexoes": 0,
    "lat": -15.3533,
    "lon": -38.9972,
-   "nome": "Una"
+   "nome": "Aeroporto de Una-Comandatuba"
   },
   {
    "iata": "UNG",
@@ -41633,7 +41639,7 @@
    "conexoes": 6,
    "lat": -29.7817,
    "lon": -57.0383,
-   "nome": "Ruben Berta Airport"
+   "nome": "Aeroporto Rubem Berta"
   },
   {
    "iata": "URJ",
@@ -41997,7 +42003,7 @@
    "conexoes": 10,
    "lat": -21.55,
    "lon": -45.4333,
-   "nome": "Major-Brigadeiro Trompowsky Airport"
+   "nome": "Aeroporto Major-Brigadeiro Trompowsky"
   },
   {
    "iata": "VAI",
@@ -42222,7 +42228,7 @@
    "conexoes": 100,
    "lat": -23.0099,
    "lon": -47.1417,
-   "nome": "Viracopos Airport"
+   "nome": "Aeroporto Internacional de Viracopos"
   },
   {
    "iata": "VCS",
@@ -42263,7 +42269,7 @@
    "conexoes": 12,
    "lat": -14.8833,
    "lon": -40.8667,
-   "nome": "Vitoria Da Conquista Airport"
+   "nome": "Aeroporto de Vitória da Conquista"
   },
   {
    "iata": "VDE",
@@ -42592,7 +42598,7 @@
    "conexoes": 54,
    "lat": -20.2568,
    "lon": -40.2896,
-   "nome": "Eurico de Aguiar Salles Airport"
+   "nome": "Aeroporto Eurico de Aguiar Salles"
   },
   {
    "iata": "VKG",
@@ -43865,7 +43871,7 @@
    "conexoes": 20,
    "lat": -27.0886,
    "lon": -52.6297,
-   "nome": "Chapeco Airport"
+   "nome": "Aeroporto de Chapecó"
   },
   {
    "iata": "XBE",

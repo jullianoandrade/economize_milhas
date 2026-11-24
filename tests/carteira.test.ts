@@ -1,9 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   diasEntre,
   estaDesatualizado,
   haQuanto,
+  MAXIMO_DE_SALDO,
   montarCarteira,
+  sanearSaldos,
   quandoVence,
   totalEstimado,
   valorEstimado,
@@ -97,5 +99,112 @@ describe("catalogo da carteira", () => {
 
   it("todo programa tem preco de referencia: nenhum valor e inventado", () => {
     for (const p of catalogo) expect(p.milheiroBRL).toBeGreaterThan(0);
+  });
+});
+
+describe("sanear o que veio do aparelho", () => {
+  it("saldo sem vencimentos ganha lista vazia (era o 'reading map')", () => {
+    expect(sanearSaldos({ smiles: { quantidade: 84_000, atualizadoEm: "2026-11-20" } })).toEqual({
+      smiles: { quantidade: 84_000, atualizadoEm: "2026-11-20", vencimentos: [] },
+    });
+  });
+
+  it("descarta entradas sem numero ou sem data, e o que nem objeto e", () => {
+    expect(
+      sanearSaldos({
+        a: { quantidade: "muito", atualizadoEm: "2026-11-20" },
+        b: { quantidade: 10, atualizadoEm: "ontem" },
+        c: null,
+        d: 42,
+        e: { quantidade: 10, atualizadoEm: "2026-11-20", vencimentos: [] },
+      }),
+    ).toEqual({ e: { quantidade: 10, atualizadoEm: "2026-11-20", vencimentos: [] } });
+    expect(sanearSaldos(null)).toEqual({});
+    expect(sanearSaldos("lixo")).toEqual({});
+    expect(sanearSaldos([1, 2])).toEqual({});
+  });
+
+  it("prende a quantidade entre 0 e o maximo, inteira", () => {
+    const s = sanearSaldos({
+      neg: { quantidade: -500, atualizadoEm: "2026-11-20" },
+      grande: { quantidade: 1e12, atualizadoEm: "2026-11-20" },
+      quebrado: { quantidade: 10.6, atualizadoEm: "2026-11-20" },
+      infinito: { quantidade: Infinity, atualizadoEm: "2026-11-20" },
+    });
+    expect(s.neg.quantidade).toBe(0);
+    expect(s.grande.quantidade).toBe(MAXIMO_DE_SALDO);
+    expect(s.quebrado.quantidade).toBe(11);
+    expect(s.infinito).toBeUndefined();
+  });
+
+  it("filtra vencimentos invalidos e da id a quem nao tem", () => {
+    const s = sanearSaldos({
+      smiles: {
+        quantidade: 1_000,
+        atualizadoEm: "2026-11-20",
+        vencimentos: [
+          { id: "ok", quantidade: 300, data: "2027-01-10" },
+          { quantidade: 200, data: "2027-02-10" },
+          { id: "zero", quantidade: 0, data: "2027-03-10" },
+          { id: "semdata", quantidade: 100 },
+          "lixo",
+        ],
+      },
+    });
+    expect(s.smiles.vencimentos).toEqual([
+      { id: "ok", quantidade: 300, data: "2027-01-10" },
+      { id: "2027-02-10-1", quantidade: 200, data: "2027-02-10" },
+    ]);
+  });
+});
+
+/**
+ * O store de verdade, com um localStorage de mentira: o persist hidrata
+ * ao criar o store, entao cada caso importa o modulo do zero.
+ */
+describe("store da carteira le o aparelho sem quebrar", () => {
+  function aparelhoCom(valor: string | null) {
+    const mapa = new Map<string, string>();
+    if (valor !== null) mapa.set("voemilo-carteira", valor);
+    vi.stubGlobal("localStorage", {
+      getItem: (k: string) => mapa.get(k) ?? null,
+      setItem: (k: string, v: string) => void mapa.set(k, v),
+      removeItem: (k: string) => void mapa.delete(k),
+    });
+    return mapa;
+  }
+
+  async function abrirStore() {
+    vi.resetModules();
+    const { usarCarteira } = await import("@/store/carteira");
+    return usarCarteira;
+  }
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("saldo antigo sem vencimentos hidrata com lista vazia", async () => {
+    aparelhoCom(JSON.stringify({ state: { saldos: { smiles: { quantidade: 84_000, atualizadoEm: "2026-11-20" } } }, version: 1 }));
+    const store = await abrirStore();
+    expect(store.persist.hasHydrated()).toBe(true);
+    expect(store.getState().saldos.smiles.vencimentos).toEqual([]);
+  });
+
+  it("JSON quebrado termina a hidratacao com a carteira vazia", async () => {
+    aparelhoCom("{isto nao e json");
+    const store = await abrirStore();
+    expect(store.persist.hasHydrated()).toBe(true);
+    expect(store.getState().saldos).toEqual({});
+  });
+
+  it("versao diferente aproveita os saldos em vez de descartar", async () => {
+    const mapa = aparelhoCom(
+      JSON.stringify({ state: { saldos: { livelo: { quantidade: 5_000, atualizadoEm: "2026-11-01", vencimentos: [] } } }, version: 0 }),
+    );
+    const store = await abrirStore();
+    expect(store.getState().saldos.livelo.quantidade).toBe(5_000);
+    // E regrava ja na versao atual.
+    expect(JSON.parse(mapa.get("voemilo-carteira") ?? "{}").version).toBe(1);
   });
 });

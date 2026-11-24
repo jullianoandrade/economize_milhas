@@ -29,17 +29,39 @@ export function SeloDeFonte({
   );
 }
 
-const ROTULO_CONFIANCA: Record<Confianca, string | null> = {
+/**
+ * O grau de confianca da tabela nao vira um segundo selo: a tela so usa
+ * os quatro termos de origem (real, estimativa, informado,
+ * desatualizado). "Interpolado", "parcial" e afins sao detalhe de COMO a
+ * estimativa foi feita, e moram na explicacao do selo.
+ */
+const NOTA_CONFIANCA: Record<Confianca, string | null> = {
   pesquisado: null, // o caso normal nao precisa de aviso
-  interpolado: "valor interpolado",
-  parcial: "dado parcial",
-  restrito: "acesso restrito",
-  indisponivel: "não atende esta rota",
+  interpolado:
+    "Este trecho não tem valor pesquisado: o número foi interpolado entre trechos vizinhos da tabela.",
+  parcial: "A tabela deste programa para este trecho só foi pesquisada em parte.",
+  restrito: "O programa restringe o acesso à tabela; o número é menos firme.",
+  indisponivel: "O programa não atende esta rota.",
 };
 
-export function SeloDeConfianca({ confianca }: { confianca: Confianca }) {
-  const rotulo = ROTULO_CONFIANCA[confianca];
-  if (!rotulo) return null;
+const BASE_DAS_MILHAS =
+  "Os programas usam precificação dinâmica e não publicam tabela fixa. Confirme no site antes de resgatar.";
 
-  return <SeloDeOrigem origem="estimado">{rotulo}</SeloDeOrigem>;
+/** O selo das milhas: sempre estimativa, com o grau de confianca no detalhe. */
+export function SeloDeMilhas({
+  confianca,
+  rotulo = "estimativa, confirme antes",
+}: {
+  confianca: Confianca;
+  rotulo?: string;
+}) {
+  const nota = NOTA_CONFIANCA[confianca];
+  return (
+    <SeloDeOrigem
+      origem="estimado"
+      detalhe={nota ? `${BASE_DAS_MILHAS} ${nota}` : BASE_DAS_MILHAS}
+    >
+      {rotulo}
+    </SeloDeOrigem>
+  );
 }

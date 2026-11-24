@@ -11,7 +11,7 @@ import {
   vencimentosProximos,
   type ProgramaDaCarteira,
 } from "@/lib/carteira/modelo";
-import { TEXTO_CURTO, type RotuloDeVeredito } from "@/lib/milhas/rotulos";
+import { TEXTO_CURTO, ordenarPorVeredito, type RotuloDeVeredito } from "@/lib/milhas/rotulos";
 import { useCarteiraHidratada, usarCarteira } from "@/store/carteira";
 import { usarPerfil } from "@/store/perfil";
 
@@ -21,17 +21,31 @@ import { usarPerfil } from "@/store/perfil";
  *   1. a carteira (quanto seus pontos valem), com a porta para ela
  *   2. o que esta para vencer, se houver: e o unico aviso que custa
  *      dinheiro se for ignorado
- *   3. tres passagens abaixo do normal saindo da cidade da pessoa
+ *   3. tres passagens em baixa saindo da cidade da pessoa -- as que
+ *      valem resgate primeiro. O titulo nao promete "vale a pena": a
+ *      maioria das quedas e de trecho domestico barato, que rende pouco
+ *      em milhas, e o selo de cada linha diz isso.
  *
  * O resto mora nas abas. "A informacao certa, no momento certo."
  */
 
 type Oportunidade = {
-  destino: { iata: string; cidade: string };
+  destino: { iata: string; cidade: string; pais?: string };
   precoBRL: number;
   descontoPct: number;
   veredito: RotuloDeVeredito;
 };
+
+/** "Praia" sozinho e ambiguo: fora do Brasil, a cidade leva o pais. */
+function lugar(d: Oportunidade["destino"]): string {
+  if (!d.pais || d.pais === "BR") return d.cidade;
+  try {
+    const pais = new Intl.DisplayNames(["pt-BR"], { type: "region" }).of(d.pais);
+    return pais ? `${d.cidade}, ${pais}` : d.cidade;
+  } catch {
+    return d.cidade;
+  }
+}
 
 export function ResumoDoInicio({ catalogo }: { catalogo: ProgramaDaCarteira[] }) {
   return (
@@ -128,7 +142,7 @@ function ValeAPenaAgora() {
     <section aria-labelledby="t-agora" className="mt-4">
       <div className="flex items-baseline justify-between gap-3 px-1">
         <h2 id="t-agora" className="text-base font-semibold text-tinta">
-          Vale a pena agora
+          Passagens em baixa
         </h2>
         <Link href="/oportunidades" className="min-h-11 py-2.5 text-sm font-semibold text-tinta underline underline-offset-4">
           ver todas
@@ -142,16 +156,26 @@ function ValeAPenaAgora() {
         </div>
       ) : (
         <ul>
-          {dados.oportunidades.slice(0, 3).map((o) => (
+          {ordenarPorVeredito(dados.oportunidades).slice(0, 3).map((o) => (
             <li key={o.destino.iata}>
               <Link
                 href={`/rota/${dados.origem.iata}/${o.destino.iata}`}
                 className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-0.5 border-b border-borda px-1 py-3"
               >
-                <span className="truncate text-base font-semibold text-tinta">{o.destino.cidade}</span>
-                <span className="tabular text-right text-base font-bold text-tinta">{reais(o.precoBRL)}</span>
+                <span className="truncate text-base font-semibold text-tinta">{lugar(o.destino)}</span>
+                <span className="text-right text-base text-tinta">
+                  <span className="tabular font-bold">{reais(o.precoBRL)}</span>{" "}
+                  <span className="text-sm text-tinta-media">em dinheiro</span>
+                </span>
                 <span className="text-sm text-tinta-media">{o.descontoPct}% abaixo do normal</span>
-                <span className="text-right text-sm text-tinta-media">{TEXTO_CURTO[o.veredito]}</span>
+                {/* Mesmo destaque das Oportunidades: so "vale resgatar" e ambar. */}
+                {o.veredito === "resgatar" ? (
+                  <span className="justify-self-end rounded-full bg-[#ffb020] px-2.5 py-0.5 text-sm font-semibold text-[#0b1526]">
+                    {TEXTO_CURTO[o.veredito]}
+                  </span>
+                ) : (
+                  <span className="text-right text-sm text-tinta-media">{TEXTO_CURTO[o.veredito]}</span>
+                )}
               </Link>
             </li>
           ))}

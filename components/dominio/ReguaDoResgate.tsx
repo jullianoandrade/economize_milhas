@@ -70,13 +70,15 @@ export function ReguaDoResgate({
       <div
         role="img"
         aria-label={descricao}
-        className="relative h-9 select-none"
+        className="relative h-10 select-none"
       >
         {/* Trilho. As zonas sao sutis de proposito: quem decide e a
-            posicao do marcador, nao o fundo. */}
-        <div className="absolute inset-x-0 top-3 flex h-3 overflow-hidden rounded-full">
+            posicao do marcador, nao o fundo. O lado da perda e neutro,
+            e nao rosa: quem diz "nao compensa" e o marcador e o texto,
+            e um fundo de alerta gritava antes de a pessoa ler. */}
+        <div className="absolute inset-x-0 top-4 flex h-3 overflow-hidden rounded-full">
           <span
-            className="h-full bg-alerta-fundo"
+            className="h-full bg-superficie-2"
             style={{ width: `${posicaoPct(CORTES[0])}%` }}
           />
           <span
@@ -90,15 +92,17 @@ export function ReguaDoResgate({
 
         {/* O ponto de equilibrio. E a unica marca rotulada do trilho
             porque e a unica que muda a resposta: abaixo dela o resgate
-            custa mais do que entrega. */}
+            custa mais do que entrega. O rotulo fica em cima e o traco
+            comeca abaixo dele, cruzando so o trilho -- antes o traco
+            atravessava a palavra. */}
         <span
           aria-hidden="true"
-          className="absolute top-2 h-5 w-px bg-tinta-media"
+          className="absolute top-3 h-5 w-px bg-tinta-media"
           style={{ left: `${posicaoPct(CORTES[0])}%` }}
         />
         <span
           aria-hidden="true"
-          className="absolute top-0 -translate-x-1/2 text-[10px] font-semibold text-tinta-media"
+          className="absolute top-0 -translate-x-1/2 text-[10px] font-semibold leading-none text-tinta-media"
           style={{ left: `${posicaoPct(CORTES[0])}%` }}
         >
           empata
@@ -106,7 +110,7 @@ export function ReguaDoResgate({
 
         <span
           aria-hidden="true"
-          className="entrada-do-marcador absolute top-[0.6875rem] size-[0.875rem] -translate-x-1/2 rounded-full border-2 border-superficie"
+          className="entrada-do-marcador absolute top-[0.9375rem] size-[0.875rem] -translate-x-1/2 rounded-full border-2 border-superficie"
           style={{
             left: esquerdaDoMarcador(milhaDeGraca ? 1 : posicaoPct(razao) / 100),
             background: COR_POR_QUALIDADE[qualidade],

@@ -21,7 +21,7 @@
  * Rode com:  node scripts/gerar-aeroportos.mjs
  */
 
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 const FONTE_AEROPORTOS = "https://api.travelpayouts.com/data/airports.json";
 const FONTE_CIDADES = "https://api.travelpayouts.com/data/cities.json";
@@ -249,6 +249,17 @@ for (const rota of rotas) {
 
 const nomeDaCidade = new Map(
   cidades.map((c) => [c.code, c.name_translations?.pt || c.name]),
+);
+
+// A curadoria a mao vence a fonte: nomes acentuados e em portugues dos
+// aeroportos brasileiros (24/11/2026) foram revisados um a um, e o mapa
+// NOME_EM_PORTUGUES so cobre ~40 cidades. Regenerar nao pode apaga-los.
+const curados = new Map(
+  existsSync("data/aeroportos.json")
+    ? JSON.parse(readFileSync("data/aeroportos.json", "utf8"))
+        .aeroportos.filter((a) => a.pais === "BR")
+        .map((a) => [a.iata, a])
+    : [],
 );
 
 const selecionados = aeroportos

@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Ilustracao, type Cena } from "@/components/ui/Ilustracao";
+import { Globo } from "@/components/dominio/Globo";
 import { PerguntaDoCartao } from "@/components/dominio/PerguntaDoCartao";
+import { Milo, type PoseDoMilo } from "@/components/ui/Milo";
 import { usarPerfil } from "@/store/perfil";
 
 /**
@@ -17,13 +18,18 @@ import { usarPerfil } from "@/store/perfil";
  * leitor de tela pula corretamente o que nao esta a vista, que e o que
  * `hidden` significa.
  *
+ * A abertura e a mesma do resto do app: o globo de aeroportos reais
+ * no painel marinho, e o Milo trocando de pose a cada passo. Um globo
+ * so, fora dos passos -- num passo `hidden` o canvas teria tamanho
+ * zero, e tres globos seriam tres lacos de animacao para um desenho.
+ *
  * Ao trocar de passo o foco vai para o titulo novo. Sem isso, quem
  * navega por teclado ou leitor de tela aperta "Proximo" e continua
  * ouvindo o passo anterior.
  */
 
 type Passo = {
-  cena: Cena;
+  pose: PoseDoMilo;
   sobrelinha: string;
   titulo: string;
   texto: string;
@@ -34,7 +40,7 @@ type Passo = {
 
 const PASSOS: Passo[] = [
   {
-    cena: "viagem",
+    pose: "apontando",
     sobrelinha: "O que é isto",
     titulo: "Viajar não precisa ser caro. Precisa ser calculado.",
     texto:
@@ -58,7 +64,7 @@ const PASSOS: Passo[] = [
     ],
   },
   {
-    cena: "meta",
+    pose: "pensando",
     sobrelinha: "Comece por você",
     titulo: "Você provavelmente já acumula milhas.",
     texto:
@@ -71,7 +77,7 @@ const PASSOS: Passo[] = [
     ),
   },
   {
-    cena: "transparencia",
+    pose: "comemorando",
     sobrelinha: "Nossa transparência",
     titulo: "Por que você pode conferir o que dizemos",
     texto:
@@ -166,6 +172,16 @@ export function PassosDeBoasVindas() {
         </button>
       </div>
 
+      <div aria-hidden="true" className="painel relative mb-5 h-[190px] overflow-hidden rounded-[28px]">
+        <div className="pointer-events-none absolute -right-10 -top-6 size-[250px]">
+          <Globo rota={null} enquadramento="inteiro" />
+        </div>
+        <Milo
+          pose={PASSOS[passo].pose}
+          className="pointer-events-none absolute bottom-0 left-5 w-[118px]"
+        />
+      </div>
+
       {PASSOS.map((p, i) => (
         <section
           key={p.titulo}
@@ -173,11 +189,7 @@ export function PassosDeBoasVindas() {
           aria-label={`Passo ${i + 1} de ${PASSOS.length}`}
           className="flex-1"
         >
-          <div className="mb-5 overflow-hidden painel rounded-[28px] px-6 py-5">
-            <Ilustracao cena={p.cena} tom="claro" className="w-full" />
-          </div>
-
-          <p className="mb-1.5 text-xs font-bold uppercase tracking-widest text-marca">
+          <p className="mb-1.5 text-sm font-semibold text-marca">
             {p.sobrelinha}
           </p>
 

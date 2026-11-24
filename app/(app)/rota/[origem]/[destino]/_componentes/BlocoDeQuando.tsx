@@ -106,11 +106,18 @@ function ItemDoAcordeao({
   children: ReactNode;
 }) {
   return (
-    <details name="quando" open={aberto} className="group mb-3 last:mb-0">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl border border-borda bg-superficie px-4 py-3 shadow-card [&::-webkit-details-marker]:hidden">
+    // O item inteiro e UM cartao: o resumo e o conteudo vivem na mesma
+    // superficie. Antes o resumo era um cartao e o conteudo outro logo
+    // abaixo, e a pessoa via dois blocos soltos para uma coisa so.
+    <details
+      name="quando"
+      open={aberto}
+      className="group mb-3 rounded-2xl border border-borda bg-superficie shadow-card last:mb-0"
+    >
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-3 [&::-webkit-details-marker]:hidden">
         <span className="min-w-0">
           <span className="block font-semibold text-tinta">{titulo}</span>
-          <span className="block truncate text-xs text-tinta-media">
+          <span className="block text-xs leading-snug text-tinta-media">
             {subtitulo}
           </span>
         </span>
@@ -127,7 +134,7 @@ function ItemDoAcordeao({
           <path d="m6 9 6 6 6-6" />
         </svg>
       </summary>
-      <div className="mt-2">{children}</div>
+      <div className="border-t border-borda px-4 pb-4 pt-3">{children}</div>
     </details>
   );
 }

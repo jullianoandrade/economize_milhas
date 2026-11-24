@@ -1,33 +1,31 @@
 import type { JanelaDeCompra } from "@/lib/tempo/antecedencia";
 import { porcentagem } from "@/lib/format";
 import { Termo } from "@/components/dominio/Termo";
+import { SeloDeOrigem } from "@/components/ui/SeloDeOrigem";
 import { LembreteDeCompra } from "./LembreteDeCompra";
 
 /**
  * Compro agora ou espero?
  *
  * O card mostra a janela como uma barra, com a posicao de hoje marcada
- * quando a pessoa informou a data do voo. O rodape diz de onde veio o
- * numero: curva propria desta rota ou estimativa de mercado. Essa
- * distincao importa tanto quanto o numero -- e e a unica coisa que
+ * quando a pessoa informou a data do voo. A explicacao termina dizendo
+ * de onde veio o numero: curva propria desta rota ou estimativa de
+ * mercado. Essa distincao importa tanto quanto o numero -- e e a unica coisa que
  * melhora sozinha com o tempo, conforme o historico acumula.
  */
 
 const APARENCIA = {
   "comprar-agora": {
     rotulo: "Boa hora de comprar",
-    classe: "border-dinheiro-borda bg-dinheiro-fundo",
-    cor: "text-dinheiro",
+    classe: "bg-dinheiro-fundo text-dinheiro",
   },
   esperar: {
     rotulo: "Ainda é cedo",
-    classe: "border-milhas-borda bg-milhas-fundo",
-    cor: "text-milhas",
+    classe: "bg-milhas-fundo text-milhas",
   },
   "janela-passou": {
     rotulo: "A janela já passou",
-    classe: "border-borda bg-superficie-2",
-    cor: "text-atencao",
+    classe: "bg-superficie-2 text-atencao",
   },
 } as const;
 
@@ -54,21 +52,17 @@ export function CardQuandoComprar({
   const daDireita = (dias: number) => `${(dias / limite) * 100}%`;
 
   return (
-    <section
-      className={`rounded-2xl border p-4 ${temData ? aparencia.classe : "border-borda bg-superficie shadow-card"}`}
-    >
-      <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-lg font-semibold tracking-tight text-tinta">
-          Quando comprar
-        </h2>
-        {temData ? (
-          <span
-            className={`text-xs font-bold uppercase tracking-widest ${aparencia.cor}`}
-          >
-            {aparencia.rotulo}
-          </span>
-        ) : null}
-      </header>
+    // Sem cartao nem titulo proprios: mora dentro do item "Com quanta
+    // antecedencia" do BlocoDeQuando, que ja e o cartao e ja diz o
+    // assunto. Repetir "Quando comprar" ali dentro era ruido.
+    <div>
+      {temData ? (
+        <p
+          className={`mb-3 inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${aparencia.classe}`}
+        >
+          {aparencia.rotulo}
+        </p>
+      ) : null}
 
       {/* Regua da antecedencia: o voo fica na direita, o passado na esquerda. */}
       <div className="relative mb-2 h-9">
@@ -128,13 +122,28 @@ export function CardQuandoComprar({
         {janela.explicacao}
       </p>
 
-      <p className="mt-2 text-xs text-tinta-fraca">
-        {janela.fonte === "curva-propria"
-          ? `Curva própria desta rota, de ${janela.observacoes.toLocaleString("pt-BR")} observações de preço.`
-          : "Estimativa de mercado. Esta previsão melhora sozinha conforme coletamos preços desta rota todos os dias."}
-      </p>
+      {/* A procedencia por extenso ja vem no fim de janela.explicacao.
+          Aqui fica so o selo de origem; a contagem de observacoes mora
+          no detalhe dele, e nao numa segunda frase igual a primeira. */}
+      <div className="mt-2">
+        {janela.fonte === "curva-propria" ? (
+          <SeloDeOrigem
+            origem="real"
+            detalhe={`Curva própria desta rota, de ${janela.observacoes.toLocaleString("pt-BR")} observações de preço.`}
+          >
+            dados reais desta rota
+          </SeloDeOrigem>
+        ) : (
+          <SeloDeOrigem
+            origem="estimado"
+            detalhe="Estimativa de mercado. Melhora sozinha conforme coletamos preços desta rota todos os dias."
+          >
+            estimativa
+          </SeloDeOrigem>
+        )}
+      </div>
 
       <LembreteDeCompra rotaId={rotaId} esperarDias={janela.esperarDias} />
-    </section>
+    </div>
   );
 }

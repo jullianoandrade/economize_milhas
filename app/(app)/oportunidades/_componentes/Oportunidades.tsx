@@ -57,6 +57,17 @@ const NOME: Record<string, string> = {
   tudoazul: "Azul Fidelidade",
 };
 
+/** "Praia" sozinho e ambiguo: fora do Brasil, a cidade leva o pais. */
+function lugar(d: Oportunidade["destino"]): string {
+  if (!d.pais || d.pais === "BR") return d.cidade;
+  try {
+    const pais = new Intl.DisplayNames(["pt-BR"], { type: "region" }).of(d.pais);
+    return pais ? `${d.cidade}, ${pais}` : d.cidade;
+  } catch {
+    return d.cidade;
+  }
+}
+
 /** "2026-11-28" vira "28/11", sem new Date(). */
 function dia(iso: string): string {
   const [, mes, d] = iso.split("-");
@@ -155,7 +166,19 @@ export function Oportunidades({
                 histórico de {historicoDe}
               </SeloDeOrigem>
             </div>
-            <ul className="mt-2">
+            {/* Legenda das barras: as mesmas classes das barras abaixo,
+                para a cor da legenda nunca desencontrar da barra. */}
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-tinta-media" aria-hidden="true">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2.5 w-4 rounded-full bg-tinta" />
+                típico
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="h-2.5 w-4 rounded-full bg-[#7fa0ff]" />
+                máximo já visto
+              </span>
+            </div>
+            <ul className="mt-1">
               {historico.map((h) => (
                 <li key={h.programa} className="border-b border-borda py-3.5">
                   <div className="flex items-baseline justify-between gap-3">
@@ -193,9 +216,18 @@ export function Oportunidades({
           Passagens abaixo do normal
         </h2>
         <p className="mt-1 text-[15px] leading-relaxed text-tinta-media">
-          Só ida, mais baratas que o preço típico da rota. Ao lado, se vale
-          gastar milhas nelas.
+          Só ida, preço em dinheiro, mais baratas que o preço típico da
+          rota. Ao lado, se vale gastar milhas nelas.
         </p>
+        {/* A origem vem antes da lista, nao depois: quem le precisa saber
+            de onde sao os precos antes de olhar para eles. */}
+        {dados && dados.oportunidades.length > 0 ? (
+          <div className="mt-2.5">
+            <SeloDeOrigem origem="real" detalhe={dados.observacao}>
+              preços de buscas reais recentes
+            </SeloDeOrigem>
+          </div>
+        ) : null}
 
         {carregando ? (
           <div className="mt-3 space-y-2" aria-label="Carregando">
@@ -222,27 +254,29 @@ export function Oportunidades({
                   href={`/rota/${dados.origem.iata}/${o.destino.iata}`}
                   className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-0.5 border-b border-borda px-1 py-3.5 transition-colors hover:bg-superficie"
                 >
-                  <span className="truncate text-base font-semibold text-tinta">{o.destino.cidade}</span>
+                  <span className="truncate text-base font-semibold text-tinta">{lugar(o.destino)}</span>
                   <span className="tabular text-right text-base font-bold text-tinta">{reais(o.precoBRL)}</span>
                   <span className="text-sm text-tinta-media">
                     {o.descontoPct}% abaixo do normal ({reais(o.precoTipicoBRL)})
                   </span>
-                  <span className="text-right text-sm font-semibold text-tinta-media">
-                    {TEXTO_CURTO[o.veredito]}
-                  </span>
+                  {/* "vale resgatar" e a unica linha que pede acao com
+                      milhas, e a unica em ambar: no meio de uma lista de
+                      "rende pouco" ela precisa saltar aos olhos. */}
+                  {o.veredito === "resgatar" ? (
+                    <span className="justify-self-end rounded-full bg-[#ffb020] px-2.5 py-0.5 text-sm font-semibold text-[#0b1526]">
+                      {TEXTO_CURTO[o.veredito]}
+                    </span>
+                  ) : (
+                    <span className="text-right text-sm font-semibold text-tinta-media">
+                      {TEXTO_CURTO[o.veredito]}
+                    </span>
+                  )}
                 </Link>
               </li>
             ))}
           </ul>
         )}
 
-        {dados && dados.oportunidades.length > 0 ? (
-          <div className="mt-3">
-            <SeloDeOrigem origem="real" detalhe={dados.observacao}>
-              preços de buscas reais recentes
-            </SeloDeOrigem>
-          </div>
-        ) : null}
       </section>
     </div>
   );

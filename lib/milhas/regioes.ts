@@ -75,10 +75,28 @@ export type RotaClassificada = {
 
 export class AeroportoDesconhecidoError extends Error {
   constructor(readonly iata: string) {
-    super(`Aeroporto ${iata} nao esta na base. Veja data/aeroportos.json.`);
+    super(`Aeroporto ${iata} não está na base. Veja data/aeroportos.json.`);
     this.name = "AeroportoDesconhecidoError";
   }
 }
+
+/**
+ * Origem e destino no mesmo aeroporto.
+ *
+ * Nao e rota: GRU-GRU dava "0 km" e um veredito inteiro, com preco e
+ * milhas, para uma viagem que nao existe. Quem chama decide como dizer
+ * isso (pagina, API), mas a regra mora aqui, num lugar so.
+ */
+export class MesmoAeroportoError extends Error {
+  constructor(readonly iata: string) {
+    super(`Origem e destino são o mesmo aeroporto (${iata}).`);
+    this.name = "MesmoAeroportoError";
+  }
+}
+
+/** Mensagem para a pessoa quando origem e destino coincidem. */
+export const MENSAGEM_MESMO_AEROPORTO =
+  "Origem e destino são o mesmo aeroporto. Escolha outro destino.";
 
 export function classificarRota(
   origemIata: string,
@@ -89,6 +107,8 @@ export function classificarRota(
 
   const destino = aeroportoPorIata(destinoIata);
   if (!destino) throw new AeroportoDesconhecidoError(destinoIata);
+
+  if (origem.iata === destino.iata) throw new MesmoAeroportoError(origem.iata);
 
   const km = Math.round(distanciaKm(origem, destino));
   const internacional = origem.pais !== destino.pais;

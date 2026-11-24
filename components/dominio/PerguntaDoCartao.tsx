@@ -80,7 +80,7 @@ export function PerguntaDoCartao({
         <div className="mb-1.5 flex items-baseline justify-between gap-3">
           <label
             htmlFor="gasto-mensal"
-            className="text-xs font-semibold uppercase tracking-wide text-tinta-fraca"
+            className="text-sm font-semibold text-tinta-media"
           >
             Quanto você passa no cartão por mês
           </label>
@@ -106,7 +106,7 @@ export function PerguntaDoCartao({
       <div className="mb-4">
         <label
           htmlFor="cartao-perfil"
-          className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-tinta-fraca"
+          className="mb-1.5 block text-sm font-semibold text-tinta-media"
         >
           Seu cartão
         </label>

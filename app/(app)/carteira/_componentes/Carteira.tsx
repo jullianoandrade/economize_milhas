@@ -33,7 +33,13 @@ import { FolhaDaCarteira, type PedidoDeFolha } from "./FolhaDaCarteira";
 const ALTURA_DO_CARTAO = 200;
 const DEGRAU = 64;
 const FRESTA = 14;
-const MATERIAIS = ["cartao-marinho", "cartao-ambar", "cartao-gelo"] as const;
+/**
+ * Cinco materiais para os cinco programas do catalogo, com o ambar por
+ * ultimo: ele aparece no maximo uma vez, e so quando a carteira esta
+ * cheia. Ambar e a cor de "atencao" -- repetido, competia com o aviso
+ * de vencimento logo acima da pilha.
+ */
+const MATERIAIS = ["cartao-marinho", "cartao-gelo", "cartao-azul", "cartao-branco", "cartao-ambar"] as const;
 
 export function Carteira({
   catalogo,
@@ -271,6 +277,11 @@ function Pilha({
         const ordem = outros.indexOf(l);
         const y = foco === null ? i * DEGRAU : focado ? 0 : inicioDosOutros + ordem * FRESTA;
         const escala = foco === null || focado ? 1 : 0.94 - ordem * 0.02;
+        // Na pilha fechada so a aba fica a vista (o ultimo cartao e a
+        // excecao): o saldo sobe para a aba, senao a pilha nao diz quanto
+        // ha em cada programa. Aberta, o de cima mostra o saldo inteiro e
+        // os de baixo sao frestas finas demais para texto.
+        const soAba = foco === null && i < linhas.length - 1;
         return (
           <button
             key={l.programa.id}
@@ -284,17 +295,22 @@ function Pilha({
               zIndex: focado ? 20 : foco === null ? i + 1 : 10 - ordem,
             }}
           >
-            <span className="relative flex items-start justify-between gap-3">
-              <span className="text-lg font-bold">{l.programa.nome}</span>
-              {l.desatualizado ? (
-                <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-[#0b1526] shadow-sm">confira o saldo</span>
+            <span className="relative flex items-baseline justify-between gap-3">
+              <span className="truncate text-lg font-bold">{l.programa.nome}</span>
+              {soAba ? (
+                <span aria-hidden="true" className="tabular shrink-0 text-right text-lg font-bold">
+                  {fmt(l.saldo.quantidade)} <span className="text-sm font-medium">{l.programa.unidade}</span>
+                </span>
               ) : null}
             </span>
             <span className="relative">
               <span className="tabular block text-[38px] font-bold leading-none tracking-[-0.035em]">
                 {fmt(l.saldo.quantidade)}
               </span>
-              <span className="mt-1 block text-sm font-medium">{l.programa.unidade}</span>
+              <span className="mt-1 flex items-center gap-2 text-sm font-medium">
+                {l.programa.unidade}
+                {l.desatualizado ? <SeloNoCartao /> : null}
+              </span>
             </span>
             <Milo pose="rosto" className="pointer-events-none absolute bottom-2 right-3 size-14 opacity-25 mix-blend-luminosity grayscale" />
           </button>
@@ -310,6 +326,23 @@ function Pilha({
         {detalhe}
       </div>
     </div>
+  );
+}
+
+/**
+ * O selo "desatualizado" no material do cartao. Mesma palavra, icone e
+ * borda tracejada do SeloDeOrigem; as cores sao fixas porque o cartao
+ * tambem e (o selo do tema sumiria no cartao marinho no modo claro).
+ */
+function SeloNoCartao() {
+  return (
+    <span className="inline-flex min-h-6 items-center gap-1.5 rounded-full border border-dashed border-[#0b1526]/60 bg-white px-2.5 text-xs font-semibold text-[#0b1526]">
+      <svg width={12} height={12} viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round">
+        <circle cx="12" cy="12" r="8.5" />
+        <path d="M12 7.5V12l3 2" />
+      </svg>
+      desatualizado
+    </span>
   );
 }
 
@@ -337,16 +370,6 @@ function Detalhe({
   return (
     <div className="rounded-[20px] bg-superficie px-5 pb-5 pt-2 shadow-card">
       <dl>
-        <div className="flex items-center justify-between gap-3 border-b border-borda py-3.5">
-          <dt className="text-[15px] text-tinta-media">Saldo</dt>
-          <dd className="tabular text-right text-[15px] font-semibold text-tinta">
-            {fmt(saldo.quantidade)} {programa.unidade}
-          </dd>
-        </div>
-        <div className="flex items-center justify-between gap-3 border-b border-borda py-3.5">
-          <dt className="text-[15px] text-tinta-media">Valor estimado</dt>
-          <dd className="tabular text-right text-[15px] font-semibold text-tinta">{reais(linha.valorBRL)}</dd>
-        </div>
         <div className="flex items-center justify-between gap-3 border-b border-borda py-3.5">
           <dt className="text-[15px] text-tinta-media">Atualizado</dt>
           <dd className="text-right">
@@ -395,7 +418,12 @@ function Detalhe({
       {programa.validade ? (
         <p className="border-t border-borda pt-3.5 text-sm leading-relaxed text-tinta-media">{programa.validade}</p>
       ) : null}
-      <p className="mt-2 text-xs leading-relaxed text-tinta-media">{fonteDoValor}: R$ {programa.milheiroBRL} a cada 1.000.</p>
+      {/* O saldo ja esta no cartao, logo acima; o valor dele vem aqui,
+          junto da conta que o produz, em vez de numa linha propria. */}
+      <p className="mt-2 text-sm leading-relaxed text-tinta-media">
+        Vale cerca de <strong className="tabular font-semibold text-tinta">{reais(linha.valorBRL)}</strong>.{" "}
+        <span className="text-xs">{fonteDoValor}: R$ {programa.milheiroBRL} a cada 1.000.</span>
+      </p>
 
       <div className="mt-4 flex flex-col gap-2">
         <button type="button" onClick={aoAtualizar} className="min-h-12 rounded-2xl bg-marca px-5 text-[15px] font-semibold text-marca-contraste">

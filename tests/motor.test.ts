@@ -270,6 +270,17 @@ describe("veredito", () => {
     expect(v.ressalva).toContain("guarde");
   });
 
+  it("diz um veredito so quando o resgate rende pouco", () => {
+    // A placa dizia "va de milhas" e a ressalva, logo abaixo, mandava
+    // guardar. O rotulo e o explicacao precisam concordar com a ressalva.
+    const v = calcularVeredito(rota("GRU", "SDU"), 350);
+    expect(v.recomendacao).toBe("milhas");
+    expect(v.rotulo).toBe("guardar");
+    expect(v.explicacao).toMatch(/^Pague em dinheiro e guarde as milhas/);
+    expect(calcularVeredito(rota("GRU", "LIS"), 6500).rotulo).toBe("resgatar");
+    expect(calcularVeredito(rota("GRU", "SDU"), 60).rotulo).toBe("pagar");
+  });
+
   it("manda pagar em dinheiro quando as taxas comem o resgate", () => {
     // Passagem baratissima: a taxa de embarque sozinha quase cobre a
     // tarifa, entao nao sobra valor nenhum para as milhas comprarem.

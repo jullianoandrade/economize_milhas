@@ -4,14 +4,14 @@
     {
       "id": "cpm",
       "termo": "CPM (custo por milheiro)",
-      "resumo": "Quanto você PAGA por 1.000 milhas.",
+      "resumo": "Quanto você paga por 1.000 milhas.",
       "explicacao": "É o preço de aquisição. Se você assina um clube de R$ 184 por mês que deposita 5.000 milhas, seu CPM é 184 dividido por 5, ou seja R$ 36,80. Esse número é a base de qualquer decisão: sem ele, não dá para saber se um resgate foi bom ou ruim. É o primeiro número que você precisa descobrir.",
       "exemplo": "Clube de R$ 184/mês com 5.000 milhas = CPM de R$ 36,80."
     },
     {
       "id": "valor-extraido",
       "termo": "Valor extraído por milheiro",
-      "resumo": "Quanto cada 1.000 milhas VALERAM naquele resgate.",
+      "resumo": "Quanto cada 1.000 milhas valeram naquele resgate.",
       "explicacao": "É o outro lado da moeda do CPM. Pegue o preço da passagem em dinheiro, desconte as taxas de embarque (você paga elas de qualquer jeito), divida pelas milhas do resgate e multiplique por mil. Se o valor extraído for maior que o seu CPM, o resgate valeu a pena. Se for menor, você queimou milhas que custaram mais caro do que a passagem.",
       "exemplo": "Passagem de R$ 3.280 com R$ 350 de taxa, por 80.000 milhas: (3.280 − 350) ÷ 80.000 × 1.000 = R$ 36,63 por milheiro."
     },

@@ -8,10 +8,15 @@ import { Globo } from "@/components/dominio/Globo";
 import { CampoDeLugar, type Lugar } from "@/components/ui/CampoDeLugar";
 import { Milo } from "@/components/ui/Milo";
 import { SeloDeOrigem } from "@/components/ui/SeloDeOrigem";
-import { useLugar } from "@/lib/cliente/lugar";
+import { buscarLugar, useLugar } from "@/lib/cliente/lugar";
 import { LinhaDoObjetivo } from "./LinhaDoObjetivo";
 import { Termo } from "@/components/dominio/Termo";
-import { usarPerfil, usePerfilHidratado } from "@/store/perfil";
+import {
+  SALDO_MAXIMO,
+  saldoValido,
+  usarPerfil,
+  usePerfilHidratado,
+} from "@/store/perfil";
 import {
   calcularProgresso,
   mesAno,
@@ -119,6 +124,100 @@ function novoId() {
   return `meta-${Date.now()}`;
 }
 
+/**
+ * Le o que a pessoa digitou num campo de saldo.
+ *
+ * Campo vazio nao e erro (e "ainda nao digitou"). O resto vira uma frase
+ * que diz o que corrigir -- antes, -3000 entrava, aparecia como
+ * "-3.000 de 42.000" e "+-23.000", e 99999999999 so era barrado pela
+ * API, que devolvia o texto cru "corpo invalido" para a tela.
+ */
+export function lerSaldo(texto: string): {
+  valor: number | null;
+  erro: string | null;
+} {
+  const limpo = texto.trim();
+  if (limpo === "") return { valor: null, erro: null };
+  const n = Number(limpo);
+  if (!Number.isFinite(n)) {
+    return { valor: null, erro: "Digite só números." };
+  }
+  if (n < 0) {
+    return { valor: null, erro: "O saldo não pode ser negativo." };
+  }
+  if (!Number.isInteger(n)) {
+    return { valor: null, erro: "Milhas não têm fração: use um número inteiro." };
+  }
+  if (n > SALDO_MAXIMO) {
+    return {
+      valor: null,
+      erro: `O limite é ${fmtMilhas(SALDO_MAXIMO)} milhas. Confira o número digitado.`,
+    };
+  }
+  return { valor: n, erro: null };
+}
+
+/**
+ * O que mostrar quando /api/plano falha. O texto da API e para log, nao
+ * para gente: "corpo invalido" nao diz a ninguem o que fazer.
+ */
+function mensagemDeFalha(status: number | null): string {
+  if (status === 429) {
+    return "Muitos cálculos seguidos. Espere alguns segundos e tente de novo.";
+  }
+  if (status === null) {
+    return "Sem conexão para calcular o plano agora. Confira a internet e tente de novo.";
+  }
+  return "Não deu para calcular o plano com esses valores. Confira os números e tente de novo.";
+}
+
+/** Saldo que vai para o calculo: um registro antigo invalido nao derruba a API. */
+function saldoParaApi(saldo: number): number {
+  if (saldoValido(saldo)) return saldo;
+  if (!Number.isFinite(saldo) || saldo < 0) return 0;
+  return Math.min(Math.round(saldo), SALDO_MAXIMO);
+}
+
+/**
+ * Variacao com sinal. Saldo abaixo da partida e legitimo (a pessoa
+ * resgatou milhas no meio do caminho) e aparecia como "+-2.000".
+ */
+function comSinal(n: number): string {
+  return n < 0 ? `−${fmtMilhas(-n)}` : `+${fmtMilhas(n)}`;
+}
+
+type CartaoSugerido = Resposta["plano"]["cartoesSugeridos"][number];
+
+/**
+ * A ordem da lista de cartoes, como a pessoa a le.
+ *
+ * O motor ordena por custo por milheiro, e um cartao sem anuidade na
+ * base entra la com custo zero -- na frente de um cartao pago de custo
+ * conhecido, sem merecer. Aqui os de custo conhecido vem primeiro, do
+ * mais barato; os desconhecidos depois, pelo prazo, que e a unica
+ * comparacao honesta entre eles.
+ */
+function ordenarCartoes(lista: CartaoSugerido[]): CartaoSugerido[] {
+  const conhecidos = lista
+    .filter((c) => !c.anuidadeDesconhecida)
+    .sort((a, b) => a.cpmBRL - b.cpmBRL || a.mesesParaMeta - b.mesesParaMeta);
+  const desconhecidos = lista
+    .filter((c) => c.anuidadeDesconhecida)
+    .sort((a, b) => a.mesesParaMeta - b.mesesParaMeta);
+  return [...conhecidos, ...desconhecidos];
+}
+
+function legendaDosCartoes(lista: CartaoSugerido[]): string {
+  const desconhecidos = lista.filter((c) => c.anuidadeDesconhecida).length;
+  if (desconhecidos === lista.length) {
+    return "Ordenado pelo prazo. A anuidade destes cartões ainda não está na nossa base, então o custo de cada mil milhas fica em aberto.";
+  }
+  if (desconhecidos === 0) {
+    return "Ordenado pelo que cada mil milhas custaria de anuidade no seu nível de gasto.";
+  }
+  return "Primeiro os de custo conhecido, do mais barato por mil milhas no seu nível de gasto; depois os de anuidade não informada, pelo prazo.";
+}
+
 export function TelaDeObjetivos() {
   const parametros = useSearchParams();
   const destinoDaUrl = parametros.get("destino")?.toUpperCase() ?? null;
@@ -152,6 +251,30 @@ export function TelaDeObjetivos() {
    */
   const [modo, setModo] = useState<"auto" | "criando" | "acompanhando">("auto");
   const [destinoNovo, setDestinoNovo] = useState<Lugar | null>(null);
+
+  /**
+   * O campo de destino abre com o NOME da cidade, nao com o codigo cru
+   * da URL ("LIS"). Guarda junto o codigo a que o texto se refere: se a
+   * URL mudar, o texto antigo deixa de valer sozinho, sem efeito extra.
+   */
+  const [rotuloDaUrl, setRotuloDaUrl] = useState<{ iata: string; texto: string } | null>(null);
+  useEffect(() => {
+    if (!destinoDaUrl) return;
+    let vivo = true;
+    buscarLugar(destinoDaUrl).then((l) => {
+      if (!vivo) return;
+      setRotuloDaUrl({
+        iata: destinoDaUrl,
+        // Mesmo formato de quando a pessoa escolhe uma sugestao.
+        texto: l ? `${l.cidade} (${l.iata})` : destinoDaUrl,
+      });
+    });
+    return () => {
+      vivo = false;
+    };
+  }, [destinoDaUrl]);
+  const textoDoDestinoDaUrl =
+    rotuloDaUrl && rotuloDaUrl.iata === destinoDaUrl ? rotuloDaUrl.texto : null;
 
   // Ponto de partida (na criacao) e saldo novo (no acompanhamento).
   const [saldoDigitado, setSaldoDigitado] = useState("");
@@ -227,11 +350,17 @@ export function TelaDeObjetivos() {
   const saldoAtualDaMeta =
     metaAtiva?.registros[metaAtiva.registros.length - 1]?.saldo ?? 0;
 
-  const saldoParaCalculo = emCriacao
-    ? Number(saldoDigitado || 0)
-    : saldoAtualDaMeta;
+  const partidaLida = lerSaldo(saldoDigitado);
+
+  const saldoParaCalculo = saldoParaApi(
+    emCriacao ? (partidaLida.valor ?? 0) : saldoAtualDaMeta,
+  );
 
   const idParaRitmo = emCriacao ? null : (metaAtiva?.id ?? null);
+
+  const cartoesVisiveis = resposta
+    ? ordenarCartoes(resposta.plano.cartoesSugeridos).slice(0, 4)
+    : [];
 
   useEffect(() => {
     if (!destinoAlvo) return;
@@ -253,9 +382,11 @@ export function TelaDeObjetivos() {
       signal: controlador.signal,
     })
       .then(async (r) => {
-        const corpo = await r.json();
-        if (!r.ok) throw new Error(corpo.erro ?? "falha no cálculo");
-        const dados = corpo as Resposta;
+        if (!r.ok) {
+          setErro(mensagemDeFalha(r.status));
+          return;
+        }
+        const dados = (await r.json()) as Resposta;
         setResposta(dados);
         setErro(null);
         // O ritmo do objetivo e consequencia do plano, entao acompanha
@@ -264,7 +395,7 @@ export function TelaDeObjetivos() {
       })
       .catch((e) => {
         if (e.name === "AbortError") return;
-        setErro(e.message);
+        setErro(mensagemDeFalha(null));
       });
 
     return () => controlador.abort();
@@ -281,9 +412,9 @@ export function TelaDeObjetivos() {
   ]);
 
   function criarObjetivo() {
-    if (!resposta) return;
+    if (!resposta || partidaLida.erro) return;
     const hoje = paraIso(new Date());
-    const partida = Number(saldoDigitado || 0);
+    const partida = partidaLida.valor ?? 0;
 
     const meta: Meta = {
       id: novoId(),
@@ -364,9 +495,12 @@ export function TelaDeObjetivos() {
 
       {emCriacao ? (
         <section className="mt-5 flex flex-col gap-5 rounded-[24px] bg-superficie p-5 shadow-card">
+          {/* A key remonta o campo quando o nome da cidade chega: o
+              CampoDeLugar so le valorInicial na montagem. */}
           <CampoDeLugar
+            key={textoDoDestinoDaUrl ?? "sem-destino-da-url"}
             rotulo="Para onde você quer ir?"
-            valorInicial={destinoDaUrl ?? ""}
+            valorInicial={textoDoDestinoDaUrl ?? ""}
             aoSelecionar={setDestinoNovo}
           />
 
@@ -379,12 +513,18 @@ export function TelaDeObjetivos() {
               type="number"
               inputMode="numeric"
               min={0}
-              step={500}
+              max={SALDO_MAXIMO}
+              step={1}
               value={saldoDigitado}
               onChange={(e) => setSaldoDigitado(e.target.value)}
               placeholder="0"
-              className="tabular h-14 w-full rounded-2xl border border-borda bg-superficie px-4 text-[17px] text-tinta outline-none focus:border-marca"
+              aria-invalid={partidaLida.erro ? true : undefined}
+              aria-describedby={partidaLida.erro ? "partida-erro" : undefined}
+              className={`tabular h-14 w-full rounded-2xl border bg-superficie px-4 text-[17px] text-tinta outline-none ${
+                partidaLida.erro ? "border-alerta" : "border-borda focus:border-marca"
+              }`}
             />
+            <ErroDoCampo id="partida-erro" erro={partidaLida.erro} />
             <p className="mt-2 text-sm leading-relaxed text-tinta-media">
               Pode ser zero. O valor fica guardado como marco inicial e não muda
               depois: é o que permite dizer quanto você acumulou.
@@ -455,7 +595,8 @@ export function TelaDeObjetivos() {
           <button
             type="button"
             onClick={criarObjetivo}
-            className="mt-5 min-h-12 w-full rounded-2xl bg-marca px-5 text-[15px] font-semibold text-marca-contraste"
+            disabled={partidaLida.erro !== null}
+            className="mt-5 min-h-12 w-full rounded-2xl bg-marca px-5 text-[15px] font-semibold text-marca-contraste disabled:opacity-40"
           >
             Criar objetivo
           </button>
@@ -621,11 +762,11 @@ export function TelaDeObjetivos() {
                 Cartões que fechariam a conta mais rápido
               </h3>
               <p className="mb-3 text-xs leading-relaxed text-tinta-media">
-                Ordenado pelo que cada mil milhas custaria de anuidade no seu
-                nível de gasto. Nosso ranking nunca considera quanto ganhamos.
+                {legendaDosCartoes(cartoesVisiveis)} Nosso ranking nunca
+                considera quanto ganhamos.
               </p>
               <ul className="space-y-2.5">
-                {resposta.plano.cartoesSugeridos.slice(0, 4).map((c) => (
+                {cartoesVisiveis.map((c) => (
                   <li
                     key={c.cartao.id}
                     className="flex items-baseline justify-between gap-3 border-t border-borda pt-2.5 first:border-0 first:pt-0"
@@ -635,7 +776,7 @@ export function TelaDeObjetivos() {
                         {c.cartao.nome}
                       </p>
                       <p className="tabular text-xs text-tinta-fraca">
-                        {fmtMilhas(c.milhasPorMes)}/mês ·{" "}
+                        {fmtMilhas(c.milhasPorMes)} milhas/mês ·{" "}
                         {c.anuidadeDesconhecida
                           ? "anuidade não informada"
                           : c.isento
@@ -651,7 +792,14 @@ export function TelaDeObjetivos() {
                         {c.mesesParaMeta === 1 ? "mês" : "meses"}
                       </span>
                       <span className="block text-[11px] text-tinta-fraca">
-                        {reaisExatos(c.cpmBRL)}/milheiro
+                        {/* Anuidade ausente nao e anuidade zero: o motor
+                            entrega cpm 0 nos dois casos, e so a flag
+                            separa o gratis comprovado do nao verificado. */}
+                        {c.anuidadeDesconhecida
+                          ? "custo desconhecido"
+                          : c.cpmBRL === 0
+                            ? "custo zero"
+                            : `${reaisExatos(c.cpmBRL)}/milheiro`}
                       </span>
                     </span>
                   </li>
@@ -690,6 +838,19 @@ export function TelaDeObjetivos() {
         />
       ) : null}
     </div>
+  );
+}
+
+/** A frase de correcao, colada ao campo e lida pelo leitor de tela. */
+function ErroDoCampo({ id, erro }: { id: string; erro: string | null }) {
+  return (
+    <p
+      id={id}
+      aria-live="polite"
+      className="mt-2 text-sm font-medium leading-relaxed text-alerta empty:hidden"
+    >
+      {erro ?? ""}
+    </p>
   );
 }
 
@@ -742,6 +903,7 @@ function ObjetivoAtivo({
   const aparencia = APARENCIA_DA_SITUACAO[progresso.situacao];
 
   const [novoSaldo, setNovoSaldo] = useState("");
+  const novoSaldoLido = lerSaldo(novoSaldo);
 
   // A estimativa do trecho muda quando o preco da rota muda. Em vez de
   // mexer na meta por conta propria -- o que faria o objetivo se mover
@@ -776,13 +938,19 @@ function ObjetivoAtivo({
         </div>
 
         <div className="relative max-w-[13rem] md:max-w-sm">
-          <MarcoDoObjetivo
-            metaId={meta.id}
-            percentual={progresso.percentual}
-            marcosCelebrados={meta.marcosCelebrados}
-            tom="claro"
-            rotulo="pronto"
-          />
+          {/* Progresso e milhas, e milhas e ambar -- o mesmo da barra do
+              Inicio. No tom claro o anel pinta arco e numero com
+              --painel-tinta; redefinida so nesta subarvore, vira o ambar
+              sem mexer no resto do painel. */}
+          <div className="[--painel-tinta:#ffb020]">
+            <MarcoDoObjetivo
+              metaId={meta.id}
+              percentual={progresso.percentual}
+              marcosCelebrados={meta.marcosCelebrados}
+              tom="claro"
+              rotulo="do caminho"
+            />
+          </div>
           <p className="mt-3 text-[15px] text-painel-tinta-fraca">{meta.programaNome}</p>
           <h2 className="display text-[30px] leading-tight">{meta.destinoCidade}</h2>
           <p className="tabular mt-1 text-[15px]">
@@ -852,17 +1020,23 @@ function ObjetivoAtivo({
             type="number"
             inputMode="numeric"
             min={0}
-            step={500}
+            max={SALDO_MAXIMO}
+            step={1}
             value={novoSaldo}
             onChange={(e) => setNovoSaldo(e.target.value)}
             placeholder={String(progresso.saldoAtual)}
-            className="tabular h-14 min-w-0 flex-1 rounded-2xl border border-borda bg-superficie px-4 text-[17px] text-tinta outline-none focus:border-marca"
+            aria-invalid={novoSaldoLido.erro ? true : undefined}
+            aria-describedby={novoSaldoLido.erro ? "novo-saldo-erro" : undefined}
+            className={`tabular h-14 min-w-0 flex-1 rounded-2xl border bg-superficie px-4 text-[17px] text-tinta outline-none ${
+              novoSaldoLido.erro ? "border-alerta" : "border-borda focus:border-marca"
+            }`}
           />
           <button
             type="button"
-            disabled={novoSaldo === ""}
+            disabled={novoSaldoLido.valor === null}
             onClick={() => {
-              aoRegistrar(Number(novoSaldo));
+              if (novoSaldoLido.valor === null) return;
+              aoRegistrar(novoSaldoLido.valor);
               setNovoSaldo("");
             }}
             className="h-14 shrink-0 rounded-2xl bg-marca px-5 text-[15px] font-semibold text-marca-contraste disabled:opacity-40"
@@ -870,6 +1044,7 @@ function ObjetivoAtivo({
             Registrar
           </button>
         </div>
+        <ErroDoCampo id="novo-saldo-erro" erro={novoSaldoLido.erro} />
         <p className="mt-2 text-sm leading-relaxed text-tinta-media">
           Confira no app do {meta.programaNome}. Cada registro melhora a medida
           do seu ritmo.
@@ -881,7 +1056,7 @@ function ObjetivoAtivo({
           <span>
             <span className="block text-[17px] font-semibold text-tinta">Como você andou</span>
             <span className="tabular mt-0.5 block text-sm text-tinta-media">
-              +{fmtMilhas(progresso.ganhoDesdeOInicio)} milhas desde o início
+              {comSinal(progresso.ganhoDesdeOInicio)} milhas desde o início
             </span>
           </span>
           <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 shrink-0 text-tinta-media transition-transform group-open:rotate-180" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -899,7 +1074,7 @@ function ObjetivoAtivo({
             </div>
             <div>
               <dt className="text-xs text-tinta-media">Acumulado</dt>
-              <dd className="text-[15px] font-semibold text-dinheiro">+{fmtMilhas(progresso.ganhoDesdeOInicio)}</dd>
+              <dd className={`text-[15px] font-semibold ${progresso.ganhoDesdeOInicio < 0 ? "text-tinta" : "text-dinheiro"}`}>{comSinal(progresso.ganhoDesdeOInicio)}</dd>
             </div>
             <div>
               <dt className="text-xs text-tinta-media">

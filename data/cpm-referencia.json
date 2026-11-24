@@ -1,6 +1,6 @@
 {
   "atualizadoEm": "2026-10-08",
-  "explicacao": "CPM = custo por milheiro, ou quanto custa adquirir 1.000 milhas. O alvo e o preco ate o qual vale a pena comprar. O mercado e a faixa praticada na compra e venda entre pessoas.",
+  "explicacao": "CPM = custo por milheiro, ou quanto custa adquirir 1.000 milhas. O alvo é o preço até o qual vale a pena comprar. O mercado é a faixa praticada na compra e venda entre pessoas.",
   "fonte": "melhoresdestinos.com.br/milhas/valor-milheiro-azul-latam-smiles-2026",
   "programas": {
     "smiles": {
@@ -30,12 +30,12 @@
     }
   },
   "compraDiretaBRL": {
-    "explicacao": "Preco de tabela ao comprar milhas direto da companhia, sem promocao. Serve de teto: acima disso nunca vale.",
+    "explicacao": "Preço de tabela ao comprar milhas direto da companhia, sem promoção. Serve de teto: acima disso nunca vale.",
     "faixaMin": 70,
     "faixaMax": 80
   },
   "coalizao": {
-    "explicacao": "Preco para COMPRAR pontos de coalizao, que e a origem das transferencias bonificadas. O valor base de tabela da Livelo e R$ 70 o milheiro; em promocao de compra cai para perto de R$ 30, e e esse o alvo realista.",
+    "explicacao": "Preço para COMPRAR pontos de coalizão, que é a origem das transferências bonificadas. O valor base de tabela da Livelo é R$ 70 o milheiro; em promoção de compra cai para perto de R$ 30, e é esse o alvo realista.",
     "fonte": "melhoresdestinos.com.br/milhas/valor-milheiro-livelo",
     "livelo": {
       "alvoBRL": 30,

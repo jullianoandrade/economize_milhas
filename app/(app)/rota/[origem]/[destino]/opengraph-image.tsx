@@ -3,6 +3,7 @@ import {
   AeroportoDesconhecidoError,
   aeroportoPorIata,
   classificarRota,
+  MesmoAeroportoError,
 } from "@/lib/milhas/regioes";
 
 /**
@@ -63,7 +64,12 @@ export default async function Imagem({
     detalhe = rota.faixa ? `${km} · ${rota.rotulo}` : km;
     tocaOBrasil = rota.tocaOBrasil;
   } catch (erro) {
-    if (!(erro instanceof AeroportoDesconhecidoError)) throw erro;
+    if (
+      !(erro instanceof AeroportoDesconhecidoError) &&
+      !(erro instanceof MesmoAeroportoError)
+    ) {
+      throw erro;
+    }
   }
 
   // A chamada acompanha a fronteira do motor. Prometer "vale mais em

@@ -442,8 +442,13 @@ body {
 /* Os cartoes da Carteira. Objetos fisicos: cores fixas nos dois temas,
    como o Milo. O padrao de circulos finos lembra a guilhoche de cedula
    -- e o detalhe que diz "isto vale dinheiro" sem precisar de icone.
-   Pares de texto medidos: branco sobre marinho 18,2; marinho sobre ambar
-   10,0; marinho sobre gelo 14,6. */
+   Cinco materiais, um por programa do catalogo; o ambar e o ultimo da
+   fila para aparecer no maximo uma vez (e a cor de "atencao").
+   Pares de texto medidos (WCAG, minimo 4,5): branco sobre marinho 18,3;
+   marinho sobre gelo 14,6; marinho sobre azul de dado #7fa0ff 7,3;
+   marinho sobre branco 18,3; marinho sobre ambar 10,0. O selo
+   "desatualizado" do cartao e marinho sobre branco (18,3) em qualquer
+   material. */
 /* Sem `position` aqui de proposito: esta regra fica fora de @layer e
    venceria o `absolute` do Tailwind que posiciona o cartao na pilha. */
 .cartao-programa {
@@ -466,6 +471,10 @@ body {
 .cartao-ambar::before { background: repeating-radial-gradient(circle at -15% 120%, transparent 0 9px, rgb(11 21 38 / 0.09) 9px 10px); }
 .cartao-gelo { background: #dfe6f5; color: #0b1526; }
 .cartao-gelo::before { background: repeating-radial-gradient(circle at 110% 120%, transparent 0 9px, rgb(11 21 38 / 0.08) 9px 10px); }
+.cartao-azul { background: #7fa0ff; color: #0b1526; }
+.cartao-azul::before { background: repeating-radial-gradient(circle at 115% -20%, transparent 0 9px, rgb(11 21 38 / 0.1) 9px 10px); }
+.cartao-branco { background: #ffffff; color: #0b1526; border: 1px solid #c9d3e6; }
+.cartao-branco::before { background: repeating-radial-gradient(circle at -15% -20%, transparent 0 9px, rgb(127 160 255 / 0.22) 9px 10px); }
 
 /* Os primeiros @keyframes do projeto (Fase 5 -- movimento). Regra:
    anima RELACOES, nao numeros; anima MUDANCAS, nao chegadas. */

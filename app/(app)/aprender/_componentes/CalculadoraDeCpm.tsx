@@ -37,7 +37,7 @@ function Deslizante({
   return (
     <div>
       <div className="mb-1.5 flex items-baseline justify-between gap-3">
-        <label className="text-xs font-semibold uppercase tracking-wide text-tinta-fraca">
+        <label className="text-sm font-medium text-tinta-media">
           {rotulo}
         </label>
         <output className="tabular text-sm font-semibold text-tinta">
@@ -86,7 +86,7 @@ export function CalculadoraDeCpm() {
         custou, e quanto ela valeu no resgate.
       </p>
 
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-tinta-fraca">
+      <p className="mb-2 text-sm font-semibold text-tinta">
         1. Quanto a milha custou
       </p>
       <div className="mb-4 space-y-4 rounded-2xl bg-superficie-2 p-3">
@@ -117,7 +117,7 @@ export function CalculadoraDeCpm() {
         </p>
       </div>
 
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-tinta-fraca">
+      <p className="mb-2 text-sm font-semibold text-tinta">
         2. Quanto ela valeria num resgate
       </p>
       <div className="mb-4 space-y-4 rounded-2xl bg-superficie-2 p-3">

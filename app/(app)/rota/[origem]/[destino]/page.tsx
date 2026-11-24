@@ -1,6 +1,7 @@
 import { Suspense, type CSSProperties } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { permanentRedirect } from "next/navigation";
 import { FaixaDaJornada } from "./_componentes/FaixaDaJornada";
 import { RegistrarInteresse } from "./_componentes/RegistrarInteresse";
 import { SeletorDeData } from "./_componentes/SeletorDeData";
@@ -24,6 +25,8 @@ import {
   AeroportoDesconhecidoError,
   aeroportoPorIata,
   classificarRota,
+  MENSAGEM_MESMO_AEROPORTO,
+  MesmoAeroportoError,
 } from "@/lib/milhas/regioes";
 import { calcularVeredito } from "@/lib/milhas/veredito";
 import rotasDestaque from "@/data/rotas-destaque.json";
@@ -65,10 +68,36 @@ export async function generateMetadata({
       ? `${o.cidade} para ${d.cidade}`
       : `${origem.toUpperCase()} para ${destino.toUpperCase()}`;
 
+  // Aeroporto desconhecido ou origem igual ao destino: a pagina so diz
+  // que nao ha rota. Nada disso deve entrar no indice do buscador.
+  const semRota = !o || !d || o.iata === d.iata;
+
   return {
     title: trecho,
     description: `Quanto custa ${trecho} em dinheiro e em milhas, em que mês ir, quando comprar e quanto você economiza.`,
+    ...(semRota ? { robots: { index: false, follow: true } } : {}),
   };
+}
+
+/**
+ * A data da URL, so se for um dia que existe no calendario.
+ *
+ * O formato sozinho nao basta: "2026-13-45" passava na expressao e
+ * virava "NaN dias" e larguras NaN% na tela, e "2026-02-31" virava
+ * 3 de marco em silencio. Data invalida e ignorada, como se nao
+ * houvesse data.
+ */
+function dataValida(bruta: unknown): string | null {
+  if (typeof bruta !== "string") return null;
+  const partes = /^(\d{4})-(\d{2})-(\d{2})$/.exec(bruta);
+  if (!partes) return null;
+  const [ano, mes, dia] = partes.slice(1).map(Number);
+  const data = new Date(Date.UTC(ano, mes - 1, dia));
+  return data.getUTCFullYear() === ano &&
+    data.getUTCMonth() === mes - 1 &&
+    data.getUTCDate() === dia
+    ? bruta
+    : null;
 }
 
 /**
@@ -79,8 +108,8 @@ export async function generateMetadata({
  * o resto da pagina usa no modo claro (CardVeredito, ReguaDoResgate,
  * FaixaDeMilhas, SeloDeFonte, FaixaDaJornada, SeletorDeData) so precisam
  * ler, aqui dentro, os valores que o MODO ESCURO do site ja define para
- * estas variaveis -- mesmo precedente de TOM_CLARO em Ilustracao.tsx, so
- * que invertido.
+ * estas variaveis -- o tema escuro aplicado so a este bloco, e nao a
+ * pagina inteira.
  */
 const TEMA_DO_HEROI = {
   "--tinta": "#eef2f9",
@@ -132,11 +161,16 @@ async function Conteudo({
 }) {
   const { origem, destino } = await params;
   const consulta = await searchParams;
-  const dataEscolhida =
-    typeof consulta.data === "string" &&
-    /^\d{4}-\d{2}-\d{2}$/.test(consulta.data)
-      ? consulta.data
-      : null;
+  const dataEscolhida = dataValida(consulta.data);
+
+  // Um endereco por rota: /rota/gru/lis vira /rota/GRU/LIS. Fora do
+  // try, porque permanentRedirect funciona lancando um erro.
+  if (origem !== origem.toUpperCase() || destino !== destino.toUpperCase()) {
+    const busca = dataEscolhida ? `?data=${dataEscolhida}` : "";
+    permanentRedirect(
+      `/rota/${encodeURIComponent(origem.toUpperCase())}/${encodeURIComponent(destino.toUpperCase())}${busca}`,
+    );
+  }
 
   let rota;
   try {
@@ -144,6 +178,9 @@ async function Conteudo({
   } catch (erro) {
     if (erro instanceof AeroportoDesconhecidoError) {
       return <RotaNaoEncontrada iata={erro.iata} />;
+    }
+    if (erro instanceof MesmoAeroportoError) {
+      return <MesmoAeroporto />;
     }
     throw erro;
   }
@@ -367,7 +404,7 @@ function RotaNaoEncontrada({ iata }: { iata: string }) {
   return (
     <div className="rounded-2xl border border-borda bg-superficie p-5 shadow-card">
       <h1 className="text-lg font-semibold text-tinta">
-        Não conheço o aeroporto {iata.toUpperCase()}
+        Não conhecemos o aeroporto {iata.toUpperCase()}.
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-tinta-media">
         Nossa base cobre todos os aeroportos do Brasil e os principais destinos
@@ -378,6 +415,22 @@ function RotaNaoEncontrada({ iata }: { iata: string }) {
         className="mt-4 inline-block rounded-xl bg-marca px-4 py-2.5 text-sm font-medium text-marca-contraste"
       >
         Voltar para a busca
+      </Link>
+    </div>
+  );
+}
+
+function MesmoAeroporto() {
+  return (
+    <div className="rounded-2xl border border-borda bg-superficie p-5 shadow-card">
+      <h1 className="text-lg font-semibold text-tinta">
+        {MENSAGEM_MESMO_AEROPORTO}
+      </h1>
+      <Link
+        href="/explorar"
+        className="mt-4 inline-block rounded-xl bg-marca px-4 py-2.5 text-sm font-medium text-marca-contraste"
+      >
+        Escolher outro destino
       </Link>
     </div>
   );

@@ -15,6 +15,22 @@ import { useId, useSyncExternalStore } from "react";
  */
 const nada = () => () => {};
 
+/**
+ * Hoje no fuso de Brasilia, como AAAA-MM-DD.
+ *
+ * toISOString() da a data em UTC: das 21h a meia-noite no Brasil ela ja
+ * e "amanha", e o `min` do campo impedia escolher o proprio dia. O
+ * locale en-CA formata exatamente como AAAA-MM-DD.
+ */
+function hojeEmBrasilia(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
 export function SeletorDeData({ valor }: { valor: string | null }) {
   const id = useId();
   const router = useRouter();
@@ -27,7 +43,10 @@ export function SeletorDeData({ valor }: { valor: string | null }) {
     else novos.delete("data");
 
     const consulta = novos.toString();
-    router.replace(consulta ? `${pathname}?${consulta}` : pathname, {
+    // push, e nao replace: cada data escolhida vira uma entrada no
+    // historico, e o botao voltar devolve a data anterior -- que e o
+    // que o comentario do topo promete.
+    router.push(consulta ? `${pathname}?${consulta}` : pathname, {
       scroll: false,
     });
   }
@@ -37,7 +56,7 @@ export function SeletorDeData({ valor }: { valor: string | null }) {
   // servidor rende sem `min` e o navegador preenche ao hidratar.
   const hoje = useSyncExternalStore(
     nada,
-    () => new Date().toISOString().slice(0, 10),
+    hojeEmBrasilia,
     () => undefined,
   );
 

@@ -1,6 +1,6 @@
 {
   "atualizadoEm": "2026-10-08",
-  "explicacao": "Estimativa de milhas por TRECHO (so ida), classe economica. Programas nao publicam tabela fixa: os valores variam por data, demanda e disponibilidade. Por isso cada faixa traz min (resgate promocional), tipico (o que se encontra na maior parte das datas) e max (alta temporada ou ultima hora). O campo confianca diz se o numero veio de fonte publicada ou de interpolacao entre pontos conhecidos.",
+  "explicacao": "Estimativa de milhas por TRECHO (só ida), classe econômica. Programas não publicam tabela fixa: os valores variam por data, demanda e disponibilidade. Por isso cada faixa traz min (resgate promocional), típico (o que se encontra na maior parte das datas) e max (alta temporada ou última hora). O campo confianca diz se o número veio de fonte publicada ou de interpolação entre pontos conhecidos.",
   "regioes": [
     {
       "id": "domestico-curto",
@@ -290,5 +290,5 @@
       "milhasPorReal": 14
     }
   },
-  "explicacaoPrecificacaoDinamica": "Os programas brasileiros usam precificacao dinamica: a quantidade de milhas acompanha o preco em dinheiro da passagem. milhasPorReal e a taxa implicita de cada programa, derivada dos pontos de tabela conhecidos. Quando o preco em dinheiro e conhecido, o motor usa preco x milhasPorReal e limita o resultado a faixa min-max da regiao. Sem preco, cai no valor tipico."
+  "explicacaoPrecificacaoDinamica": "Os programas brasileiros usam precificação dinâmica: a quantidade de milhas acompanha o preço em dinheiro da passagem. milhasPorReal é a taxa implícita de cada programa, derivada dos pontos de tabela conhecidos. Quando o preço em dinheiro é conhecido, o motor usa preço x milhasPorReal e limita o resultado à faixa min-max da região. Sem preço, cai no valor típico."
 }
