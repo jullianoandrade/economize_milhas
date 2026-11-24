@@ -62,3 +62,13 @@ test("nenhuma tela fica mais larga que o celular", async ({ page, isMobile }) =>
     expect(largura, `${url} com ${largura}px numa tela de ${tela}px`).toBeLessThanOrEqual(tela);
   }
 });
+
+test("o tema padrao e o claro, mesmo com o aparelho no escuro", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("data-tema", "claro");
+  // A escolha da pessoa continua valendo.
+  await page.evaluate(() => localStorage.setItem("milhas-tema", "escuro"));
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-tema", "escuro");
+});

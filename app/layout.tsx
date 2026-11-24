@@ -58,11 +58,11 @@ export const viewport: Viewport = {
  * para depois da hidratacao, quem prefere escuro veria a tela clara
  * piscar a cada carregamento.
  *
- * Sem preferencia salva, segue o sistema -- e esse mesmo caminho serve
- * ao botao manual, o que evita manter duas copias da paleta escura no
- * CSS, uma para a media query e outra para o atributo.
+ * Sem preferencia salva, o tema e o CLARO (decisao de 24/11/2026): o
+ * escuro so entra quando a pessoa escolhe no botao. O atributo, e nao a
+ * media query, evita manter duas copias da paleta escura no CSS.
  */
-const APLICAR_TEMA = `try{var t=localStorage.getItem("milhas-tema");if(t!=="claro"&&t!=="escuro")t=matchMedia("(prefers-color-scheme: dark)").matches?"escuro":"claro";document.documentElement.setAttribute("data-tema",t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",t==="escuro"?"#0b1526":"#f4f6f9")}catch(e){}`;
+const APLICAR_TEMA = `try{var t=localStorage.getItem("milhas-tema");if(t!=="claro"&&t!=="escuro")t="claro";document.documentElement.setAttribute("data-tema",t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",t==="escuro"?"#0b1526":"#f4f6f9")}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
