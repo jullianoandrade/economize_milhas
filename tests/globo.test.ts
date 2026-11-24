@@ -76,3 +76,42 @@ describe("os pontos do globo acompanham a base de aeroportos", () => {
     });
   });
 });
+
+describe("rotacao livre (quaternios)", async () => {
+  const r = await import("@/lib/globo/rotacao");
+  const { projetar: projetarAntigo } = await import("@/lib/globo/projecao");
+
+  it("centrar em um ponto e o mesmo que a projecao antiga por lat/lon", () => {
+    const centro = [-12, -38] as const;
+    const livre = { q: r.orientacaoCentradaEm(centro), R: 150, cx: 200, cy: 300 };
+    const antiga = { lam: centro[1], phi: centro[0], R: 150, cx: 200, cy: 300 };
+    for (const ponto of [[-23.4, -46.5], [38.8, -9.1], [0, 0], [60, -100], [-50, 20]] as const) {
+      const a = r.projetarLivre(livre, ponto);
+      const b = projetarAntigo(antiga, ponto);
+      expect(a.x).toBeCloseTo(b.x, 6);
+      expect(a.y).toBeCloseTo(b.y, 6);
+      expect(a.frente).toBeCloseTo(b.frente, 6);
+    }
+  });
+
+  it("o ponto sob o dedo acompanha o dedo, em qualquer direcao", () => {
+    const R = 100;
+    for (const [dx, dy] of [[30, 0], [0, 30], [20, -20], [-25, 10]] as const) {
+      const q = r.rotacaoDoArraste(dx, dy, R);
+      // o centro do disco (o ponto de frente) se move na direcao do arraste
+      const [, y, z] = r.girar(q, [1, 0, 0]);
+      expect(Math.sign(y * R)).toBe(Math.sign(dx) || Math.sign(y * R));
+      expect(Math.sign(-z * R)).toBe(Math.sign(dy) || Math.sign(-z * R));
+    }
+  });
+
+  it("slerp vai pelo caminho mais curto e chega no destino", () => {
+    const a = r.orientacaoCentradaEm([0, 170]);
+    const b = r.orientacaoCentradaEm([0, -170]);
+    const meio = r.slerp(a, b, 0.5);
+    const frente = r.girar(meio, r.vetorDe([0, 180]));
+    expect(frente[0]).toBeCloseTo(1, 5); // no meio do caminho curto, 180 graus fica de frente
+    const fim = r.slerp(a, b, 1);
+    expect(r.girar(fim, r.vetorDe([0, -170]))[0]).toBeCloseTo(1, 5);
+  });
+});

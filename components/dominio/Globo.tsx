@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { grandeCirculo, suavizar, type LatLon } from "@/lib/globo/projecao";
 import {
-  deltaDeLongitude,
-  grandeCirculo,
-  projetar,
-  suavizar,
-  type LatLon,
-  type Vista,
-} from "@/lib/globo/projecao";
+  deEixoAngulo,
+  multiplicar,
+  normalizar,
+  orientacaoCentradaEm,
+  projetarLivre as projetar,
+  rotacaoDoArraste,
+  slerp,
+  type VistaLivre as Vista,
+} from "@/lib/globo/rotacao";
 
 /**
  * O globo da tela Explorar, feito dos aeroportos da VoeMilo.
@@ -26,6 +29,11 @@ import {
  * traca o arco -- um momento so, e em resposta a uma acao. Com
  * "reduzir movimento" ligado, tudo vai direto ao estado final.
  *
+ * GIRO LIVRE (lib/globo/rotacao.ts): a orientacao e um quaternio, entao
+ * o globo gira na direcao exata do arraste, sem eixo preso -- da para
+ * tombar o polo. Solto, segue com a velocidade da mao e desacelera
+ * devagar; o giro de espera volta acelerando aos poucos, sem tranco.
+ *
  * As cores sao fixas: o globo e sempre noturno, nos dois temas.
  */
 
@@ -33,6 +41,7 @@ import {
 export type Enquadramento = "centro" | "direita" | "acima" | "esquerda" | "inteiro";
 
 const CENTRO_DO_BRASIL: LatLon = [-14, -51];
+const GRAU = Math.PI / 180;
 
 let pontosPendentes: Promise<Float32Array> | null = null; // uma carga por sessao
 function carregarPontos(): Promise<Float32Array> {
@@ -52,18 +61,18 @@ function vistaAlvo(
   enq: Enquadramento,
   centro: LatLon,
 ): Vista {
-  const [phi, lam] = centro;
+  const q = orientacaoCentradaEm(centro);
   switch (enq) {
     case "centro":
-      return { lam, phi, R: Math.min(w * 0.44, h * 0.3), cx: w / 2, cy: h * 0.46 };
+      return { q, R: Math.min(w * 0.44, h * 0.3), cx: w / 2, cy: h * 0.46 };
     case "direita":
-      return { lam, phi, R: Math.min(w * 0.3, h * 0.4), cx: w * 0.62, cy: h * 0.52 };
+      return { q, R: Math.min(w * 0.3, h * 0.4), cx: w * 0.62, cy: h * 0.52 };
     case "acima":
-      return { lam, phi, R: Math.min(w * 0.38, h * 0.2), cx: w / 2, cy: h * 0.3 };
+      return { q, R: Math.min(w * 0.38, h * 0.2), cx: w / 2, cy: h * 0.3 };
     case "esquerda":
-      return { lam, phi, R: Math.min(w * 0.26, h * 0.36), cx: w * 0.32, cy: h * 0.54 };
+      return { q, R: Math.min(w * 0.26, h * 0.36), cx: w * 0.32, cy: h * 0.54 };
     case "inteiro":
-      return { lam, phi, R: Math.min(w, h) * 0.42, cx: w / 2, cy: h / 2 };
+      return { q, R: Math.min(w, h) * 0.42, cx: w / 2, cy: h / 2 };
   }
 }
 
@@ -76,9 +85,10 @@ export function Globo({
   rota: { origem: LatLon; destino: LatLon; rotulos: [string, string] } | null;
   enquadramento: Enquadramento;
   /**
-   * A pessoa pode girar o globo arrastando. Com o mouse, nos dois eixos;
-   * no toque, so na horizontal -- o arraste vertical continua rolando a
-   * pagina (touch-action: pan-y), para o globo nunca prender a tela.
+   * A pessoa pode girar o globo arrastando. Com o mouse, em qualquer
+   * direcao; no toque, so o componente horizontal do arraste -- o
+   * vertical continua rolando a pagina (touch-action: pan-y), para o
+   * globo nunca prender a tela.
    */
   arrastavel?: boolean;
 }) {
@@ -122,12 +132,14 @@ export function Globo({
     carregarPontos().then((p) => (pontos = p));
 
     // ---- Arraste -------------------------------------------------------
-    // Girar o globo com a mao e o tipo de detalhe que faz a pessoa ficar
-    // brincando com a tela. Graus por pixel = 1 radiano / R: arrastar a
-    // largura de um raio gira ~57 graus, o que "acompanha o dedo".
+    // O ponto sob a mao acompanha a mao (1 radiano por raio arrastado).
+    // A velocidade angular e um vetor no referencial da tela (eixo vezes
+    // rad/ms), alisado entre eventos para a inercia nao herdar o tremor
+    // do ultimo movimento.
     let arrastando: { id: number; x: number; y: number; t: number } | null = null;
-    let giroLam = 0; // inercia, em graus por quadro
+    let giro: [number, number, number] = [0, 0, 0];
     let ultimoToque = -Infinity;
+    let espera = 0; // 0..1: o giro de espera volta acelerando
 
     const dentroDoDisco = (x: number, y: number) =>
       vista !== null && Math.hypot(x - vista.cx, y - vista.cy) <= vista.R * 1.05;
@@ -143,7 +155,8 @@ export function Globo({
       if (!dentroDoDisco(x, y)) return;
       arrastando = { id: e.pointerId, x, y, t: performance.now() };
       tween = null; // a mao da pessoa manda; a animacao em curso para
-      giroLam = 0;
+      giro = [0, 0, 0];
+      espera = 0;
       tela.setPointerCapture(e.pointerId);
       tela.style.cursor = "grabbing";
     };
@@ -155,25 +168,29 @@ export function Globo({
         tela.style.cursor = dentroDoDisco(x, y) ? "grab" : "";
         return;
       }
-      const grausPorPixel = 180 / Math.PI / vista.R;
       const dx = x - arrastando.x;
-      const dy = y - arrastando.y;
-      vista.lam -= dx * grausPorPixel;
-      // no toque, so a horizontal gira: a vertical e da rolagem da pagina
-      if (e.pointerType === "mouse") {
-        vista.phi = Math.max(-75, Math.min(75, vista.phi + dy * grausPorPixel));
-      }
+      // no toque, a vertical e da rolagem da pagina
+      const dy = e.pointerType === "mouse" ? y - arrastando.y : 0;
+      vista.q = normalizar(multiplicar(rotacaoDoArraste(dx, dy, vista.R), vista.q));
+
       const agora = performance.now();
-      const dt = Math.max(1, agora - arrastando.t);
-      giroLam = (-dx * grausPorPixel * 16) / dt; // por quadro de ~16 ms
+      const dt = Math.max(4, agora - arrastando.t);
+      const novo = [0, dy / vista.R / dt, dx / vista.R / dt];
+      giro = [
+        giro[0] * 0.4 + novo[0] * 0.6,
+        giro[1] * 0.4 + novo[1] * 0.6,
+        giro[2] * 0.4 + novo[2] * 0.6,
+      ];
       arrastando = { id: e.pointerId, x, y, t: agora };
     };
 
     const aoSoltar = (e: PointerEvent) => {
       if (!arrastando || arrastando.id !== e.pointerId) return;
+      const agora = performance.now();
+      // parou a mao antes de soltar: o globo para junto
+      if (calmo || agora - arrastando.t > 90) giro = [0, 0, 0];
       arrastando = null;
-      ultimoToque = performance.now();
-      if (calmo) giroLam = 0;
+      ultimoToque = agora;
       tela.style.cursor = arrastavelRef.current ? "grab" : "";
     };
 
@@ -205,11 +222,11 @@ export function Globo({
         caminho = null;
       }
       const para = vistaAlvo(w, h, enq, centro);
+      giro = [0, 0, 0];
       if (!vista) {
         vista = para;
       } else {
-        // gira pelo lado mais curto
-        para.lam = vista.lam + deltaDeLongitude(vista.lam, para.lam);
+        // o slerp gira pelo caminho mais curto e endireita o norte
         tween = { de: { ...vista }, para, inicio: agora, ms: calmo ? 0 : 1100 };
       }
       arco = 0;
@@ -284,36 +301,45 @@ export function Globo({
       }
     };
 
+    let anterior = performance.now();
     const laco = (agora: number) => {
+      // aba em segundo plano nao vira salto quando volta
+      const dt = Math.min(50, Math.max(0, agora - anterior));
+      anterior = agora;
       if (pedido.current.versao !== visto && w > 0) {
         visto = pedido.current.versao;
         reenquadrar(agora);
       }
       if (vista) {
+        const velocidade = Math.hypot(giro[0], giro[1], giro[2]);
         if (tween) {
           const t = tween.ms === 0 ? 1 : Math.min(1, (agora - tween.inicio) / tween.ms);
           const e = suavizar(t);
           const de = tween.de;
           const para = tween.para;
           vista = {
-            lam: de.lam + (para.lam - de.lam) * e,
-            phi: de.phi + (para.phi - de.phi) * e,
+            q: slerp(de.q, para.q, e),
             R: de.R + (para.R - de.R) * e,
             cx: de.cx + (para.cx - de.cx) * e,
             cy: de.cy + (para.cy - de.cy) * e,
           };
           if (t >= 1) tween = null;
-        } else if (!arrastando && Math.abs(giroLam) > 0.01) {
-          // inercia: o globo continua um pouco depois de solto
-          vista.lam += giroLam;
-          giroLam *= 0.94;
+        } else if (!arrastando && velocidade > 2e-6) {
+          // inercia: segue na direcao do arraste e perde ~63% a cada 650 ms
+          vista.q = normalizar(multiplicar(deEixoAngulo(giro, velocidade * dt), vista.q));
+          const atrito = Math.exp(-dt / 650);
+          giro = [giro[0] * atrito, giro[1] * atrito, giro[2] * atrito];
         } else if (
           !arrastando &&
           !pedido.current.rota &&
           !calmo &&
           agora - ultimoToque > 2500
         ) {
-          vista.lam += 0.03;
+          // espera: gira em torno do eixo da propria Terra, ~1,8 grau/s,
+          // e chega a essa velocidade em ~1,5 s
+          espera = Math.min(1, espera + dt / 1500);
+          const ang = ((1.8 * GRAU) / 1000) * dt * suavizar(espera);
+          vista.q = normalizar(multiplicar(vista.q, deEixoAngulo([0, 0, 1], ang)));
         }
         if (arcoAlvo > 0 && agora >= arcoInicio) {
           arco = calmo ? 1 : Math.min(1, suavizar(Math.min(1, (agora - arcoInicio) / 1400)));
