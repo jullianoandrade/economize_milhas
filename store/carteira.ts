@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from "react";
 import { create } from "zustand";
-import { createJSONStorage, persist, type StateStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { armazenamentoSeguro, novoId } from "@/lib/cliente/armazenamento";
 import { MAXIMO_DE_SALDO, sanearSaldos, type Saldos, type Vencimento } from "@/lib/carteira/modelo";
 
 /**
@@ -24,52 +25,6 @@ type Carteira = {
   adicionarVencimento: (programaId: string, vencimento: Omit<Vencimento, "id">) => void;
   removerVencimento: (programaId: string, vencimentoId: string) => void;
 };
-
-function novoId(): string {
-  return typeof crypto !== "undefined" && "randomUUID" in crypto
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-}
-
-/**
- * localStorage que nao lanca erro.
- *
- * JSON quebrado no aparelho fazia o persist rejeitar a hidratacao, e a
- * Carteira ficava em aria-busy para sempre -- tela em branco sem saida.
- * Conteudo ilegivel vira "nada guardado"; o proximo salvamento
- * sobrescreve. Sem localStorage (pre-render no servidor), a referencia
- * abaixo lanca dentro do createJSONStorage, que entao nao hidrata --
- * o mesmo comportamento de antes.
- */
-function armazenamentoSeguro(): StateStorage {
-  const ls = localStorage;
-  return {
-    getItem: (nome) => {
-      try {
-        const bruto = ls.getItem(nome);
-        if (bruto === null) return null;
-        JSON.parse(bruto);
-        return bruto;
-      } catch {
-        return null;
-      }
-    },
-    setItem: (nome, valor) => {
-      try {
-        ls.setItem(nome, valor);
-      } catch {
-        // Cota cheia ou modo privado: a sessao continua, so nao persiste.
-      }
-    },
-    removeItem: (nome) => {
-      try {
-        ls.removeItem(nome);
-      } catch {
-        // idem
-      }
-    },
-  };
-}
 
 /** Estado guardado -> estado confiavel, venha de que versao vier. */
 function lerGuardado(guardado: unknown): { saldos: Saldos } {
