@@ -10,8 +10,9 @@ import partes from "./logo-partes.json";
  * bilhete, com picote e entalhe. As curvas vem de scripts/marca/ (ver o
  * cabecalho de scripts/marca/gerar-marca.mjs para regenerar).
  *
- * O entrelacamento e feito com uma folga na COR DO FUNDO em volta do
- * traco -- por isso `fundo` precisa ser a cor real atras da logo. As
+ * No "e" o traco passa na frente, com uma folga na COR DO FUNDO -- por
+ * isso `fundo` precisa ser a cor real atras da logo. No "m" ele passa por
+ * tras, sem folga: o m e desenhado inteiro por cima. As
  * letras usam currentColor: a logo herda a tinta do lugar onde esta.
  */
 export function Logo({
@@ -39,10 +40,9 @@ export function Logo({
       aria-label={MARCA.nome}
       focusable="false"
     >
-      <defs>
-        <clipPath id="logo-voo">{voo({})}</clipPath>
-      </defs>
-      <path d={partes.letras + partes.m} fill="currentColor" />
+      {/* 1. letras, menos o m */}
+      <path d={partes.letras} fill="currentColor" />
+      {/* 2. o traco, com folga: passa na FRENTE do "e" */}
       {voo({ fill: fundo, stroke: fundo, strokeWidth: folga, strokeLinejoin: "round" })}
       {voo({ fill: ambar })}
       <path
@@ -53,16 +53,8 @@ export function Logo({
         strokeDasharray="22 18"
         fill="none"
       />
-      <g clipPath="url(#logo-voo)">
-        <path
-          d={partes.m}
-          fill="currentColor"
-          stroke={fundo}
-          strokeWidth={folga}
-          strokeLinejoin="round"
-          paintOrder="stroke"
-        />
-      </g>
+      {/* 3. o m inteiro por cima, sem folga: o traco passa POR TRAS dele */}
+      <path d={partes.m} fill="currentColor" />
     </svg>
   );
 }

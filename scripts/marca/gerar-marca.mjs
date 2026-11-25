@@ -37,12 +37,11 @@ function logoSvg(tinta, fundo, comFundo) {
   const [x, y, lw, lh] = partes.viewBox.split(" ").map(Number);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${partes.viewBox}">
   ${comFundo ? `<rect x="${x}" y="${y}" width="${lw}" height="${lh}" fill="${fundo}"/>` : ""}
-  <defs><clipPath id="voo">${voo("")}</clipPath></defs>
-  <path d="${partes.letras}${partes.m}" fill="${tinta}"/>
+  <path d="${partes.letras}" fill="${tinta}"/>
   ${voo(`fill="${fundo}" stroke="${fundo}" stroke-width="${w}" stroke-linejoin="round"`)}
   ${voo(`fill="${AMBAR}"`)}
   <path d="${partes.picote}" transform="${partes.canhotoTransform}" stroke="${fundo}" stroke-width="12" stroke-dasharray="22 18" fill="none"/>
-  <g clip-path="url(#voo)"><path d="${partes.m}" fill="${tinta}" stroke="${fundo}" stroke-width="${w}" stroke-linejoin="round" paint-order="stroke"/></g>
+  <path d="${partes.m}" fill="${tinta}"/>
 </svg>
 `;
 }

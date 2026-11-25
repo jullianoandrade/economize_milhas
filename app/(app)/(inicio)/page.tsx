@@ -28,7 +28,7 @@ export default function Inicio() {
   return (
     <>
       <PrimeiraVisita />
-      <HeroiDoInicio />
+      <HeroiDoInicio catalogo={catalogoDaCarteira()} />
       {/* Com uma viagem reservada, o Inicio leva a prepara-la. */}
       <div className="mt-5 empty:hidden md:mt-6">
         <ProximaViagem />

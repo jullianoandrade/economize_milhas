@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useSyncExternalStore, ViewTransition } from "react";
 import { Globo } from "@/components/dominio/Globo";
 import { Logo } from "@/components/ui/Logo";
-import { Milo } from "@/components/ui/Milo";
+import type { ProgramaDaCarteira } from "@/lib/carteira/modelo";
+import { MiloGuia } from "./MiloGuia";
 import { useLugar } from "@/lib/cliente/lugar";
 import { milhas as fmt } from "@/lib/format";
 import { calcularProgresso } from "@/lib/metas/progresso";
@@ -52,7 +53,7 @@ function useSaudacao(): string {
   );
 }
 
-export function HeroiDoInicio() {
+export function HeroiDoInicio({ catalogo }: { catalogo: ProgramaDaCarteira[] }) {
   const hidratado = usePerfilHidratado();
   const metas = usarPerfil((p) => p.metas);
   const visitou = usarPerfil((p) => p.visitou);
@@ -92,12 +93,17 @@ export function HeroiDoInicio() {
               painel. No desktop ela esta na barra, e aqui fica a saudacao. */}
           <Logo className="h-12 w-auto text-painel-tinta md:hidden" fundo="var(--painel)" />
           <p className="hidden text-[17px] text-painel-tinta-fraca md:block">{saudacao}</p>
+          {/* Um Milo so por painel: ele esta de corpo inteiro no canto de
+              baixo. A conta e um icone simples. */}
           <Link
             href="/conta"
             aria-label="Sua conta"
-            className="size-11 overflow-hidden rounded-full border border-painel-tinta/20 bg-painel-realce md:hidden"
+            className="flex size-11 items-center justify-center rounded-full border border-painel-tinta/20 bg-painel-realce text-painel-tinta md:hidden"
           >
-            <Milo pose="rosto" className="size-11" />
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" />
+            </svg>
           </Link>
         </div>
 
@@ -166,6 +172,7 @@ export function HeroiDoInicio() {
             </>
           )}
         </div>
+        <MiloGuia catalogo={catalogo} />
       </section>
     </ViewTransition>
   );

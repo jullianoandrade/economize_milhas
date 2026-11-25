@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { MESES_CURTOS, milhas as fmt, reais } from "@/lib/format";
 import {
   hojeISO,
@@ -11,7 +10,8 @@ import {
   vencimentosProximos,
   type ProgramaDaCarteira,
 } from "@/lib/carteira/modelo";
-import { TEXTO_CURTO, ordenarPorVeredito, type RotuloDeVeredito } from "@/lib/milhas/rotulos";
+import { TEXTO_CURTO, ordenarPorVeredito } from "@/lib/milhas/rotulos";
+import { hrefDaOferta, lugarDaOferta as lugar, usePromocoes } from "@/lib/cliente/promocoes";
 import { useCarteiraHidratada, usarCarteira } from "@/store/carteira";
 import { usarPerfil } from "@/store/perfil";
 
@@ -29,40 +29,11 @@ import { usarPerfil } from "@/store/perfil";
  * O resto mora nas abas. "A informacao certa, no momento certo."
  */
 
-type Oportunidade = {
-  destino: { iata: string; cidade: string; pais?: string };
-  precoBRL: number;
-  descontoPct: number;
-  veredito: RotuloDeVeredito;
-  /** Dia de ida desta tarifa (AAAA-MM-DD), de hoje em diante; null se a API nao disse. */
-  partidaEm: string | null;
-};
-
-/**
- * O destino do toque: a rota JA no dia da tarifa, quando a API disse
- * qual e. Dali a pessoa chega a passagem daquele dia com mais um toque.
- */
-function hrefDaOferta(origemIata: string, o: Oportunidade): string {
-  const base = `/rota/${origemIata}/${o.destino.iata}`;
-  return o.partidaEm ? `${base}?data=${o.partidaEm}` : base;
-}
-
 /** "2027-03-31" -> "31 mar", sem new Date (nada de fuso no meio). */
 function diaCurto(iso: string): string {
   const [, mes, dia] = iso.split("-");
   const m = MESES_CURTOS[Number(mes) - 1];
   return m && dia ? `${Number(dia)} ${m}` : iso;
-}
-
-/** "Praia" sozinho e ambiguo: fora do Brasil, a cidade leva o pais. */
-function lugar(d: Oportunidade["destino"]): string {
-  if (!d.pais || d.pais === "BR") return d.cidade;
-  try {
-    const pais = new Intl.DisplayNames(["pt-BR"], { type: "region" }).of(d.pais);
-    return pais ? `${d.cidade}, ${pais}` : d.cidade;
-  } catch {
-    return d.cidade;
-  }
 }
 
 export function ResumoDoInicio({ catalogo }: { catalogo: ProgramaDaCarteira[] }) {
@@ -135,22 +106,9 @@ function CarteiraEAvisos({ catalogo }: { catalogo: ProgramaDaCarteira[] }) {
 
 function ValeAPenaAgora() {
   const origemIata = usarPerfil((p) => p.origemIata);
-  const [dados, setDados] = useState<{ origem: { iata: string }; oportunidades: Oportunidade[] } | null>(null);
-  const [falhou, setFalhou] = useState(false);
-
-  useEffect(() => {
-    const controlador = new AbortController();
-    fetch(`/api/promocoes?origem=${origemIata}`, { signal: controlador.signal })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("falha"))))
-      .then((corpo) => {
-        setDados(corpo);
-        setFalhou(false);
-      })
-      .catch((e) => {
-        if (e.name !== "AbortError") setFalhou(true);
-      });
-    return () => controlador.abort();
-  }, [origemIata]);
+  const resposta = usePromocoes(origemIata);
+  const dados = resposta ?? null;
+  const falhou = resposta === null;
 
   // Sem oportunidade ou com falha de rede, o bloco simplesmente nao
   // aparece: aqui ele e bonus, nao a resposta principal da tela.

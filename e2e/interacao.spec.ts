@@ -72,3 +72,22 @@ test("o tema padrao e o claro, mesmo com o aparelho no escuro", async ({ page })
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-tema", "escuro");
 });
+
+test("o Milo do Inicio da uma dica com acao a cada toque", async ({ page }) => {
+  await page.goto("/");
+  const milo = page.getByRole("button", { name: "Ouvir uma dica do Milo" });
+  await expect(milo).toBeVisible();
+  await milo.click();
+
+  const balao = page.getByRole("status").filter({ has: page.getByRole("button", { name: "Fechar a dica" }) });
+  await expect(balao).toBeVisible();
+  // toda dica termina numa acao que leva a algum lugar do app
+  await expect(balao.getByRole("link")).toHaveAttribute("href", /^\//);
+
+  const primeira = await balao.innerText();
+  await page.getByRole("button", { name: "Outra dica do Milo" }).click();
+  await expect(balao).not.toHaveText(primeira);
+
+  await page.keyboard.press("Escape");
+  await expect(balao).toBeHidden();
+});

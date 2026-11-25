@@ -629,3 +629,27 @@ body {
   }
 }
 /* ====================== fim das view transitions ========================= */
+
+/* ------------------------------------------------------------
+   O Milo guia, no Inicio (app/(app)/(inicio)/_componentes/MiloGuia.tsx).
+   Movimento SO em resposta ao toque: o pulo a cada toque e o balao que
+   abre a partir da cabeca dele. Com "reduzir movimento", a regra global
+   acima zera as duas animacoes.
+   ------------------------------------------------------------ */
+@keyframes pulo-do-milo {
+  0% { transform: translateY(0) rotate(0); }
+  35% { transform: translateY(-12px) rotate(-4deg); }
+  70% { transform: translateY(0) rotate(1.5deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
+.pulo-do-milo {
+  transform-origin: 50% 100%;
+  animation: pulo-do-milo 380ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+@keyframes balao-do-milo {
+  from { opacity: 0; transform: translateY(6px) scale(0.94); }
+}
+.balao-do-milo {
+  transform-origin: 85% 100%;
+  animation: balao-do-milo 180ms ease-out;
+}
