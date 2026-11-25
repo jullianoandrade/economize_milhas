@@ -40,7 +40,7 @@ type Passo = {
 
 const PASSOS: Passo[] = [
   {
-    pose: "apontando",
+    pose: "acenando",
     sobrelinha: "O que é isto",
     titulo: "Viajar não precisa ser caro. Precisa ser calculado.",
     texto:

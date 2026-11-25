@@ -10,7 +10,7 @@ import poses from "@/lib/milo/poses.json";
  */
 const raiz = path.resolve(import.meta.dirname, "..");
 const pasta = path.join(raiz, "public", "milo");
-const POSES = ["apontando", "rosto", "comemorando", "esperando", "pensando"];
+const POSES = ["apontando", "explorando", "cartoes", "mala", "acenando", "rosto", "comemorando", "esperando", "pensando"];
 const registradas = poses as Record<string, { arquivo: string; largura: number; altura: number }>;
 
 describe("as poses do Milo", () => {

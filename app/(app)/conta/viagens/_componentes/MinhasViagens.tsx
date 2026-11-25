@@ -132,7 +132,7 @@ export function MinhasViagens({ nomesDosProgramas }: { nomesDosProgramas: Nomes 
 function SemViagens() {
   return (
     <div className="relative mt-6 overflow-visible rounded-[20px] border-2 border-dashed border-tinta-fraca/50 px-5 pb-6 pt-24">
-      <Milo pose="esperando" className="pointer-events-none absolute -top-6 right-3 w-[112px]" />
+      <Milo pose="mala" className="pointer-events-none absolute -top-6 right-3 w-[112px]" />
       <p className="display max-w-[16rem] text-[22px] leading-tight text-tinta">
         Suas viagens começam numa passagem.
       </p>

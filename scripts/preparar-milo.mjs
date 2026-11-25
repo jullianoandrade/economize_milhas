@@ -27,7 +27,7 @@ import path from "node:path";
 import sharp from "sharp";
 import { removerFundo } from "./lib/remover-fundo.mjs";
 
-const POSES = ["apontando", "rosto", "comemorando", "esperando", "pensando"];
+const POSES = ["apontando", "explorando", "cartoes", "mala", "acenando", "rosto", "comemorando", "esperando", "pensando"];
 const raiz = path.resolve(import.meta.dirname, "..");
 const pasta = path.join(raiz, "public", "milo");
 const registro = path.join(raiz, "lib", "milo", "poses.json");

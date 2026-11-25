@@ -24,11 +24,37 @@ import poses from "@/lib/milo/poses.json";
 const CONTORNO = "#3b2618";
 
 /**
- * apontando: mostra algo a esquerda dele (Explorar, Carteira vazia).
+ * Cada tela tem o seu Milo -- a mesma pose em tres telas cansava:
+ * apontando: o guia do Inicio, apontando para "Explorar destinos".
+ * explorando: com um mapa aberto (Explorar).
+ * cartoes: com um leque de cartoes de fidelidade (Carteira vazia).
+ * mala: puxando uma mala de rodinha (Minhas viagens vazia).
+ * acenando: dando oi (primeiro passo das boas-vindas).
  * rosto: avatar e selo pequeno. comemorando: meta batida.
  * esperando: nada no momento, mas vem. pensando: falta a pessoa decidir.
  */
-export type PoseDoMilo = "apontando" | "rosto" | "comemorando" | "esperando" | "pensando";
+export type PoseDoMilo =
+  | "apontando"
+  | "explorando"
+  | "cartoes"
+  | "mala"
+  | "acenando"
+  | "rosto"
+  | "comemorando"
+  | "esperando"
+  | "pensando";
+
+/**
+ * Enquanto a arte de uma pose nova nao chega, entra a existente mais
+ * proxima no sentido e no tamanho -- nunca o desenho provisorio, que nao
+ * combina mais com as artes finais.
+ */
+const SUBSTITUTA: Partial<Record<PoseDoMilo, PoseDoMilo>> = {
+  explorando: "pensando",
+  cartoes: "apontando",
+  mala: "esperando",
+  acenando: "apontando",
+};
 
 type Arte = { arquivo: string; largura: number; altura: number; espelhar: boolean };
 const ARTES: Partial<Record<PoseDoMilo, Arte>> = poses;
@@ -44,7 +70,8 @@ export function Milo({
   /** Quando informado, o desenho deixa de ser decorativo. */
   rotulo?: string;
 }) {
-  const arte = ARTES[pose];
+  const substituta = SUBSTITUTA[pose];
+  const arte = ARTES[pose] ?? (substituta ? ARTES[substituta] : undefined);
   if (!arte) {
     return (
       <MiloDesenhado

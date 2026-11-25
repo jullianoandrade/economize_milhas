@@ -222,7 +222,7 @@ export function Explorar({
 
         {estado.fase === "espera" ? (
           <div className="vidro absolute inset-x-3 bottom-24 z-10 rounded-[28px] p-5 md:bottom-6 md:left-6 md:right-auto md:w-[380px]">
-            <Milo pose="apontando" className="pointer-events-none absolute -top-[88px] right-3 w-[100px]" />
+            <Milo pose="explorando" className="pointer-events-none absolute -top-[88px] right-3 w-[100px]" />
             <p className="max-w-[16rem] text-[17px] leading-snug text-painel-tinta">
               Escolha um destino e eu comparo milhas com dinheiro.
             </p>

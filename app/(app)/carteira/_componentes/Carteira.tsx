@@ -205,7 +205,7 @@ function CarteiraVazia({
       </p>
 
       <div className="relative mt-6" style={{ height: ALTURA_DO_CARTAO }}>
-        <Milo pose="apontando" className="pointer-events-none absolute -top-[86px] right-0 z-10 w-[118px]" />
+        <Milo pose="cartoes" className="pointer-events-none absolute -top-[86px] right-0 z-10 w-[118px]" />
         <button
           type="button"
           onClick={() => aoEscolher()}
