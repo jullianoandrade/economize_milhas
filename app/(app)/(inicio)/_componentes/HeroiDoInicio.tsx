@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSyncExternalStore, ViewTransition } from "react";
 import { Globo } from "@/components/dominio/Globo";
+import { Logo } from "@/components/ui/Logo";
 import { Milo } from "@/components/ui/Milo";
 import { useLugar } from "@/lib/cliente/lugar";
 import { milhas as fmt } from "@/lib/format";
@@ -87,7 +88,10 @@ export function HeroiDoInicio() {
         </ViewTransition>
 
         <div className="relative flex items-center justify-between gap-3">
-          <p className="text-[17px] text-painel-tinta-fraca">{saudacao}</p>
+          {/* No celular nao ha barra superior: a marca mora aqui, no topo do
+              painel. No desktop ela esta na barra, e aqui fica a saudacao. */}
+          <Logo className="h-12 w-auto text-painel-tinta md:hidden" fundo="var(--painel)" />
+          <p className="hidden text-[17px] text-painel-tinta-fraca md:block">{saudacao}</p>
           <Link
             href="/conta"
             aria-label="Sua conta"

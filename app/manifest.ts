@@ -24,19 +24,12 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#f4f6f9",
     lang: "pt-BR",
     categories: ["travel", "finance"],
+    // O Milo num quadrado marinho, gerado por scripts/marca/gerar-marca.mjs.
+    // A "mascara" tem mais respiro: o Android recorta um circulo.
     icons: [
-      {
-        src: "/icone.svg",
-        sizes: "any",
-        type: "image/svg+xml",
-        purpose: "any",
-      },
-      {
-        src: "/icone-mascara.svg",
-        sizes: "any",
-        type: "image/svg+xml",
-        purpose: "maskable",
-      },
+      { src: "/icone-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icone-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/icone-mascara-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }

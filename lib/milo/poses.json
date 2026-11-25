@@ -1,8 +1,32 @@
 {
   "apontando": {
-    "arquivo": "apontando-816d5fdf.webp",
-    "largura": 464,
+    "arquivo": "apontando-1e09ab3e.webp",
+    "largura": 466,
     "altura": 600,
-    "espelhar": true
+    "espelhar": false
+  },
+  "rosto": {
+    "arquivo": "rosto-2f2fa2f9.webp",
+    "largura": 259,
+    "altura": 320,
+    "espelhar": false
+  },
+  "comemorando": {
+    "arquivo": "comemorando-fddc5b8b.webp",
+    "largura": 600,
+    "altura": 587,
+    "espelhar": false
+  },
+  "esperando": {
+    "arquivo": "esperando-85daf182.webp",
+    "largura": 413,
+    "altura": 600,
+    "espelhar": false
+  },
+  "pensando": {
+    "arquivo": "pensando-8ae8ab0b.webp",
+    "largura": 412,
+    "altura": 600,
+    "espelhar": false
   }
 }

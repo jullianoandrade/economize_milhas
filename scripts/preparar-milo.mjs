@@ -5,7 +5,12 @@
  *
  * Poses: apontando, rosto, comemorando, esperando, pensando.
  *
- * O PNG precisa ter fundo transparente (o do ChatGPT, pedido assim, tem).
+ * Aceita PNG transparente ou imagem com fundo branco (JPG do ChatGPT,
+ * inclusive com o xadrez de transparencia desenhado): o fundo e removido.
+ * --remover-fundo forca a remocao mesmo num PNG com canal alfa.
+ * --vaos-internos tira tambem os vaos brancos FECHADOS (ex.: entre a alca
+ * e a mochila). Confira o resultado: dente e brilho de olho tambem sao
+ * branco fechado.
  * O script recorta a sobra transparente, reduz para o tamanho que o app
  * usa (com folga para tela de 3x), converte para WebP e registra a pose
  * em lib/milo/poses.json. O nome do arquivo leva um hash do conteudo:
@@ -20,6 +25,7 @@ import { createHash } from "node:crypto";
 import { readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
+import { removerFundo } from "./lib/remover-fundo.mjs";
 
 const POSES = ["apontando", "rosto", "comemorando", "esperando", "pensando"];
 const raiz = path.resolve(import.meta.dirname, "..");
@@ -28,24 +34,31 @@ const registro = path.join(raiz, "lib", "milo", "poses.json");
 
 const [pose, entrada, ...opcoes] = process.argv.slice(2);
 if (!POSES.includes(pose) || !entrada) {
-  console.error(`uso: node scripts/preparar-milo.mjs <${POSES.join("|")}> <arquivo.png> [--espelhar]`);
+  console.error(`uso: node scripts/preparar-milo.mjs <${POSES.join("|")}> <arquivo> [--espelhar] [--remover-fundo] [--vaos-internos]`);
   process.exit(1);
 }
 
-const original = sharp(entrada);
-const info = await original.metadata();
-if (!info.hasAlpha) {
-  console.error(
-    "Esta imagem nao tem fundo transparente. Peca de novo ao ChatGPT com " +
-      '"fundo transparente (PNG)" -- recortar fundo branco a mao deixa borda suja.',
+// Sem transparencia (o ChatGPT costuma entregar JPG com fundo branco, ou
+// com o xadrez de transparencia desenhado), o fundo sai aqui: ver
+// scripts/lib/remover-fundo.mjs.
+const info = await sharp(entrada).metadata();
+let comAlfa;
+if (info.hasAlpha && !opcoes.includes("--remover-fundo")) {
+  comAlfa = await sharp(entrada).png().toBuffer();
+} else {
+  const { data, info: bruto } = await sharp(entrada).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const limpo = removerFundo(
+    { data, width: bruto.width, height: bruto.height },
+    { vaosInternos: opcoes.includes("--vaos-internos") },
   );
-  process.exit(1);
+  comAlfa = await sharp(limpo.data, { raw: { width: limpo.width, height: limpo.height, channels: 4 } }).png().toBuffer();
+  console.log("fundo removido");
 }
 
 // O rosto vira avatar de ate ~56px; o corpo inteiro aparece com ate ~130px
 // de largura. Os lados abaixo cobrem isso em tela de 3x.
 const lado = pose === "rosto" ? 320 : 600;
-const recortada = await sharp(entrada).trim({ threshold: 1 }).toBuffer();
+const recortada = await sharp(comAlfa).trim({ threshold: 1 }).toBuffer();
 const webp = await sharp(recortada)
   .resize({ width: lado, height: lado, fit: "inside", withoutEnlargement: true })
   .webp({ quality: 88, alphaQuality: 100, effort: 6 })

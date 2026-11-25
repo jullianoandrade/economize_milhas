@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ABAS, estaAtiva } from "./abas";
 import { AlternadorDeTema } from "./AlternadorDeTema";
 import { MARCA } from "@/lib/marca";
+import { Logo } from "@/components/ui/Logo";
 
 /**
  * A navegação do app em telas grandes.
@@ -26,11 +27,9 @@ export function BarraSuperior() {
   return (
     <header className="sticky top-0 z-40 hidden border-b border-borda bg-superficie/85 backdrop-blur-md md:block">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-8 px-6 lg:px-8">
-        <Link
-          href="/"
-          className="display shrink-0 text-lg text-tinta transition-colors hover:text-marca"
-        >
-          {MARCA.nome}
+        <Link href="/" className="shrink-0 text-tinta" aria-label={`${MARCA.nome}, início`}>
+          {/* fundo: a cor da barra, para a folga do entrelacamento sumir nela */}
+          <Logo className="h-12 w-auto" fundo="var(--superficie)" />
         </Link>
 
         <nav aria-label="Navegação principal">
