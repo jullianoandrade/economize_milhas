@@ -28,5 +28,29 @@
     "largura": 412,
     "altura": 600,
     "espelhar": false
+  },
+  "explorando": {
+    "arquivo": "explorando-7185e083.webp",
+    "largura": 480,
+    "altura": 600,
+    "espelhar": false
+  },
+  "cartoes": {
+    "arquivo": "cartoes-244e541e.webp",
+    "largura": 546,
+    "altura": 600,
+    "espelhar": false
+  },
+  "mala": {
+    "arquivo": "mala-345f0f64.webp",
+    "largura": 549,
+    "altura": 600,
+    "espelhar": false
+  },
+  "acenando": {
+    "arquivo": "acenando-7b612b01.webp",
+    "largura": 452,
+    "altura": 600,
+    "espelhar": false
   }
 }
